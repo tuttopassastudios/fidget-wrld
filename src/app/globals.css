@@ -47,7 +47,7 @@ select {
   gap: 10px;
   padding: 14px 16px;
   border-radius: 10px;
-  font-family: 'Hanken Grotesk', system-ui, sans-serif;
+  font-family: var(--font-primary), system-ui, sans-serif;
   font-size: 14px;
   font-weight: 400;
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);

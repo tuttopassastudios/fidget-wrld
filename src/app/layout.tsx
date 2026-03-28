@@ -1,21 +1,14 @@
 import type { Metadata, Viewport } from "next";
-import { Nunito, Fredoka } from "next/font/google";
+import { Quicksand } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
 import { Providers } from "@/components/Providers";
 
-const nunito = Nunito({
-  variable: "--font-primary",
+const quicksand = Quicksand({
+  variable: "--font-quicksand",
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800"],
-  display: "swap",
-});
-
-const fredoka = Fredoka({
-  variable: "--font-display",
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+  weight: ["300", "400", "500", "600", "700"],
   display: "swap",
 });
 
@@ -65,7 +58,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${nunito.variable} ${fredoka.variable}`}>
+    <html lang="en" className={quicksand.variable}>
       <head>
         <script
           type="application/ld+json"
