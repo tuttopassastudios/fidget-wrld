@@ -1,0 +1,159 @@
+/* =============================================
+   DOCK — macOS-style bottom navigation
+   ============================================= */
+
+.dock {
+  position: fixed;
+  bottom: calc(16px + var(--safe-bottom));
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 500;
+  view-transition-name: dock;
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+  padding: 8px 12px;
+  border-radius: var(--radius-full);
+  background: rgba(0, 20, 40, 0.65);
+  border: 1px solid rgba(70, 200, 220, 0.15);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.4),
+    0 0 0 0.5px rgba(255, 255, 255, 0.05) inset;
+}
+
+/* GlassSurface background layer — inherits dock border-radius */
+.dock-glass {
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+/* Individual dock item wrapper */
+.dock-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  text-decoration: none;
+  color: var(--color-text-muted);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 6px 10px;
+  border-radius: var(--radius-lg);
+  transition: color var(--transition-fast);
+  position: relative;
+  /* Magnification driven by JS via --scale custom property */
+  transform: scale(var(--scale, 1));
+  transform-origin: bottom center;
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1),
+              color var(--transition-fast);
+  /* Minimum hit target 44px for mobile */
+  min-width: 44px;
+  min-height: 44px;
+  justify-content: center;
+}
+
+.dock-item:hover {
+  color: var(--color-text-primary);
+}
+
+.dock-item:focus-visible {
+  outline: 2px solid var(--color-accent-primary);
+  outline-offset: 2px;
+}
+
+/* Active route indicator */
+.dock-item--active {
+  color: var(--color-accent-primary);
+}
+
+.dock-item--active::after {
+  content: '';
+  position: absolute;
+  bottom: 2px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--color-accent-primary);
+}
+
+/* Icon sizing */
+.dock-item svg {
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+}
+
+/* Cart badge */
+.dock-badge {
+  position: absolute;
+  top: 2px;
+  right: 4px;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
+  border-radius: var(--radius-full);
+  background: var(--color-accent-primary);
+  color: var(--color-text-on-accent);
+  font-size: 10px;
+  font-weight: var(--font-bold);
+  line-height: 16px;
+  text-align: center;
+  pointer-events: none;
+}
+
+/* Label — hidden on desktop, visible on mobile */
+.dock-label {
+  font-size: 10px;
+  line-height: 1;
+  white-space: nowrap;
+  display: none;
+}
+
+/* ---- Mobile: floating liquid dock with labels ---- */
+@media (max-width: 768px) {
+  .dock {
+    width: calc(100% - 24px);
+    max-width: 420px;
+    bottom: calc(8px + var(--safe-bottom));
+    padding: 6px 4px calc(6px + var(--safe-bottom));
+    justify-content: space-around;
+    gap: 0;
+  }
+
+  .dock-item {
+    /* Disable magnification on mobile — no hover */
+    transform: none !important;
+    padding: 4px 0;
+    min-width: 0;
+    flex: 1;
+  }
+
+  .dock-item svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .dock-label {
+    display: block;
+  }
+
+  .dock-item--active::after {
+    display: none;
+  }
+
+  .dock-badge {
+    top: 0;
+    right: calc(50% - 18px);
+  }
+}
+
+/* ---- Reduced motion ---- */
+@media (prefers-reduced-motion: reduce) {
+  .dock-item {
+    transition: color var(--transition-fast);
+    transform: none !important;
+  }
+}

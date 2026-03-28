@@ -1,0 +1,169 @@
+/* About Carousel - Product Page */
+.about-carousel-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  width: 100%;
+  height: 100%;
+}
+
+/* Desktop: Override carousel container to fill width */
+@media (min-width: 769px) {
+  .about-carousel-wrapper .carousel-container {
+    display: flex;
+    flex-direction: column;
+    width: 100% !important;
+    max-width: 100%;
+  }
+
+  .about-carousel-wrapper .carousel-track {
+    width: 100% !important;
+  }
+
+  .about-carousel-wrapper .carousel-item {
+    width: calc(100% - 2px) !important;
+  }
+}
+
+/* Set fixed height for carousel items and allow internal scrolling */
+.about-carousel-wrapper .carousel-item {
+  height: 320px;
+  overflow: hidden; /* Keep horizontal clipping for carousel */
+}
+
+/* Card content fills the item evenly */
+.about-carousel-card {
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+  height: 100%;
+  min-height: 0; /* Critical for flex children to allow shrinking */
+  box-sizing: border-box;
+}
+
+.about-carousel-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 12px;
+  flex-shrink: 0;
+}
+
+.about-carousel-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: rgba(94, 234, 212, 0.1);
+  border: 1px solid rgba(94, 234, 212, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.about-carousel-icon svg {
+  color: var(--color-accent-primary);
+  width: 20px;
+  height: 20px;
+}
+
+.about-carousel-title-group {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.about-carousel-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin: 0;
+  line-height: 1.3;
+}
+
+.about-carousel-subtitle {
+  font-size: 11px;
+  color: var(--color-text-muted);
+}
+
+.about-carousel-content {
+  flex: 1;
+  min-height: 0; /* Allow flex item to shrink below content size */
+  overflow-y: auto;
+  overflow-x: hidden;
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--color-text-secondary);
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border) transparent;
+  padding-right: 4px; /* Space for scrollbar */
+}
+
+.about-carousel-content::-webkit-scrollbar {
+  width: 4px;
+}
+
+.about-carousel-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.about-carousel-content::-webkit-scrollbar-thumb {
+  background: var(--color-text-muted);
+  border-radius: 2px;
+}
+
+.about-carousel-content::-webkit-scrollbar-thumb:hover {
+  background: var(--color-text-secondary);
+}
+
+.about-carousel-content p {
+  margin: 0 0 10px 0;
+}
+
+.about-carousel-content p:last-child {
+  margin-bottom: 0;
+}
+
+.about-carousel-content ul {
+  margin: 0;
+  padding-left: 16px;
+}
+
+.about-carousel-content li {
+  margin-bottom: 4px;
+}
+
+.about-carousel-content li:last-child {
+  margin-bottom: 0;
+}
+
+.about-carousel-content strong {
+  color: var(--color-text-primary);
+  font-weight: 600;
+}
+
+.about-carousel-content sub {
+  font-size: 0.75em;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .about-carousel-wrapper {
+    max-width: 100%;
+    overflow: hidden;
+  }
+
+  .about-carousel-wrapper .carousel-item {
+    height: 300px;
+  }
+
+  /* Disable 3D rotation on mobile - slide is on track, rotation on items */
+  .about-carousel-wrapper .carousel-track {
+    perspective: none !important;
+  }
+
+  .about-carousel-wrapper .carousel-item {
+    transform: none !important;
+  }
+}

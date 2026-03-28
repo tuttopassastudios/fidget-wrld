@@ -1,0 +1,67 @@
+.announcementBar {
+  background: linear-gradient(90deg, #FF6B9D 0%, #FF8B6A 50%, #FFD93D 100%);
+  background-size: 200% 100%;
+  animation: gradientShift 8s ease infinite;
+  padding: 10px 16px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+@keyframes gradientShift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .announcementBar {
+    animation: none;
+    background-position: 50% 50%;
+  }
+}
+
+.announcementContent {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #FFFFFF;
+  flex-wrap: wrap;
+}
+
+.announcementContent strong {
+  font-weight: 700;
+}
+
+.emoji {
+  font-size: 14px;
+}
+
+.divider {
+  opacity: 0.5;
+}
+
+.promoCode {
+  background: rgba(255, 255, 255, 0.25);
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-family: monospace;
+  letter-spacing: 1px;
+}
+
+@media (max-width: 600px) {
+  .announcementContent {
+    font-size: 12px;
+    gap: 6px;
+  }
+
+  .divider {
+    display: none;
+  }
+
+  .announcementContent > span:nth-child(4) {
+    display: none;
+  }
+}

@@ -1,0 +1,39 @@
+import { Suspense, ViewTransition } from "react";
+import dynamic from "next/dynamic";
+import { Header } from "@/components/layout/Header";
+import { AnnouncementBar } from "@/components/layout/AnnouncementBar";
+import { Footer } from "@/components/layout/Footer";
+import { Dock } from "@/components/layout/Dock";
+import { ToastContainer } from "@/components/ui/ToastContainer";
+
+const AgeGate = dynamic(() => import("@/components/AgeGate").then(m => m.AgeGate));
+const CartDrawer = dynamic(() => import("@/components/cart/CartDrawer").then(m => m.CartDrawer));
+const ReturnVisitToast = dynamic(() => import("@/components/ui/ReturnVisitToast").then(m => m.ReturnVisitToast));
+
+export default function StorefrontLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  return (
+    <>
+      <div className="storefront-content">
+        <Suspense>
+          <Header />
+          <AnnouncementBar />
+          <main style={{ viewTransitionName: 'main-content' }}>
+            <ViewTransition>
+              {children}
+            </ViewTransition>
+          </main>
+          <Footer />
+          <Dock />
+          <CartDrawer />
+          <ToastContainer />
+          <ReturnVisitToast />
+        </Suspense>
+      </div>
+      <AgeGate />
+    </>
+  );
+}

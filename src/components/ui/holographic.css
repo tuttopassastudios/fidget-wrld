@@ -1,0 +1,255 @@
+/* ===== Holographic Shared Variables ===== */
+:root {
+  /* Sunpillar colors — cyan/teal brand palette */
+  --sun-1: hsl(170, 80%, 65%);
+  --sun-2: hsl(190, 90%, 65%);
+  --sun-3: hsl(200, 100%, 70%);
+  --sun-4: hsl(180, 100%, 72%);
+  --sun-5: hsl(220, 80%, 70%);
+  --sun-6: hsl(260, 60%, 70%);
+}
+
+/* ===== Holographic Card Effect ===== */
+
+.holo-wrapper {
+  --pointer-x: 50%;
+  --pointer-y: 50%;
+  --pointer-from-center: 0;
+  --pointer-from-top: 0.5;
+  --pointer-from-left: 0.5;
+  --card-opacity: 0;
+  --rotate-x: 0deg;
+  --rotate-y: 0deg;
+  --background-x: 50%;
+  --background-y: 50%;
+  --holo-glow-color: rgba(70, 200, 220, 0.4);
+  --holo-radius: var(--radius-lg, 12px);
+
+  perspective: 600px;
+  transform: translate3d(0, 0, 0.1px);
+  position: relative;
+  touch-action: manipulation;
+}
+
+/* Behind glow — hidden by default, opt-in only */
+.holo-glow {
+  display: none;
+}
+
+/* Card shell — receives 3D transform */
+.holo-shell {
+  position: relative;
+  z-index: 1;
+  border-radius: var(--holo-radius);
+  transform: translateZ(0) rotateX(0deg) rotateY(0deg);
+  transition: transform 0.8s ease, box-shadow 0.3s ease;
+}
+
+.holo-wrapper.active .holo-shell {
+  transition: box-shadow 0.3s ease;
+  transform: translateZ(0) rotateX(var(--rotate-y)) rotateY(var(--rotate-x));
+}
+
+@media (hover: hover) {
+  .holo-wrapper:hover .holo-shell {
+    transition: box-shadow 0.3s ease;
+    transform: translateZ(0) rotateX(var(--rotate-y)) rotateY(var(--rotate-x));
+  }
+}
+
+.holo-wrapper.entering .holo-shell {
+  transition: transform 180ms ease-out, box-shadow 0.3s ease;
+}
+
+.holo-wrapper.active {
+  --card-opacity: 1;
+}
+
+@media (hover: hover) {
+  .holo-wrapper:hover {
+    --card-opacity: 1;
+  }
+}
+
+/* Shine layer — the holographic rainbow */
+.holo-shine {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  border-radius: var(--holo-radius);
+  overflow: hidden;
+  transform: translate3d(0, 0, 1px);
+
+  --space: 5%;
+  --angle: -45deg;
+
+  background-image:
+    repeating-linear-gradient(
+      0deg,
+      var(--sun-1) calc(var(--space) * 1),
+      var(--sun-2) calc(var(--space) * 2),
+      var(--sun-3) calc(var(--space) * 3),
+      var(--sun-4) calc(var(--space) * 4),
+      var(--sun-5) calc(var(--space) * 5),
+      var(--sun-6) calc(var(--space) * 6),
+      var(--sun-1) calc(var(--space) * 7)
+    ),
+    repeating-linear-gradient(
+      var(--angle),
+      #0e152e 0%,
+      hsl(180, 10%, 60%) 3.8%,
+      hsl(180, 29%, 66%) 4.5%,
+      hsl(180, 10%, 60%) 5.2%,
+      #0e152e 10%,
+      #0e152e 12%
+    ),
+    radial-gradient(
+      farthest-corner circle at var(--pointer-x) var(--pointer-y),
+      hsla(0, 0%, 0%, 0.1) 12%,
+      hsla(0, 0%, 0%, 0.15) 20%,
+      hsla(0, 0%, 0%, 0.25) 120%
+    );
+
+  background-position:
+    0 var(--background-y),
+    var(--background-x) var(--background-y),
+    center;
+  background-blend-mode: color, hard-light;
+  background-size:
+    500% 500%,
+    300% 300%,
+    200% 200%;
+  background-repeat: repeat;
+
+  /* KEY FIX: soft-light instead of color-dodge — never blows out on dark bg */
+  mix-blend-mode: soft-light;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  animation: holo-shimmer 18s linear infinite;
+  animation-play-state: running;
+}
+
+/* No ::before pseudo — it was the worst contrast offender */
+
+@media (hover: hover) {
+  .holo-wrapper:hover .holo-shine {
+    opacity: 0.5;
+    animation-play-state: paused;
+  }
+}
+
+/* Glare layer — radial light at pointer */
+.holo-glare {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+  border-radius: var(--holo-radius);
+  overflow: hidden;
+  transform: translate3d(0, 0, 1.1px);
+
+  background-image: radial-gradient(
+    farthest-corner circle at var(--pointer-x) var(--pointer-y),
+    hsla(190, 40%, 80%, 0.3) 12%,
+    hsla(200, 40%, 30%, 0.3) 90%
+  );
+  mix-blend-mode: overlay;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+@media (hover: hover) {
+  .holo-wrapper:hover .holo-glare {
+    opacity: 0.4;
+  }
+}
+
+/* Dynamic shadow following pointer */
+@media (hover: hover) {
+  .holo-wrapper:hover .holo-shell {
+    box-shadow:
+      rgba(0, 0, 0, 0.4)
+      calc((var(--pointer-from-left) * 8px) - 4px)
+      calc((var(--pointer-from-top) * 14px) - 4px)
+      16px -4px;
+  }
+}
+
+@keyframes holo-shimmer {
+  0% {
+    background-position:
+      0 var(--background-y),
+      0 0,
+      center;
+  }
+  100% {
+    background-position:
+      0 var(--background-y),
+      90% 90%,
+      center;
+  }
+}
+
+/* ===== Reduced motion ===== */
+@media (prefers-reduced-motion: reduce) {
+  .holo-shine {
+    animation: none;
+  }
+
+  .holo-shell {
+    transition: none !important;
+    transform: none !important;
+  }
+
+  .holo-wrapper:hover .holo-shell {
+    transform: none !important;
+    box-shadow: none;
+  }
+}
+
+/* ===== Holographic Logo ===== */
+.holo-logo-wrap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.holo-logo-gradient {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+
+  background: linear-gradient(
+    90deg,
+    var(--sun-1),
+    var(--sun-2),
+    var(--sun-3),
+    var(--sun-4),
+    var(--sun-5),
+    var(--sun-6),
+    var(--sun-1)
+  );
+  background-size: 300% 100%;
+  animation: holo-logo-shift 6s linear infinite;
+  mix-blend-mode: color;
+  opacity: 0.3;
+  transition: opacity 0.4s ease;
+}
+
+.holo-logo-wrap:hover .holo-logo-gradient {
+  opacity: 0.7;
+}
+
+@keyframes holo-logo-shift {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 300% 50%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .holo-logo-gradient {
+    animation: none;
+  }
+}
