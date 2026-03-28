@@ -7,36 +7,18 @@
   justify-content: center;
   min-height: 90dvh;
   padding: 80px 24px 48px;
-  background: var(--color-bg-dark);
+  background: #0a0a0a;
   border-bottom: 1px solid var(--color-border);
   overflow: hidden;
 }
-.hero::before {
-  content: '';
+.ballpitBackground {
   position: absolute;
   inset: 0;
-  background:
-    radial-gradient(ellipse 60% 50% at 30% 30%, rgba(255, 107, 157, 0.08) 0%, transparent 60%),
-    radial-gradient(ellipse 50% 50% at 70% 70%, rgba(255, 217, 61, 0.06) 0%, transparent 60%),
-    radial-gradient(ellipse 40% 40% at 50% 50%, rgba(0, 180, 216, 0.04) 0%, transparent 50%);
-  pointer-events: none;
-}
-.hero::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background-image:
-    radial-gradient(circle at 10% 20%, rgba(255, 107, 157, 0.12) 0, rgba(255, 107, 157, 0.12) 6px, transparent 6px),
-    radial-gradient(circle at 90% 80%, rgba(255, 217, 61, 0.12) 0, rgba(255, 217, 61, 0.12) 8px, transparent 8px),
-    radial-gradient(circle at 20% 70%, rgba(0, 180, 216, 0.1) 0, rgba(0, 180, 216, 0.1) 4px, transparent 4px),
-    radial-gradient(circle at 80% 30%, rgba(255, 139, 106, 0.1) 0, rgba(255, 139, 106, 0.1) 5px, transparent 5px),
-    radial-gradient(circle at 50% 10%, rgba(183, 148, 246, 0.1) 0, rgba(183, 148, 246, 0.1) 7px, transparent 7px),
-    radial-gradient(circle at 30% 90%, rgba(255, 107, 157, 0.08) 0, rgba(255, 107, 157, 0.08) 5px, transparent 5px);
-  pointer-events: none;
-  opacity: 0.7;
+  z-index: 0;
 }
 .heroInner {
   position: relative;
+  z-index: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -70,12 +52,13 @@
 }
 .scrollIndicator {
   position: absolute;
+  z-index: 1;
   bottom: 28px;
   left: 50%;
   transform: translateX(-50%);
   animation: bounceDown 2.5s ease-in-out infinite;
   color: var(--color-accent-primary);
-  opacity: 0.4;
+  opacity: 0.6;
 }
 @keyframes bounceDown {
   0%, 100% { transform: translateX(-50%) translateY(0); }

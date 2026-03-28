@@ -4,6 +4,7 @@ import { FadeIn } from '@/components/ui/FadeIn';
 import { PageReveal } from '@/components/ui/PageReveal';
 import { FidgetWrldLogo } from '@/components/ui/FidgetWrldLogo';
 import { NewsletterSignup } from '@/components/newsletter';
+import { BallpitBackground } from '@/components/effects/BallpitBackground';
 import { getBestSellers } from '@/lib/products-db';
 import styles from './page.module.css';
 
@@ -28,6 +29,12 @@ export default async function HomePage() {
   return (
     <PageReveal>
       <section className={styles.hero} id="top">
+        <div className={styles.ballpitBackground}>
+          <BallpitBackground
+            count={370}
+            colors={[0x3b82f6, 0x22c55e, 0x06b6d4, 0x8b5cf6]}
+          />
+        </div>
         <div className={styles.heroInner}>
           <FidgetWrldLogo className={styles.heroLogo} size="lg" />
         </div>
