@@ -401,6 +401,35 @@ img {
   border: 1px solid rgba(239, 68, 68, 0.3);
 }
 
+.badge-sale {
+  background: linear-gradient(135deg, var(--color-error), #FF8A8A);
+  color: #FFFFFF;
+  border: none;
+  box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
+  font-weight: 800;
+}
+
+.badge-exclusive {
+  background: linear-gradient(135deg, var(--color-dot-violet), var(--color-accent-secondary));
+  color: #FFFFFF;
+  border: none;
+  box-shadow: 0 2px 8px rgba(183, 148, 246, 0.3);
+  font-weight: 800;
+}
+
+.badge-collectible {
+  background: linear-gradient(135deg, var(--color-dot-coral), var(--color-dot-yellow));
+  color: #FFFFFF;
+  border: none;
+  box-shadow: 0 2px 8px rgba(255, 139, 106, 0.3);
+  font-weight: 800;
+}
+
+.badge-md {
+  padding: 4px 10px;
+  font-size: 11px;
+}
+
 /* Category Badges */
 .badge-magnetic { background: rgba(139, 92, 246, 0.15); color: var(--color-magnetic); }
 .badge-squishy { background: rgba(236, 72, 153, 0.15); color: var(--color-squishy); }
