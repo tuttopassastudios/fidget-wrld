@@ -864,6 +864,102 @@ img {
   gap: var(--space-2);
 }
 
+/* Polka-dot hover overlay */
+.product-card-dot-overlay {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle, var(--color-dot-pink) 1.5px, transparent 1.5px);
+  background-size: 20px 20px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--transition-base);
+}
+
+@media (hover: hover) {
+  .product-card:hover .product-card-dot-overlay {
+    opacity: 0.12;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .product-card-dot-overlay {
+    transition: none;
+    display: none;
+  }
+}
+
+/* Quick View button overlay */
+.product-card-quickview {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: var(--text-xs);
+  background: white;
+  color: var(--color-text-primary);
+  border: none;
+  border-radius: var(--radius-full);
+  padding: 6px 16px;
+  cursor: pointer;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--transition-base);
+  z-index: 2;
+  white-space: nowrap;
+}
+
+@media (hover: hover) {
+  .product-card:hover .product-card-quickview {
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
+
+.product-card-quickview:focus-visible {
+  opacity: 1;
+  pointer-events: auto;
+  outline: 2px solid var(--color-accent-primary);
+  outline-offset: 2px;
+}
+
+/* Featured size variant */
+.product-card-name--featured {
+  font-size: var(--text-lg);
+}
+
+/* Compact size variant */
+.product-card-name--compact {
+  font-size: var(--text-xs);
+}
+
+/* Description (featured cards) */
+.product-card-description {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  margin-bottom: 4px;
+}
+
+/* Tag pills */
+.product-card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-bottom: 6px;
+}
+
+.product-card-tag {
+  background: var(--color-bg-elevated);
+  border-radius: var(--radius-full);
+  padding: 2px 8px;
+  font-size: 10px;
+  color: var(--color-text-muted);
+  text-transform: lowercase;
+}
+
 /* Product Page */
 .product-page {
   padding: var(--space-8) 0 var(--space-16);
