@@ -1,3 +1,4 @@
+/* Stats Strip */
 .statStrip {
   padding: 48px 0;
   border-bottom: 1px solid var(--color-border);
@@ -23,7 +24,8 @@
   letter-spacing: -2px;
   line-height: 1;
   color: var(--color-accent-primary);
-  font-family: var(--font-secondary);
+  font-family: var(--font-display);
+  font-variant-numeric: tabular-nums;
 }
 .statLabel {
   font-size: 11px;
@@ -33,6 +35,16 @@
   margin-top: 12px;
 }
 
+/* Section Divider */
+.sectionDivider {
+  position: relative;
+  height: 20px;
+  margin: var(--space-4) 0;
+  overflow: hidden;
+  opacity: 0.1;
+}
+
+/* Info Cards */
 .infoSection {
   padding: 24px 0;
   border-bottom: 1px solid var(--color-border);
@@ -62,7 +74,53 @@
   margin: 0;
 }
 
-/* Quality Banner Section */
+/* Best Sellers */
+.productsSection {
+  padding: var(--space-12) 0;
+  content-visibility: auto;
+  contain-intrinsic-size: auto 500px;
+}
+.bestSellersHeader {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: var(--space-6);
+}
+.viewAllLink {
+  font-size: var(--text-sm);
+  font-weight: var(--font-semibold);
+  color: var(--color-accent-primary);
+  text-decoration: none;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  transition: var(--transition-fast);
+}
+.viewAllLink:hover {
+  color: var(--color-accent-primary-hover);
+  text-decoration: underline;
+}
+
+/* Designer Spotlight Teaser */
+.designerTeaser {
+  padding: var(--space-12) 0;
+}
+.designerTeaserLink {
+  display: inline-block;
+  margin-top: var(--space-6);
+  font-size: var(--text-sm);
+  font-weight: var(--font-semibold);
+  color: var(--color-accent-primary);
+  text-decoration: none;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  transition: var(--transition-fast);
+}
+.designerTeaserLink:hover {
+  color: var(--color-accent-primary-hover);
+  text-decoration: underline;
+}
+
+/* Quality Banner */
 .qualityBanner {
   padding: 64px 0;
   background: linear-gradient(135deg, var(--color-bg-card) 0%, var(--color-bg-dark) 100%);
@@ -75,12 +133,6 @@
   max-width: 800px;
   margin: 0 auto;
   text-align: center;
-}
-.qualityBannerContent h2 {
-  font-size: 1.75rem;
-  font-weight: 600;
-  margin-bottom: 16px;
-  color: var(--color-text-primary);
 }
 .qualityBannerContent p {
   font-size: 1rem;
@@ -106,29 +158,7 @@
   color: var(--color-success);
 }
 
-.productsSection { padding: 48px 0; content-visibility: auto; contain-intrinsic-size: auto 500px; }
-.sectionTitle {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 24px;
-  padding-bottom: 16px;
-  border-bottom: 1px solid var(--color-border);
-}
-.sectionTitle h2 {
-  font-size: 1rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  color: var(--color-text-secondary);
-}
-.bestsellersGrid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
-}
-
-/* Newsletter Section */
+/* Newsletter */
 .newsletterSection {
   padding: 64px 0;
   background:
@@ -156,12 +186,6 @@
   border-radius: 50%;
   color: var(--color-accent-primary);
 }
-.newsletterSection h2 {
-  font-size: 1.5rem;
-  font-weight: 600;
-  margin-bottom: 12px;
-  color: var(--color-text-primary);
-}
 .newsletterSection > div > p {
   font-size: 1rem;
   color: var(--color-text-secondary);
@@ -174,8 +198,7 @@
   color: var(--color-text-muted);
 }
 
-/* Removed: researchNotice styles no longer needed */
-
+/* Responsive */
 @media (max-width: 1024px) {
   .infoGrid { grid-template-columns: repeat(2, 1fr); }
   .qualityBannerFeatures { gap: 24px; }
@@ -189,22 +212,16 @@
   }
   .statValue { font-size: 1.5rem; letter-spacing: -1px; }
   .statLabel { font-size: 10px; margin-top: 6px; }
-  .bestsellersGrid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
   .infoGrid { grid-template-columns: 1fr; }
-  .quickBarInner { flex-direction: column; align-items: stretch; }
-  .searchBox { min-width: auto; }
-  .quickLinks { flex-wrap: wrap; }
   .qualityBanner { padding: 48px 0; }
-  .qualityBannerContent h2 { font-size: 1.5rem; }
   .qualityBannerFeatures { flex-direction: column; gap: 16px; align-items: center; }
   .newsletterSection { padding: 48px 0; }
-  .newsletterSection h2 { font-size: 1.25rem; }
   .newsletterIcon { width: 56px; height: 56px; }
   .newsletterIcon svg { width: 28px; height: 28px; }
+  .bestSellersHeader { flex-direction: column; gap: var(--space-2); }
 }
 @media (max-width: 480px) {
   .statRow { grid-template-columns: repeat(2, 1fr); gap: 8px; }
   .statValue { font-size: 1.25rem; }
   .statLabel { font-size: 9px; letter-spacing: 1px; }
-  .bestsellersGrid { grid-template-columns: 1fr; }
 }
