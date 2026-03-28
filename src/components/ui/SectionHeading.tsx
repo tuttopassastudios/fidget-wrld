@@ -1,3 +1,5 @@
+import { BlurText } from '@/components/effects/BlurText'
+
 interface SectionHeadingProps {
   heading: string
   eyebrow?: string
@@ -35,7 +37,7 @@ export function SectionHeading({
             marginBottom: 'var(--space-2)',
           }}
         >
-          {eyebrow}
+          <BlurText text={eyebrow} />
         </p>
       )}
       <Tag
@@ -48,7 +50,7 @@ export function SectionHeading({
           margin: 0,
         }}
       >
-        {heading}
+        <BlurText text={heading} />
         {dotAccent && (
           <span
             aria-hidden="true"

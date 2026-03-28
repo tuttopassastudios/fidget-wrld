@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { FadeIn } from '@/components/ui/FadeIn';
+import { BlurText } from '@/components/effects/BlurText';
 import { FaqAccordion } from '@/components/ui/FaqAccordion';
 import styles from './faq.module.css';
 
@@ -64,7 +65,7 @@ export default function FaqPage() {
             Support
           </p>
           <h1 className={styles.heroTitle}>
-            Frequently Asked Questions
+            <BlurText text="Frequently Asked Questions" />
           </h1>
           <p className={styles.heroDescription}>
             Everything you need to know about our fidget toys, ordering, shipping, and returns. Can&apos;t find what you&apos;re looking for? Reach out through our Contact page.
@@ -111,7 +112,7 @@ export default function FaqPage() {
               <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
             </svg>
             <h3 className={styles.ctaTitle}>
-              Still have questions?
+              <BlurText text="Still have questions?" />
             </h3>
             <p className={styles.ctaDescription}>
               Our team is here to help with product questions and order support. We respond within 24 hours on business days.

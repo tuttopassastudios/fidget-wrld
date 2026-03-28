@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { BlurText } from '@/components/effects/BlurText';
 import styles from './contact.module.css';
 
 export default function ContactPage() {
@@ -25,7 +26,7 @@ export default function ContactPage() {
               <polyline points="20 6 9 17 4 12" />
             </svg>
           </div>
-          <h1 className={styles.successTitle}>Message Sent</h1>
+          <h1 className={styles.successTitle}><BlurText text="Message Sent" /></h1>
           <p className={styles.successText}>
             Thank you for reaching out. We typically respond within 24 hours.
           </p>
@@ -46,7 +47,7 @@ export default function ContactPage() {
         <p className={styles.eyebrow}>
           Get in Touch
         </p>
-        <h1 className={styles.pageTitle}>Contact Us</h1>
+        <h1 className={styles.pageTitle}><BlurText text="Contact Us" /></h1>
         <p className={styles.pageDescription}>
           Have a question about our fidgets or need help with an order? We&apos;re here to help!
         </p>

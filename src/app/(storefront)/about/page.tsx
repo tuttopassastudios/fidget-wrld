@@ -3,6 +3,7 @@ import { designers } from '@/data/designers';
 import { productPages } from '@/data/products';
 import { FadeIn } from '@/components/ui/FadeIn';
 import { SectionHeading } from '@/components/ui/SectionHeading';
+import { BlurText } from '@/components/effects/BlurText';
 import { DesignerCard } from '@/components/about/DesignerCard';
 import { DesignerSpotlight } from '@/components/about/DesignerSpotlight';
 import dsStyles from '@/components/about/DesignerSpotlight.module.css';
@@ -17,7 +18,7 @@ export default function AboutPage() {
   return (
     <section className={`product-page ${styles.pageSection}`}>
       <div className={`container ${styles.contentContainer}`}>
-        <h1 className={styles.pageTitle}>About Fidget WRLD</h1>
+        <h1 className={styles.pageTitle}><BlurText text="About Fidget WRLD" /></h1>
         <p className={styles.bodyText}>
           Welcome to Fidget WRLD - your destination for premium fidget toys that deliver endless satisfaction. We believe everyone deserves access to quality sensory tools that help with focus, stress relief, and just plain fun.
         </p>
@@ -32,7 +33,7 @@ export default function AboutPage() {
             <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--color-accent-primary)" strokeWidth="2" className={styles.featureIcon}>
               <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
             </svg>
-            <h3 className={styles.featureTitle}>Safe Materials</h3>
+            <h3 className={styles.featureTitle}><BlurText text="Safe Materials" /></h3>
             <p className={styles.featureDescription}>All products are made from non-toxic, durable materials that pass strict safety testing.</p>
           </div>
           <div className={styles.featureCard}>
@@ -42,27 +43,27 @@ export default function AboutPage() {
               <line x1="9" y1="9" x2="9.01" y2="9" />
               <line x1="15" y1="9" x2="15.01" y2="9" />
             </svg>
-            <h3 className={styles.featureTitle}>Satisfaction First</h3>
+            <h3 className={styles.featureTitle}><BlurText text="Satisfaction First" /></h3>
             <p className={styles.featureDescription}>We test every product ourselves to ensure it delivers that perfect, satisfying fidget experience.</p>
           </div>
           <div className={styles.featureCard}>
             <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--color-accent-primary)" strokeWidth="2" className={styles.featureIcon}>
               <rect x="1" y="3" width="15" height="13" /><polygon points="16 8 20 8 23 11 23 16 16 16 16 8" /><circle cx="5.5" cy="18.5" r="2.5" /><circle cx="18.5" cy="18.5" r="2.5" />
             </svg>
-            <h3 className={styles.featureTitle}>Fast Shipping</h3>
+            <h3 className={styles.featureTitle}><BlurText text="Fast Shipping" /></h3>
             <p className={styles.featureDescription}>Same-day processing on orders placed before 2pm. Get your fidgets fast!</p>
           </div>
           <div className={styles.featureCard}>
             <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--color-accent-primary)" strokeWidth="2" className={styles.featureIcon}>
               <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
             </svg>
-            <h3 className={styles.featureTitle}>Friendly Support</h3>
+            <h3 className={styles.featureTitle}><BlurText text="Friendly Support" /></h3>
             <p className={styles.featureDescription}>Questions? Our team is here to help you find the perfect fidget for your needs.</p>
           </div>
         </div></FadeIn>
 
         <div className={styles.missionBanner}>
-          <h2 className={styles.missionTitle}>Our Mission</h2>
+          <h2 className={styles.missionTitle}><BlurText text="Our Mission" /></h2>
           <p className={styles.missionText}>
             To bring joy and focus to fidgeters everywhere through quality products, exceptional service, and a genuine passion for all things fidget.
           </p>
