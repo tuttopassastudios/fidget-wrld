@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useCart } from '@/context/CartContext';
@@ -12,6 +12,8 @@ import { getBulkTier } from '@/data/products';
 import { calculateSubtotal, FREE_SHIP_THRESHOLD, STANDARD_SHIPPING } from '@/lib/pricing';
 import { useHaptics } from '@/hooks/useHaptics';
 import { CheckoutProgress } from '@/components/checkout/CheckoutProgress';
+import { RecommendationCarousel } from '@/components/product/RecommendationCarousel';
+import { productPages, getProductBySlug } from '@/data/products';
 
 export function CartPageClient() {
   const { items, removeItem, updateQuantity, getSubtotal } = useCart();
@@ -20,6 +22,44 @@ export function CartPageClient() {
   const { trigger } = useHaptics();
   const [promoCode, setPromoCode] = useState('');
   const [affirmed, setAffirmed] = useState(false);
+
+  // Compute "Frequently Bought Together" products from cart items' relatedSlugs
+  const cartRecommendations = useMemo(() => {
+    const cartSlugs = new Set<string>();
+    const relatedSlugs = new Set<string>();
+
+    // Find which product slugs are in the cart
+    for (const item of items) {
+      for (const p of productPages) {
+        if (p.variants.some(v => v.sku === item.sku)) {
+          cartSlugs.add(p.slug);
+          // Collect related slugs
+          if (p.relatedSlugs) {
+            for (const rs of p.relatedSlugs) relatedSlugs.add(rs);
+          }
+        }
+      }
+    }
+
+    // Remove cart items from related set, then resolve to ProductPage[]
+    for (const slug of cartSlugs) relatedSlugs.delete(slug);
+
+    const results: typeof productPages = [];
+    for (const slug of relatedSlugs) {
+      const p = getProductBySlug(slug);
+      if (p) results.push(p);
+      if (results.length >= 8) break;
+    }
+
+    // Fall back to bestsellers if no related products found
+    if (results.length === 0) {
+      return productPages
+        .filter(p => p.isBestseller && !cartSlugs.has(p.slug))
+        .slice(0, 8);
+    }
+
+    return results;
+  }, [items]);
 
   const subtotal = calculateSubtotal(items);
   const promoResult = calculateDiscount(subtotal);
@@ -174,6 +214,14 @@ export function CartPageClient() {
             </Link>
           </div>
         </div>
+
+        {cartRecommendations.length > 0 && (
+          <RecommendationCarousel
+            products={cartRecommendations}
+            title="Frequently Bought Together"
+            context="cart"
+          />
+        )}
       </div>
     </section>
   );

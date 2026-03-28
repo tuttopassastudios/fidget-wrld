@@ -1,23 +1,41 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useMemo } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useCart } from '@/context/CartContext';
+import { useToast } from '@/context/ToastContext';
 import { formatCurrency } from '@/lib/utils';
 import { useFocusTrap } from '@/hooks/useFocusTrap';
 import { useHaptics } from '@/hooks/useHaptics';
+import { productPages } from '@/data/products';
+import recStyles from '@/components/product/RecommendationCarousel.module.css';
 
 const FREE_SHIP_THRESHOLD = 150;
 
 export function CartDrawer() {
-  const { items, getCount, getSubtotal, isDrawerOpen, closeDrawer, removeItem } = useCart();
+  const { items, addItem, getCount, getSubtotal, isDrawerOpen, closeDrawer, removeItem } = useCart();
+  const { show } = useToast();
   const timerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
   const drawerRef = useRef<HTMLDivElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
   const { trigger } = useHaptics();
   const count = getCount();
   const subtotal = getSubtotal();
+
+  // Pick 2 recommended products not already in cart
+  const drawerRecs = useMemo(() => {
+    const cartSkus = new Set(items.map(i => i.sku));
+    const cartSlugs = new Set<string>();
+    for (const p of productPages) {
+      for (const v of p.variants) {
+        if (cartSkus.has(v.sku)) cartSlugs.add(p.slug);
+      }
+    }
+    return productPages
+      .filter(p => !cartSlugs.has(p.slug) && (p.isBestseller || p.isNew))
+      .slice(0, 2);
+  }, [items]);
 
   useFocusTrap(drawerRef, isDrawerOpen, { initialFocusRef: closeRef });
 
@@ -103,6 +121,53 @@ export function CartDrawer() {
             ))
           )}
         </div>
+
+        {items.length > 0 && drawerRecs.length > 0 && (
+          <div className={recStyles.drawerRecs}>
+            <div className={recStyles.drawerRecsTitle}>You might also like</div>
+            <div className={recStyles.drawerRecsGrid}>
+              {drawerRecs.map(p => {
+                const v = p.variants[p.defaultVariantIndex];
+                return (
+                  <div key={p.slug} className={recStyles.drawerRecCard}>
+                    <Image
+                      className={recStyles.drawerRecImage}
+                      src={v.image}
+                      alt={v.name}
+                      width={48}
+                      height={48}
+                      sizes="48px"
+                      loading="lazy"
+                    />
+                    <div className={recStyles.drawerRecInfo}>
+                      <div className={recStyles.drawerRecName}>{p.name}</div>
+                      <div className={recStyles.drawerRecPrice}>{formatCurrency(v.price)}</div>
+                    </div>
+                    <button
+                      className={`btn btn-primary btn-sm ${recStyles.drawerRecAdd}`}
+                      style={{ fontSize: 10, padding: '2px 8px' }}
+                      onClick={() => {
+                        addItem({
+                          sku: v.sku,
+                          name: v.name,
+                          variant: v.variant,
+                          price: v.price,
+                          image: v.image,
+                          quantity: 1,
+                        });
+                        trigger('success');
+                        show(`${v.name} added`, 'success', 2000);
+                      }}
+                      aria-label={`Add ${p.name} to cart`}
+                    >
+                      Add
+                    </button>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
 
         <div className="cart-drawer-footer">
           <div className="cart-drawer-subtotal">

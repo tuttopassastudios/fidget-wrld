@@ -4,11 +4,19 @@ import { FadeIn } from '@/components/ui/FadeIn';
 import { PageReveal } from '@/components/ui/PageReveal';
 import { NewsletterSignup } from '@/components/newsletter';
 import { HeroBanner } from '@/components/hero/HeroBanner';
-import { getBestSellers } from '@/lib/products-db';
+import { RecommendationCarousel } from '@/components/product/RecommendationCarousel';
+import { getBestSellers, getProductPagesAsync } from '@/lib/products-db';
 import styles from './page.module.css';
 
 export default async function HomePage() {
-  const bestSellersData = await getBestSellers();
+  const [bestSellersData, allProducts] = await Promise.all([
+    getBestSellers(),
+    getProductPagesAsync(),
+  ]);
+
+  const trendingProducts = allProducts
+    .filter(p => p.isBestseller || p.isNew)
+    .slice(0, 8);
 
   const bestSellers = bestSellersData.map(p => {
     const v = p.variants[p.defaultVariantIndex];
@@ -52,6 +60,19 @@ export default async function HomePage() {
           </div>
         </div>
       </section></FadeIn>
+
+      {trendingProducts.length > 0 && (
+        <FadeIn>
+          <div className="container">
+            <RecommendationCarousel
+              products={trendingProducts}
+              title="Trending Now"
+              eyebrow="What's Hot"
+              context="homepage"
+            />
+          </div>
+        </FadeIn>
+      )}
 
       <FadeIn><section className={styles.newsletterSection}>
         <div className="container">

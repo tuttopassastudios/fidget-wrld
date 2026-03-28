@@ -10,11 +10,13 @@ import { QuantitySelector } from './QuantitySelector';
 import { ProductTabs } from './ProductTabs';
 import { ProductCard } from './ProductCard';
 import { AboutCarousel } from './AboutCarousel';
+import { RecommendationCarousel } from './RecommendationCarousel';
+import { CompleteTheSet } from './CompleteTheSet';
 import { SectionHeading } from '@/components/ui/SectionHeading';
 import { PolkaDots } from '@/components/ui/DecorativePatterns';
 import { formatCurrency } from '@/lib/utils';
 import { useHaptics } from '@/hooks/useHaptics';
-import { getRecommendations, bulkTiers } from '@/data/products';
+import { getRecommendations, bulkTiers, productPages } from '@/data/products';
 import { getModelComponent } from './models';
 import type { ProductPage } from '@/types';
 import styles from './ProductPageClient.module.css';
@@ -34,6 +36,12 @@ export function ProductPageClient({ product }: { product: ProductPage }) {
   const variant = product.variants[variantIdx];
   const wishlisted = isWishlisted(variant.sku);
   const related = getRecommendations([{ sku: variant.sku, name: product.name }]);
+
+  // Get full ProductPage objects for related products (for RecommendationCarousel)
+  const relatedProductPages = useMemo(() => {
+    const relatedSlugs = new Set(related.map(r => r.slug));
+    return productPages.filter(p => relatedSlugs.has(p.slug));
+  }, [related]);
 
   // Determine if thumbnail strip should show (only if variants have distinct images)
   const uniqueImages = useMemo(() => {
@@ -247,20 +255,18 @@ export function ProductPageClient({ product }: { product: ProductPage }) {
         />
       </div>
 
-      {related.length > 0 && (
-        <section className={`reveal-item ${styles.relatedSection}`}>
-          <h2 className={styles.relatedHeading}>You May Also Like</h2>
-          <div className="product-grid">
-            {related.map(rec => (
-              <ProductCard
-                key={rec.sku}
-                product={rec}
-                slug={rec.slug}
-                variantCount={rec.variantCount}
-              />
-            ))}
-          </div>
-        </section>
+      <div className="reveal-item">
+        <CompleteTheSet currentProduct={product} allProducts={productPages} />
+      </div>
+
+      {relatedProductPages.length > 0 && (
+        <div className="reveal-item">
+          <RecommendationCarousel
+            products={relatedProductPages}
+            title="You May Also Like"
+            context="pdp"
+          />
+        </div>
       )}
     </>
   );
