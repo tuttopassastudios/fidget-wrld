@@ -1,5 +1,6 @@
 'use client';
 
+import { useMemo } from 'react';
 import { useHaptics } from '@/hooks/useHaptics';
 import type { ProductVariant } from '@/types';
 
@@ -11,6 +12,7 @@ interface VariantSelectorProps {
 
 export function VariantSelector({ variants, selectedIndex, onSelect }: VariantSelectorProps) {
   const { trigger } = useHaptics();
+  const hasColorSwatches = useMemo(() => variants.some(v => v.colorHex), [variants]);
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
     const len = variants.length;
@@ -43,21 +45,69 @@ export function VariantSelector({ variants, selectedIndex, onSelect }: VariantSe
 
   return (
     <div className="product-variants">
-      <label id="variant-label">Size:</label>
+      <label id="variant-label">{hasColorSwatches ? 'Color:' : 'Size:'}</label>
       <div className="variant-options" role="radiogroup" aria-labelledby="variant-label" onKeyDown={handleKeyDown}>
-        {variants.map((v, i) => (
-          <button
-            key={v.sku}
-            role="radio"
-            aria-checked={i === selectedIndex}
-            aria-label={`Size ${v.variant}`}
-            tabIndex={i === selectedIndex ? 0 : -1}
-            className={`variant-option${i === selectedIndex ? ' active' : ''}`}
-            onClick={() => { trigger('select'); onSelect(i); }}
-          >
-            {v.variant}
-          </button>
-        ))}
+        {variants.map((v, i) => {
+          if (hasColorSwatches && v.colorHex) {
+            return (
+              <button
+                key={v.sku}
+                role="radio"
+                aria-checked={i === selectedIndex}
+                aria-label={v.variant}
+                tabIndex={i === selectedIndex ? 0 : -1}
+                className={`variant-option${i === selectedIndex ? ' active' : ''}`}
+                onClick={() => { trigger('select'); onSelect(i); }}
+                style={{
+                  display: 'inline-flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  gap: 4,
+                  padding: '4px 8px',
+                  background: 'none',
+                  border: 'none',
+                  cursor: 'pointer',
+                }}
+              >
+                <span
+                  style={{
+                    display: 'block',
+                    width: 28,
+                    height: 28,
+                    borderRadius: '50%',
+                    backgroundColor: v.colorHex,
+                    outline: i === selectedIndex ? '2px solid var(--color-accent-primary)' : '1px solid var(--color-border)',
+                    outlineOffset: 2,
+                    transition: 'outline 0.15s',
+                  }}
+                  aria-hidden="true"
+                />
+                <span style={{
+                  fontSize: 'var(--text-xs)',
+                  color: i === selectedIndex ? 'var(--color-text-primary)' : 'var(--color-text-muted)',
+                  fontWeight: i === selectedIndex ? 600 : 400,
+                  whiteSpace: 'nowrap',
+                }}>
+                  {v.variant}
+                </span>
+              </button>
+            );
+          }
+
+          return (
+            <button
+              key={v.sku}
+              role="radio"
+              aria-checked={i === selectedIndex}
+              aria-label={`Size ${v.variant}`}
+              tabIndex={i === selectedIndex ? 0 : -1}
+              className={`variant-option${i === selectedIndex ? ' active' : ''}`}
+              onClick={() => { trigger('select'); onSelect(i); }}
+            >
+              {v.variant}
+            </button>
+          );
+        })}
       </div>
     </div>
   );
