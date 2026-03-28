@@ -285,13 +285,7 @@ export function CardNav() {
                   </span>
                 )}
               </button>
-              <Link
-                href="/products"
-                className="card-nav-cta"
-                transitionTypes={['navigation']}
-              >
-                Browse Catalog
-              </Link>
+
             </div>
           </div>
 
