@@ -7,8 +7,9 @@ import { createClient } from '@supabase/supabase-js';
 import { productPages } from '../src/data/products';
 import type { Database, Json } from '../src/lib/supabase/types';
 
-// Load environment variables
-import 'dotenv/config';
+// Load environment variables from .env.local
+import dotenv from 'dotenv';
+dotenv.config({ path: '.env.local' });
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
