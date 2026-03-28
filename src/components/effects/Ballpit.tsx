@@ -348,78 +348,79 @@ class W {
     let startIdx = 0;
     if (config.controlSphere0) {
       startIdx = 1;
-      const firstVec = new Vector3().fromArray(positionData, 0);
-      firstVec.lerp(center, 0.1).toArray(positionData, 0);
-      new Vector3(0, 0, 0).toArray(velocityData, 0);
+      F.fromArray(positionData, 0);
+      F.lerp(center, 0.1).toArray(positionData, 0);
+      V.set(0, 0, 0).toArray(velocityData, 0);
     }
     for (let idx = startIdx; idx < config.count; idx++) {
       const base = 3 * idx;
-      const pos = new Vector3().fromArray(positionData, base);
-      const vel = new Vector3().fromArray(velocityData, base);
-      vel.y -= deltaInfo.delta * config.gravity * sizeData[idx];
-      vel.multiplyScalar(config.friction);
-      vel.clampLength(0, config.maxVelocity);
-      pos.add(vel);
-      pos.toArray(positionData, base);
-      vel.toArray(velocityData, base);
+      I.fromArray(positionData, base);
+      B.fromArray(velocityData, base);
+      B.y -= deltaInfo.delta * config.gravity * sizeData[idx];
+      B.multiplyScalar(config.friction);
+      B.clampLength(0, config.maxVelocity);
+      I.add(B);
+      I.toArray(positionData, base);
+      B.toArray(velocityData, base);
     }
     for (let idx = startIdx; idx < config.count; idx++) {
       const base = 3 * idx;
-      const pos = new Vector3().fromArray(positionData, base);
-      const vel = new Vector3().fromArray(velocityData, base);
+      I.fromArray(positionData, base);
+      B.fromArray(velocityData, base);
       const radius = sizeData[idx];
       for (let jdx = idx + 1; jdx < config.count; jdx++) {
         const otherBase = 3 * jdx;
-        const otherPos = new Vector3().fromArray(positionData, otherBase);
-        const otherVel = new Vector3().fromArray(velocityData, otherBase);
-        const diff = new Vector3().copy(otherPos).sub(pos);
-        const dist = diff.length();
+        O.fromArray(positionData, otherBase);
+        N.fromArray(velocityData, otherBase);
+        _.copy(O).sub(I);
+        const dist = _.length();
         const sumRadius = radius + sizeData[jdx];
         if (dist < sumRadius) {
           const overlap = sumRadius - dist;
-          const correction = diff.normalize().multiplyScalar(0.5 * overlap);
-          const velCorrection = correction.clone().multiplyScalar(Math.max(vel.length(), 1));
-          pos.sub(correction);
-          vel.sub(velCorrection);
-          pos.toArray(positionData, base);
-          vel.toArray(velocityData, base);
-          otherPos.add(correction);
-          otherVel.add(correction.clone().multiplyScalar(Math.max(otherVel.length(), 1)));
-          otherPos.toArray(positionData, otherBase);
-          otherVel.toArray(velocityData, otherBase);
+          j.copy(_).normalize().multiplyScalar(0.5 * overlap);
+          H.copy(j).multiplyScalar(Math.max(B.length(), 1));
+          T.copy(j).multiplyScalar(Math.max(N.length(), 1));
+          I.sub(j);
+          B.sub(H);
+          I.toArray(positionData, base);
+          B.toArray(velocityData, base);
+          O.add(j);
+          N.add(T);
+          O.toArray(positionData, otherBase);
+          N.toArray(velocityData, otherBase);
         }
       }
       if (config.controlSphere0) {
-        const diff = new Vector3().copy(new Vector3().fromArray(positionData, 0)).sub(pos);
-        const d = diff.length();
+        _.copy(F).sub(I);
+        const d = _.length();
         const sumRadius0 = radius + sizeData[0];
         if (d < sumRadius0) {
-          const correction = diff.normalize().multiplyScalar(sumRadius0 - d);
-          const velCorrection = correction.clone().multiplyScalar(Math.max(vel.length(), 2));
-          pos.sub(correction);
-          vel.sub(velCorrection);
+          j.copy(_.normalize()).multiplyScalar(sumRadius0 - d);
+          H.copy(j).multiplyScalar(Math.max(B.length(), 2));
+          I.sub(j);
+          B.sub(H);
         }
       }
-      if (Math.abs(pos.x) + radius > config.maxX) {
-        pos.x = Math.sign(pos.x) * (config.maxX - radius);
-        vel.x = -vel.x * config.wallBounce;
+      if (Math.abs(I.x) + radius > config.maxX) {
+        I.x = Math.sign(I.x) * (config.maxX - radius);
+        B.x = -B.x * config.wallBounce;
       }
       if (config.gravity === 0) {
-        if (Math.abs(pos.y) + radius > config.maxY) {
-          pos.y = Math.sign(pos.y) * (config.maxY - radius);
-          vel.y = -vel.y * config.wallBounce;
+        if (Math.abs(I.y) + radius > config.maxY) {
+          I.y = Math.sign(I.y) * (config.maxY - radius);
+          B.y = -B.y * config.wallBounce;
         }
-      } else if (pos.y - radius < -config.maxY) {
-        pos.y = -config.maxY + radius;
-        vel.y = -vel.y * config.wallBounce;
+      } else if (I.y - radius < -config.maxY) {
+        I.y = -config.maxY + radius;
+        B.y = -B.y * config.wallBounce;
       }
       const maxBoundary = Math.max(config.maxZ, config.maxSize);
-      if (Math.abs(pos.z) + radius > maxBoundary) {
-        pos.z = Math.sign(pos.z) * (config.maxZ - radius);
-        vel.z = -vel.z * config.wallBounce;
+      if (Math.abs(I.z) + radius > maxBoundary) {
+        I.z = Math.sign(I.z) * (config.maxZ - radius);
+        B.z = -B.z * config.wallBounce;
       }
-      pos.toArray(positionData, base);
-      vel.toArray(velocityData, base);
+      I.toArray(positionData, base);
+      B.toArray(velocityData, base);
     }
   }
 }
@@ -750,8 +751,7 @@ class Z extends InstancedMesh {
         }
       }
 
-      if (!this.instanceColor) return;
-      this.instanceColor.needsUpdate = true;
+      this.instanceColor!.needsUpdate = true;
     }
   }
 
