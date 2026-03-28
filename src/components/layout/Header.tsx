@@ -60,7 +60,6 @@ export function Header() {
                   <Link href="/products?category=Desk+Toys" role="menuitem" transitionTypes={['navigation']}>Desk Toys</Link>
                 </div>
               </div>
-              <Link href="/quality" className={isActive('/quality') ? 'active' : undefined} transitionTypes={['navigation']}>Quality</Link>
               <Link href="/about" className={isActive('/about') ? 'active' : undefined} transitionTypes={['navigation']}>About</Link>
               <Link href="/contact" className={isActive('/contact') ? 'active' : undefined} transitionTypes={['navigation']}>Contact&nbsp;Us</Link>
             </nav>

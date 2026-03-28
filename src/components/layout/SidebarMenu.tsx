@@ -8,7 +8,6 @@ import { PolkaDots } from '@/components/ui/DecorativePatterns';
 
 const NAV_ITEMS = [
   { label: 'Shop', href: '/products' },
-  { label: 'Quality', href: '/quality' },
   { label: 'About', href: '/about' },
   { label: 'Contact', href: '/contact' },
 ] as const;
@@ -36,10 +35,6 @@ const PREVIEW_CONFIGS: Record<string, string[]> = {
     'var(--color-clicky, #00D4AA)',
     'var(--color-stretchy, #FFD93D)',
     'var(--color-desk, #FF8B6A)',
-  ],
-  Quality: [
-    'var(--color-accent-secondary, #00B4D8)',
-    'var(--color-accent-primary, #FF6B9D)',
   ],
   About: [
     'var(--color-dot-pink, #FF6B9D)',

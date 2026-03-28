@@ -3,18 +3,6 @@
 > **Goal:** Vivid. Joyful. Organized.
 > POPMART-inspired redesign with oversized visuals, polka-dot system, editorial grids, bright accents.
 > All existing functionality and accessibility must be preserved.
-
----
-
-## Complete
-
-All 20 tasks across 4 phases are done.
-
-### Task 4.3 — Animation Polish
-- [x] Add scroll-triggered PolkaDots fade-in using existing FadeIn/MotionSection components
-- [x] Add ViewTransition hints (`viewTransitionName`) to new components
-- [x] Verify all animations disabled/reduced under `prefers-reduced-motion`
-
 ---
 
 ## Technical Notes

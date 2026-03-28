@@ -1,0 +1,165 @@
+/* Category Bubbles — adapted from reactbits BubbleMenu */
+.categoryBubbles {
+  padding: var(--space-16) 0 var(--space-12);
+  position: relative;
+}
+
+.categoryBubblesHeading {
+  text-align: center;
+  margin-bottom: var(--space-8);
+}
+
+.categoryBubblesHeading h2 {
+  font-family: var(--font-display);
+  font-size: var(--text-3xl);
+  font-weight: var(--font-bold);
+  color: var(--color-text-primary);
+  margin: 0 0 8px;
+}
+
+.categoryBubblesHeading p {
+  font-size: var(--text-base);
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+.pillList {
+  list-style: none;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0;
+  row-gap: 8px;
+  width: 100%;
+  max-width: 1200px;
+  justify-content: stretch;
+}
+
+.pillSpacer {
+  width: 100%;
+  height: 0;
+  pointer-events: none;
+}
+
+.pillCol {
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  flex: 0 0 calc(100% / 3);
+  box-sizing: border-box;
+}
+
+/* Center the bottom row when there are 2 leftover items */
+.pillCol:nth-child(4):nth-last-child(2) {
+  margin-left: calc(100% / 6);
+}
+
+/* Center the bottom row when there is 1 leftover item */
+.pillCol:nth-child(4):last-child {
+  margin-left: calc(100% / 3);
+}
+
+.pillLink {
+  --pill-bg: #ffffff;
+  --pill-color: #111;
+  --pill-border: rgba(0, 0, 0, 0.08);
+  --item-rot: 0deg;
+  --pill-min-h: 140px;
+  --hover-bg: #f3f4f6;
+  --hover-color: #111;
+  width: 100%;
+  min-height: var(--pill-min-h);
+  padding: clamp(1.2rem, 2.5vw, 6rem) 0;
+  font-size: clamp(1.25rem, 3.5vw, 3rem);
+  font-family: var(--font-display);
+  font-weight: 600;
+  line-height: 0;
+  border-radius: 999px;
+  background: var(--pill-bg);
+  color: var(--pill-color);
+  text-decoration: none;
+  box-shadow:
+    0 4px 14px rgba(0, 0, 0, 0.08),
+    0 1px 3px rgba(0, 0, 0, 0.04);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transition:
+    background 0.3s ease,
+    color 0.3s ease,
+    transform 0.3s ease;
+  will-change: transform;
+  box-sizing: border-box;
+  white-space: nowrap;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.pillLabel {
+  display: inline-block;
+  will-change: transform, opacity;
+  height: 1.2em;
+  line-height: 1.2;
+}
+
+/* Desktop rotations + hover */
+@media (min-width: 900px) {
+  .pillLink {
+    transform: rotate(var(--item-rot));
+  }
+
+  .pillLink:hover {
+    transform: rotate(var(--item-rot)) scale(1.06);
+    background: var(--hover-bg);
+    color: var(--hover-color);
+    box-shadow:
+      0 8px 24px rgba(0, 0, 0, 0.12),
+      0 2px 6px rgba(0, 0, 0, 0.06);
+  }
+
+  .pillLink:active {
+    transform: rotate(var(--item-rot)) scale(0.96);
+  }
+}
+
+/* Mobile layout — stack */
+@media (max-width: 899px) {
+  .pillList {
+    row-gap: 12px;
+  }
+
+  .pillCol {
+    flex: 0 0 100%;
+    margin-left: 0 !important;
+  }
+
+  .pillLink {
+    font-size: clamp(1.1rem, 3vw, 2rem);
+    padding: clamp(0.8rem, 2vw, 1.5rem) 0;
+    min-height: 72px;
+  }
+
+  .pillLink:hover {
+    transform: scale(1.04);
+    background: var(--hover-bg);
+    color: var(--hover-color);
+  }
+
+  .pillLink:active {
+    transform: scale(0.96);
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .pillLink {
+    transition: none;
+    will-change: auto;
+  }
+
+  .pillLabel {
+    will-change: auto;
+  }
+}

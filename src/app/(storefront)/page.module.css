@@ -1,91 +1,124 @@
-/* Stats Strip */
-.statStrip {
-  padding: 48px 0;
-  border-bottom: 1px solid var(--color-border);
-  background:
-    radial-gradient(ellipse 80% 60% at 20% 50%, rgba(255, 107, 157, 0.08) 0%, transparent 70%),
-    radial-gradient(ellipse 60% 50% at 80% 40%, rgba(255, 217, 61, 0.06) 0%, transparent 60%);
-}
-.statRow {
-  display: flex;
-  justify-content: center;
-  gap: 12px;
-}
-.statGlass {
-  flex: 1;
-}
-.statItem {
-  text-align: center;
-  width: 100%;
-}
-.statValue {
-  font-size: clamp(3rem, 6vw, 5rem);
-  font-weight: 700;
-  letter-spacing: -2px;
-  line-height: 1;
-  color: var(--color-accent-primary);
-  font-family: var(--font-display);
-  font-variant-numeric: tabular-nums;
-}
-.statLabel {
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 1.5px;
-  color: var(--color-text-muted);
-  margin-top: 12px;
-}
-
-/* Section Divider */
-.sectionDivider {
+/* ── Hero: full-viewport ballpit + logo ── */
+.hero {
   position: relative;
-  height: 20px;
-  margin: var(--space-4) 0;
+  width: 100%;
+  height: 100svh;
+  min-height: 500px;
   overflow: hidden;
-  opacity: 0.1;
-}
-
-/* Info Cards */
-.infoSection {
-  padding: 24px 0;
-  border-bottom: 1px solid var(--color-border);
-  content-visibility: auto;
-  contain-intrinsic-size: auto 300px;
-}
-.infoGrid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 24px;
-}
-.infoCard { padding: 16px; }
-.infoCard h3 {
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--color-text-primary);
-  margin-bottom: 8px;
   display: flex;
   align-items: center;
-  gap: 8px;
-}
-.infoCard h3 svg { color: var(--color-accent-primary); }
-.infoCard p {
-  font-size: 13px;
-  color: var(--color-text-muted);
-  line-height: 1.5;
-  margin: 0;
+  justify-content: center;
 }
 
-/* Best Sellers */
+.heroBallpit {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.heroContent {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-6);
+  pointer-events: none;
+  padding: 0 var(--space-4);
+}
+
+.heroLogo {
+  width: clamp(280px, 50vw, 600px);
+  height: auto;
+  filter: drop-shadow(0 8px 32px rgba(0, 0, 0, 0.3));
+  animation: logoFloat 4s ease-in-out infinite;
+}
+
+@keyframes logoFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
+}
+
+.heroCta {
+  pointer-events: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 36px;
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: var(--font-bold);
+  color: #fff;
+  background: linear-gradient(135deg, #3b82f6 0%, #06b6d4 50%, #22c55e 100%);
+  border: none;
+  border-radius: var(--radius-full);
+  text-decoration: none;
+  box-shadow:
+    0 4px 16px rgba(59, 130, 246, 0.35),
+    0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+  cursor: pointer;
+}
+
+.heroCta:hover {
+  transform: scale(1.05);
+  box-shadow:
+    0 8px 24px rgba(59, 130, 246, 0.45),
+    0 2px 6px rgba(0, 0, 0, 0.12);
+}
+
+.heroCta:active {
+  transform: scale(0.97);
+}
+
+.scrollHint {
+  position: absolute;
+  bottom: var(--space-6);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: var(--text-xs);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  animation: scrollBounce 2s ease-in-out infinite;
+}
+
+.scrollHint svg {
+  opacity: 0.6;
+}
+
+@keyframes scrollBounce {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-50%) translateY(6px); }
+}
+
+/* Reduced-motion fallback for hero */
+.heroFallback {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+}
+
+/* ── Best Sellers ── */
 .productsSection {
   padding: var(--space-12) 0;
   content-visibility: auto;
   contain-intrinsic-size: auto 500px;
 }
+
 .bestSellersHeader {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
   margin-bottom: var(--space-6);
 }
+
 .viewAllLink {
   font-size: var(--text-sm);
   font-weight: var(--font-semibold);
@@ -95,85 +128,30 @@
   letter-spacing: 0.05em;
   transition: var(--transition-fast);
 }
+
 .viewAllLink:hover {
   color: var(--color-accent-primary-hover);
   text-decoration: underline;
 }
 
-/* Designer Spotlight Teaser */
-.designerTeaser {
-  padding: var(--space-12) 0;
-}
-.designerTeaserLink {
-  display: inline-block;
-  margin-top: var(--space-6);
-  font-size: var(--text-sm);
-  font-weight: var(--font-semibold);
-  color: var(--color-accent-primary);
-  text-decoration: none;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  transition: var(--transition-fast);
-}
-.designerTeaserLink:hover {
-  color: var(--color-accent-primary-hover);
-  text-decoration: underline;
-}
-
-/* Quality Banner */
-.qualityBanner {
-  padding: 64px 0;
-  background: linear-gradient(135deg, var(--color-bg-card) 0%, var(--color-bg-dark) 100%);
-  border-top: 1px solid var(--color-border);
-  border-bottom: 1px solid var(--color-border);
-  content-visibility: auto;
-  contain-intrinsic-size: auto 400px;
-}
-.qualityBannerInner {
-  max-width: 800px;
-  margin: 0 auto;
-  text-align: center;
-}
-.qualityBannerContent p {
-  font-size: 1rem;
-  color: var(--color-text-secondary);
-  line-height: 1.7;
-  margin-bottom: 32px;
-}
-.qualityBannerFeatures {
-  display: flex;
-  justify-content: center;
-  gap: 32px;
-  flex-wrap: wrap;
-}
-.qualityFeature {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--color-text-primary);
-}
-.qualityFeature svg {
-  color: var(--color-success);
-}
-
-/* Newsletter */
+/* ── Newsletter ── */
 .newsletterSection {
   padding: 64px 0;
   background:
-    radial-gradient(ellipse 60% 50% at 50% 100%, rgba(255, 107, 157, 0.08) 0%, transparent 70%),
+    radial-gradient(ellipse 60% 50% at 50% 100%, rgba(59, 130, 246, 0.08) 0%, transparent 70%),
     var(--color-bg-dark);
   border-top: 1px solid var(--color-border);
   border-bottom: 1px solid var(--color-border);
   content-visibility: auto;
   contain-intrinsic-size: auto 350px;
 }
+
 .newsletterInner {
   max-width: 600px;
   margin: 0 auto;
   text-align: center;
 }
+
 .newsletterIcon {
   display: inline-flex;
   align-items: center;
@@ -181,47 +159,57 @@
   width: 64px;
   height: 64px;
   margin-bottom: 20px;
-  background: rgba(255, 107, 157, 0.1);
-  border: 1px solid rgba(255, 107, 157, 0.2);
+  background: rgba(59, 130, 246, 0.1);
+  border: 1px solid rgba(59, 130, 246, 0.2);
   border-radius: 50%;
-  color: var(--color-accent-primary);
+  color: #3b82f6;
 }
-.newsletterSection > div > p {
+
+.newsletterSection p {
   font-size: 1rem;
   color: var(--color-text-secondary);
   line-height: 1.6;
   margin-bottom: 28px;
 }
+
 .newsletterDisclaimer {
   margin-top: 16px;
   font-size: 12px;
   color: var(--color-text-muted);
 }
 
-/* Responsive */
-@media (max-width: 1024px) {
-  .infoGrid { grid-template-columns: repeat(2, 1fr); }
-  .qualityBannerFeatures { gap: 24px; }
-}
+/* ── Responsive ── */
 @media (max-width: 768px) {
-  .statStrip { padding: 24px 0; }
-  .statRow {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
+  .hero {
+    min-height: 100svh;
   }
-  .statValue { font-size: 1.5rem; letter-spacing: -1px; }
-  .statLabel { font-size: 10px; margin-top: 6px; }
-  .infoGrid { grid-template-columns: 1fr; }
-  .qualityBanner { padding: 48px 0; }
-  .qualityBannerFeatures { flex-direction: column; gap: 16px; align-items: center; }
+
+  .heroLogo {
+    width: clamp(220px, 70vw, 400px);
+  }
+
+  .heroCta {
+    padding: 12px 28px;
+    font-size: var(--text-base);
+  }
+
   .newsletterSection { padding: 48px 0; }
   .newsletterIcon { width: 56px; height: 56px; }
   .newsletterIcon svg { width: 28px; height: 28px; }
   .bestSellersHeader { flex-direction: column; gap: var(--space-2); }
 }
-@media (max-width: 480px) {
-  .statRow { grid-template-columns: repeat(2, 1fr); gap: 8px; }
-  .statValue { font-size: 1.25rem; }
-  .statLabel { font-size: 9px; letter-spacing: 1px; }
+
+/* ── Reduced motion ── */
+@media (prefers-reduced-motion: reduce) {
+  .heroLogo {
+    animation: none;
+  }
+
+  .scrollHint {
+    animation: none;
+  }
+
+  .heroCta {
+    transition: none;
+  }
 }

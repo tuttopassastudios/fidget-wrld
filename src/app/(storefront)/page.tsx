@@ -1,18 +1,55 @@
+import Image from 'next/image';
 import Link from 'next/link';
 import { ProductCard } from '@/components/product/ProductCard';
 import { FadeIn } from '@/components/ui/FadeIn';
 import { PageReveal } from '@/components/ui/PageReveal';
 import { SectionHeading } from '@/components/ui/SectionHeading';
 import { EditorialGrid } from '@/components/ui/EditorialGrid';
-import { PolkaDots } from '@/components/ui/DecorativePatterns';
-import { GlassSurface } from '@/components/effects/GlassSurface';
+import { CategoryBubbles } from '@/components/ui/CategoryBubbles';
 import { NewsletterSignup } from '@/components/newsletter';
-import { HeroBanner } from '@/components/hero/HeroBanner';
 import { RecommendationCarousel } from '@/components/product/RecommendationCarousel';
-import { DesignerSpotlight } from '@/components/about/DesignerSpotlight';
-import { designers } from '@/data/designers';
+import { BallpitHero } from './BallpitHero';
 import { getBestSellers, getProductPagesAsync } from '@/lib/products-db';
 import styles from './page.module.css';
+
+const CATEGORY_ITEMS = [
+  {
+    label: 'Magnetic',
+    href: '/products?category=Magnetic',
+    rotation: -6,
+    hoverStyles: { bgColor: '#B794F6', textColor: '#fff' },
+  },
+  {
+    label: 'Squishy',
+    href: '/products?category=Squishy',
+    rotation: 5,
+    hoverStyles: { bgColor: '#FF6B9D', textColor: '#fff' },
+  },
+  {
+    label: 'Clicky',
+    href: '/products?category=Clicky',
+    rotation: 4,
+    hoverStyles: { bgColor: '#00D4AA', textColor: '#fff' },
+  },
+  {
+    label: 'Stretchy',
+    href: '/products?category=Stretchy',
+    rotation: -5,
+    hoverStyles: { bgColor: '#FFD93D', textColor: '#1a1a1a' },
+  },
+  {
+    label: 'Desk Toys',
+    href: '/products?category=Desk+Toy',
+    rotation: 6,
+    hoverStyles: { bgColor: '#FF8B6A', textColor: '#fff' },
+  },
+  {
+    label: 'Gift Sets',
+    href: '/products?category=Gift+Set',
+    rotation: -4,
+    hoverStyles: { bgColor: '#3b82f6', textColor: '#fff' },
+  },
+];
 
 export default async function HomePage() {
   const [bestSellersData, allProducts] = await Promise.all([
@@ -39,114 +76,60 @@ export default async function HomePage() {
     };
   });
 
-  const featuredDesigner = designers[0];
-
   return (
     <PageReveal>
-      {/* 1. Hero Banner */}
-      <HeroBanner
-        headline="Premium Fidget Toys. Endless Satisfaction."
-        subtitle="Discover the world's most satisfying fidget toys — designed for focus, calm, and endless play."
-        ctaText="Shop Now"
-        ctaHref="/products"
-        mediaType="image"
-        mediaSrc="/images/products/mag-balls-rainbow.webp"
-      />
+      {/* 1. Hero — Ballpit + Logo */}
+      <section className={styles.hero}>
+        <BallpitHero className={styles.heroBallpit} />
+        <noscript>
+          <div className={styles.heroFallback} />
+        </noscript>
 
-      {/* 2. Stats Strip */}
-      <FadeIn><section className={`${styles.statStrip} reveal-item`}>
-        <div className="container">
-          <div className={styles.statRow}>
-            <GlassSurface width="100%" height="100%" borderRadius={10} blur={8} backgroundOpacity={0.06} distortionScale={-120} className={styles.statGlass}>
-              <div className={styles.statItem}>
-                <div className={styles.statValue}>100+</div>
-                <div className={styles.statLabel}>Unique Fidgets</div>
-              </div>
-            </GlassSurface>
-            <GlassSurface width="100%" height="100%" borderRadius={10} blur={8} backgroundOpacity={0.06} distortionScale={-120} className={styles.statGlass}>
-              <div className={styles.statItem}>
-                <div className={styles.statValue}>Premium</div>
-                <div className={styles.statLabel}>Quality Materials</div>
-              </div>
-            </GlassSurface>
-            <GlassSurface width="100%" height="100%" borderRadius={10} blur={8} backgroundOpacity={0.06} distortionScale={-120} className={styles.statGlass}>
-              <div className={styles.statItem}>
-                <div className={styles.statValue}>Fast</div>
-                <div className={styles.statLabel}>Same-Day Shipping</div>
-              </div>
-            </GlassSurface>
-            <GlassSurface width="100%" height="100%" borderRadius={10} blur={8} backgroundOpacity={0.06} distortionScale={-120} className={styles.statGlass}>
-              <div className={styles.statItem}>
-                <div className={styles.statValue}>Free</div>
-                <div className={styles.statLabel}>Returns &amp; Exchanges</div>
-              </div>
-            </GlassSurface>
-          </div>
+        <div className={styles.heroContent}>
+          <Image
+            src="/images/fidget-wrld-logo-main.png"
+            alt="Fidget WRLD"
+            width={600}
+            height={400}
+            priority
+            className={styles.heroLogo}
+          />
+          <Link href="/products" className={styles.heroCta}>
+            Shop Now
+          </Link>
         </div>
-      </section></FadeIn>
 
-      {/* 3. Polka-dot section divider */}
-      <div className={styles.sectionDivider} aria-hidden="true">
-        <PolkaDots pattern="border" size="sm" />
-      </div>
-
-      {/* 4. Info Cards Grid */}
-      <FadeIn><section className={styles.infoSection}>
-        <div className="container">
-          <div className={styles.infoGrid}>
-            <div className={styles.infoCard}>
-              <h3>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10" /></svg>
-                Safe &amp; Durable
-              </h3>
-              <p>Non-toxic materials that pass strict safety testing. Built to last through endless fidgeting.</p>
-            </div>
-            <div className={styles.infoCard}>
-              <h3>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><circle cx="12" cy="12" r="10" /><path d="M8 14s1.5 2 4 2 4-2 4-2" /><line x1="9" y1="9" x2="9.01" y2="9" /><line x1="15" y1="9" x2="15.01" y2="9" /></svg>
-                Sensory Satisfaction
-              </h3>
-              <p>Carefully designed textures and feedback for the most satisfying fidget experience.</p>
-            </div>
-            <div className={styles.infoCard}>
-              <h3>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" /></svg>
-                Friendly Support
-              </h3>
-              <p>Questions? Our team is here to help you find the perfect fidget for your needs.</p>
-            </div>
-            <div className={styles.infoCard}>
-              <h3>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" /></svg>
-                Secure Checkout
-              </h3>
-              <p>Safe payments with 256-bit SSL encryption. Shop with confidence.</p>
-            </div>
-          </div>
+        <div className={styles.scrollHint} aria-hidden="true">
+          <span>Scroll</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <path d="M12 5v14M5 12l7 7 7-7" />
+          </svg>
         </div>
-      </section></FadeIn>
+      </section>
 
-      {/* 5. Polka-dot section divider */}
-      <div className={styles.sectionDivider} aria-hidden="true">
-        <PolkaDots pattern="border" size="sm" />
-      </div>
+      {/* 2. Category Bubbles */}
+      <FadeIn>
+        <CategoryBubbles items={CATEGORY_ITEMS} />
+      </FadeIn>
 
-      {/* 6. Best Sellers — EditorialGrid with featured layout */}
-      <FadeIn><section className={styles.productsSection}>
-        <div className="container">
-          <div className={styles.bestSellersHeader}>
-            <SectionHeading heading="Best Sellers" eyebrow="Fan Favorites" dotAccent />
-            <Link href="/products" className={styles.viewAllLink}>View All &rarr;</Link>
+      {/* 3. Best Sellers */}
+      <FadeIn>
+        <section className={styles.productsSection}>
+          <div className="container">
+            <div className={styles.bestSellersHeader}>
+              <SectionHeading heading="Best Sellers" eyebrow="Fan Favorites" dotAccent />
+              <Link href="/products" className={styles.viewAllLink}>View All &rarr;</Link>
+            </div>
+            <EditorialGrid layout="featured">
+              {bestSellers.map((p, i) => (
+                <ProductCard key={p.sku} product={p} slug={p.slug} meta={p.meta} priority={i < 3} variantCount={p.variantCount} />
+              ))}
+            </EditorialGrid>
           </div>
-          <EditorialGrid layout="featured">
-            {bestSellers.map((p, i) => (
-              <ProductCard key={p.sku} product={p} slug={p.slug} meta={p.meta} priority={i < 3} variantCount={p.variantCount} />
-            ))}
-          </EditorialGrid>
-        </div>
-      </section></FadeIn>
+        </section>
+      </FadeIn>
 
-      {/* 7. Trending Now Carousel */}
+      {/* 4. Trending Carousel */}
       {trendingProducts.length > 0 && (
         <FadeIn>
           <div className="container">
@@ -160,84 +143,29 @@ export default async function HomePage() {
         </FadeIn>
       )}
 
-      {/* 8. Polka-dot section divider */}
-      <div className={styles.sectionDivider} aria-hidden="true">
-        <PolkaDots pattern="border" size="sm" />
-      </div>
-
-      {/* 9. Designer Spotlight Teaser */}
-      <FadeIn><section className={styles.designerTeaser}>
-        <div className="container">
-          <SectionHeading heading="Behind the Design" eyebrow="Meet the Makers" dotAccent />
-          <DesignerSpotlight designer={featuredDesigner} products={allProducts} layout="left" />
-          <Link href="/about" className={styles.designerTeaserLink}>Meet All Designers &rarr;</Link>
-        </div>
-      </section></FadeIn>
-
-      {/* 10. Polka-dot section divider */}
-      <div className={styles.sectionDivider} aria-hidden="true">
-        <PolkaDots pattern="border" size="sm" />
-      </div>
-
-      {/* 11. Quality Banner */}
-      <FadeIn><section className={styles.qualityBanner}>
-        <div className="container">
-          <div className={styles.qualityBannerInner}>
-            <div className={styles.qualityBannerContent}>
-              <SectionHeading heading="Why Choose Fidget WRLD?" align="center" />
-              <p>
-                We handpick every fidget toy in our collection for quality, durability, and that perfect satisfying feel. From magnetic desk toys to squishy stress relievers, we have something for every fidgeter.
-              </p>
-              <div className={styles.qualityBannerFeatures}>
-                <div className={styles.qualityFeature}>
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
-                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
-                    <polyline points="22 4 12 14.01 9 11.01" />
-                  </svg>
-                  <span>Premium Materials</span>
-                </div>
-                <div className={styles.qualityFeature}>
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
-                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
-                    <polyline points="22 4 12 14.01 9 11.01" />
-                  </svg>
-                  <span>Safety Tested</span>
-                </div>
-                <div className={styles.qualityFeature}>
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
-                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
-                    <polyline points="22 4 12 14.01 9 11.01" />
-                  </svg>
-                  <span>Satisfaction Guaranteed</span>
-                </div>
+      {/* 5. Newsletter */}
+      <FadeIn>
+        <section className={styles.newsletterSection}>
+          <div className="container">
+            <div className={styles.newsletterInner}>
+              <div className={styles.newsletterIcon} aria-hidden="true">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                  <polyline points="22,6 12,13 2,6" />
+                </svg>
               </div>
-              <Link href="/about" className="btn btn-secondary" style={{ marginTop: 24 }}>Learn More About Us</Link>
+              <SectionHeading heading="Join the Fidget Fam" align="center" />
+              <p>
+                Get first access to new arrivals, exclusive discounts, and fidget tips delivered straight to your inbox.
+              </p>
+              <NewsletterSignup />
+              <p className={styles.newsletterDisclaimer}>
+                We respect your privacy. Unsubscribe anytime.
+              </p>
             </div>
           </div>
-        </div>
-      </section></FadeIn>
-
-      {/* 12. Newsletter Signup */}
-      <FadeIn><section className={styles.newsletterSection}>
-        <div className="container">
-          <div className={styles.newsletterInner}>
-            <div className={styles.newsletterIcon} aria-hidden="true">
-              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
-                <polyline points="22,6 12,13 2,6" />
-              </svg>
-            </div>
-            <SectionHeading heading="Join the Fidget Fam" align="center" />
-            <p>
-              Get first access to new arrivals, exclusive discounts, and fidget tips delivered straight to your inbox.
-            </p>
-            <NewsletterSignup />
-            <p className={styles.newsletterDisclaimer}>
-              We respect your privacy. Unsubscribe anytime.
-            </p>
-          </div>
-        </div>
-      </section></FadeIn>
+        </section>
+      </FadeIn>
     </PageReveal>
   );
 }
