@@ -54,7 +54,7 @@ export default async function HomePage() {
       />
 
       {/* 2. Stats Strip */}
-      <section className={`${styles.statStrip} reveal-item`}>
+      <FadeIn><section className={`${styles.statStrip} reveal-item`}>
         <div className="container">
           <div className={styles.statRow}>
             <GlassSurface width="100%" height="100%" borderRadius={10} blur={8} backgroundOpacity={0.06} distortionScale={-120} className={styles.statGlass}>
@@ -83,7 +83,7 @@ export default async function HomePage() {
             </GlassSurface>
           </div>
         </div>
-      </section>
+      </section></FadeIn>
 
       {/* 3. Polka-dot section divider */}
       <div className={styles.sectionDivider} aria-hidden="true">
@@ -95,31 +95,31 @@ export default async function HomePage() {
         <div className="container">
           <div className={styles.infoGrid}>
             <div className={styles.infoCard}>
-              <h4>
+              <h3>
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10" /></svg>
                 Safe &amp; Durable
-              </h4>
+              </h3>
               <p>Non-toxic materials that pass strict safety testing. Built to last through endless fidgeting.</p>
             </div>
             <div className={styles.infoCard}>
-              <h4>
+              <h3>
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><circle cx="12" cy="12" r="10" /><path d="M8 14s1.5 2 4 2 4-2 4-2" /><line x1="9" y1="9" x2="9.01" y2="9" /><line x1="15" y1="9" x2="15.01" y2="9" /></svg>
                 Sensory Satisfaction
-              </h4>
+              </h3>
               <p>Carefully designed textures and feedback for the most satisfying fidget experience.</p>
             </div>
             <div className={styles.infoCard}>
-              <h4>
+              <h3>
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" /></svg>
                 Friendly Support
-              </h4>
+              </h3>
               <p>Questions? Our team is here to help you find the perfect fidget for your needs.</p>
             </div>
             <div className={styles.infoCard}>
-              <h4>
+              <h3>
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" /></svg>
                 Secure Checkout
-              </h4>
+              </h3>
               <p>Safe payments with 256-bit SSL encryption. Shop with confidence.</p>
             </div>
           </div>

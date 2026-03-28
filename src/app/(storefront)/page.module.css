@@ -57,7 +57,7 @@
   gap: 24px;
 }
 .infoCard { padding: 16px; }
-.infoCard h4 {
+.infoCard h3 {
   font-size: 13px;
   font-weight: 700;
   color: var(--color-text-primary);
@@ -66,7 +66,7 @@
   align-items: center;
   gap: 8px;
 }
-.infoCard h4 svg { color: var(--color-accent-primary); }
+.infoCard h3 svg { color: var(--color-accent-primary); }
 .infoCard p {
   font-size: 13px;
   color: var(--color-text-muted);

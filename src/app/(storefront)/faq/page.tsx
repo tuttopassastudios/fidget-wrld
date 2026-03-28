@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { FadeIn } from '@/components/ui/FadeIn';
 import { FaqAccordion } from '@/components/ui/FaqAccordion';
 import styles from './faq.module.css';
 
@@ -74,7 +75,7 @@ export default function FaqPage() {
         </div>
 
         {/* ── Stats Strip ── */}
-        <div className={styles.statsStrip}>
+        <FadeIn><div className={styles.statsStrip}>
           {[
             { value: `${faqItems.length}`, label: 'Questions' },
             { value: '4', label: 'Categories' },
@@ -93,7 +94,7 @@ export default function FaqPage() {
               </p>
             </div>
           ))}
-        </div>
+        </div></FadeIn>
 
         {/* ── FAQ Accordion ── */}
         <div className={styles.faqSection}>
@@ -104,7 +105,7 @@ export default function FaqPage() {
         </div>
 
         {/* ── Still Have Questions? ── */}
-        <div className={styles.ctaSection}>
+        <FadeIn><div className={styles.ctaSection}>
           <div className={`card ${styles.ctaCard}`}>
             <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--color-accent-primary)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className={styles.ctaIcon}>
               <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
@@ -125,7 +126,7 @@ export default function FaqPage() {
               </svg>
             </a>
           </div>
-        </div>
+        </div></FadeIn>
 
       </div>
     </section>

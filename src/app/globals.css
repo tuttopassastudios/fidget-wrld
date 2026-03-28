@@ -162,7 +162,11 @@ select {
     animation-duration: 0s;
   }
   .reveal-item {
-    animation-delay: calc(var(--reveal-i, 0) * 50ms);
+    animation: none;
+    opacity: 1;
+  }
+  .skeleton-block {
+    animation: none;
   }
 }
 

@@ -1,6 +1,7 @@
 'use client';
 
 import { FaqAccordion } from '@/components/ui/FaqAccordion';
+import { FadeIn } from '@/components/ui/FadeIn';
 import { SectionHeading } from '@/components/ui/SectionHeading';
 import { PolkaDots } from '@/components/ui/DecorativePatterns';
 import { ContactForm } from './ContactForm';
@@ -38,40 +39,44 @@ export function SupportCenter({ faqItems }: SupportCenterProps) {
         </div>
 
         {/* Stats strip */}
-        <div className={styles.statsStrip}>
-          {stats.map(stat => (
-            <div key={stat.label} className={styles.statCard}>
-              <p className={styles.statValue}>{stat.value}</p>
-              <p className={styles.statLabel}>{stat.label}</p>
-            </div>
-          ))}
-        </div>
+        <FadeIn>
+          <div className={styles.statsStrip}>
+            {stats.map(stat => (
+              <div key={stat.label} className={styles.statCard}>
+                <p className={styles.statValue}>{stat.value}</p>
+                <p className={styles.statLabel}>{stat.label}</p>
+              </div>
+            ))}
+          </div>
+        </FadeIn>
 
         {/* Main grid: FAQ + Contact */}
-        <div className={styles.mainGrid}>
-          {/* FAQ column */}
-          <div className={styles.faqColumn}>
-            <h2 style={{
-              fontFamily: 'var(--font-display)',
-              fontSize: 'var(--text-xl)',
-              fontWeight: 'var(--font-bold)',
-              marginBottom: 'var(--space-6)',
-              color: 'var(--color-text-primary)',
-            }}>
-              Frequently Asked Questions
-            </h2>
-            <FaqAccordion items={faqItems} />
-          </div>
-
-          {/* Contact column */}
-          <div>
-            <div className={styles.contactCard}>
-              <h2 className={styles.contactHeading}>Send Us a Message</h2>
-              <ContactForm />
+        <FadeIn>
+          <div className={styles.mainGrid}>
+            {/* FAQ column */}
+            <div className={styles.faqColumn}>
+              <h2 style={{
+                fontFamily: 'var(--font-display)',
+                fontSize: 'var(--text-xl)',
+                fontWeight: 'var(--font-bold)',
+                marginBottom: 'var(--space-6)',
+                color: 'var(--color-text-primary)',
+              }}>
+                Frequently Asked Questions
+              </h2>
+              <FaqAccordion items={faqItems} />
             </div>
-            <SocialLinks />
+
+            {/* Contact column */}
+            <div>
+              <div className={styles.contactCard}>
+                <h2 className={styles.contactHeading}>Send Us a Message</h2>
+                <ContactForm />
+              </div>
+              <SocialLinks />
+            </div>
           </div>
-        </div>
+        </FadeIn>
       </div>
     </section>
   );

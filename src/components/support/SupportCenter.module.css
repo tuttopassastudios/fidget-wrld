@@ -35,9 +35,15 @@
   padding: var(--space-8) 0 var(--space-10);
 }
 
-@media (max-width: 640px) {
+@media (max-width: 768px) {
   .statsStrip {
     grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .statsStrip {
+    grid-template-columns: 1fr;
   }
 }
 
@@ -255,4 +261,11 @@
 .socialButton:focus-visible {
   outline: 2px solid var(--color-accent-primary);
   outline-offset: 2px;
+}
+
+@media (max-width: 768px) {
+  .socialButton {
+    width: 44px;
+    height: 44px;
+  }
 }
