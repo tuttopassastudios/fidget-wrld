@@ -3,6 +3,7 @@
   inset: 0;
   pointer-events: none;
   overflow: hidden;
+  will-change: transform;
 }
 
 .polkaDots::before {
@@ -10,12 +11,12 @@
   position: absolute;
   inset: 0;
   background-image:
-    radial-gradient(circle at 5% 15%, rgba(255, 107, 157, 0.15) 0, rgba(255, 107, 157, 0.15) 8px, transparent 8px),
-    radial-gradient(circle at 95% 25%, rgba(255, 217, 61, 0.12) 0, rgba(255, 217, 61, 0.12) 6px, transparent 6px),
-    radial-gradient(circle at 15% 85%, rgba(0, 180, 216, 0.12) 0, rgba(0, 180, 216, 0.12) 10px, transparent 10px),
-    radial-gradient(circle at 85% 75%, rgba(255, 139, 106, 0.1) 0, rgba(255, 139, 106, 0.1) 7px, transparent 7px),
-    radial-gradient(circle at 45% 5%, rgba(183, 148, 246, 0.1) 0, rgba(183, 148, 246, 0.1) 5px, transparent 5px),
-    radial-gradient(circle at 55% 95%, rgba(255, 71, 87, 0.08) 0, rgba(255, 71, 87, 0.08) 9px, transparent 9px);
+    radial-gradient(circle at 5% 15%, rgba(255, 107, 157, 0.15) 0, rgba(255, 107, 157, 0.15) var(--dot-radius, 8px), transparent var(--dot-radius, 8px)),
+    radial-gradient(circle at 95% 25%, rgba(255, 217, 61, 0.12) 0, rgba(255, 217, 61, 0.12) var(--dot-radius, 6px), transparent var(--dot-radius, 6px)),
+    radial-gradient(circle at 15% 85%, rgba(0, 180, 216, 0.12) 0, rgba(0, 180, 216, 0.12) var(--dot-radius, 10px), transparent var(--dot-radius, 10px)),
+    radial-gradient(circle at 85% 75%, rgba(255, 139, 106, 0.1) 0, rgba(255, 139, 106, 0.1) var(--dot-radius, 7px), transparent var(--dot-radius, 7px)),
+    radial-gradient(circle at 45% 5%, rgba(183, 148, 246, 0.1) 0, rgba(183, 148, 246, 0.1) var(--dot-radius, 5px), transparent var(--dot-radius, 5px)),
+    radial-gradient(circle at 55% 95%, rgba(255, 71, 87, 0.08) 0, rgba(255, 71, 87, 0.08) var(--dot-radius, 9px), transparent var(--dot-radius, 9px));
 }
 
 .sparse::before {
@@ -28,6 +29,125 @@
 
 .dense::before {
   opacity: 1;
+}
+
+/* Grid pattern — uniform repeating polka-dot grid */
+.grid::before {
+  background-image: var(--dot-bg);
+  background-size: var(--dot-bg-size);
+  background-position: var(--dot-bg-position);
+  opacity: 0.15;
+}
+
+/* Border pattern — dots along container edges */
+.border::before {
+  background-image:
+    /* Top edge */
+    repeating-linear-gradient(
+      90deg,
+      var(--dot-border-color, var(--color-dot-pink, #FF6B9D)) 0,
+      var(--dot-border-color, var(--color-dot-pink, #FF6B9D)) calc(var(--dot-radius, 8px) * 2),
+      transparent calc(var(--dot-radius, 8px) * 2),
+      transparent calc(var(--dot-radius, 8px) * 6)
+    ),
+    /* Bottom edge */
+    repeating-linear-gradient(
+      90deg,
+      var(--dot-border-color, var(--color-dot-pink, #FF6B9D)) 0,
+      var(--dot-border-color, var(--color-dot-pink, #FF6B9D)) calc(var(--dot-radius, 8px) * 2),
+      transparent calc(var(--dot-radius, 8px) * 2),
+      transparent calc(var(--dot-radius, 8px) * 6)
+    ),
+    /* Left edge */
+    repeating-linear-gradient(
+      180deg,
+      var(--dot-border-color, var(--color-dot-pink, #FF6B9D)) 0,
+      var(--dot-border-color, var(--color-dot-pink, #FF6B9D)) calc(var(--dot-radius, 8px) * 2),
+      transparent calc(var(--dot-radius, 8px) * 2),
+      transparent calc(var(--dot-radius, 8px) * 6)
+    ),
+    /* Right edge */
+    repeating-linear-gradient(
+      180deg,
+      var(--dot-border-color, var(--color-dot-pink, #FF6B9D)) 0,
+      var(--dot-border-color, var(--color-dot-pink, #FF6B9D)) calc(var(--dot-radius, 8px) * 2),
+      transparent calc(var(--dot-radius, 8px) * 2),
+      transparent calc(var(--dot-radius, 8px) * 6)
+    );
+  background-size:
+    100% calc(var(--dot-radius, 8px) * 2),
+    100% calc(var(--dot-radius, 8px) * 2),
+    calc(var(--dot-radius, 8px) * 2) 100%,
+    calc(var(--dot-radius, 8px) * 2) 100%;
+  background-position:
+    0 0,
+    0 100%,
+    0 0,
+    100% 0;
+  background-repeat: no-repeat;
+  opacity: 0.15;
+  border-radius: calc(var(--dot-radius, 8px));
+}
+
+/* Corner pattern — cluster of dots in a single corner */
+.corner::before {
+  background-image:
+    radial-gradient(circle, var(--color-dot-pink, #FF6B9D) var(--dot-radius, 8px), transparent var(--dot-radius, 8px)),
+    radial-gradient(circle, var(--color-dot-yellow, #FFD93D) calc(var(--dot-radius, 8px) * 0.7), transparent calc(var(--dot-radius, 8px) * 0.7)),
+    radial-gradient(circle, var(--color-dot-cyan, #00B4D8) calc(var(--dot-radius, 8px) * 0.5), transparent calc(var(--dot-radius, 8px) * 0.5)),
+    radial-gradient(circle, var(--color-dot-coral, #FF8B6A) calc(var(--dot-radius, 8px) * 0.8), transparent calc(var(--dot-radius, 8px) * 0.8)),
+    radial-gradient(circle, var(--color-dot-violet, #B794F6) calc(var(--dot-radius, 8px) * 0.6), transparent calc(var(--dot-radius, 8px) * 0.6));
+  background-repeat: no-repeat;
+  opacity: 0.2;
+}
+
+/* Corner positions for cluster placement */
+.corner-top-right::before {
+  background-position:
+    calc(100% - 20px) 20px,
+    calc(100% - 50px) 15px,
+    calc(100% - 15px) 50px,
+    calc(100% - 45px) 45px,
+    calc(100% - 30px) 30px;
+  background-size: 40px 40px;
+}
+
+.corner-top-left::before {
+  background-position:
+    20px 20px,
+    50px 15px,
+    15px 50px,
+    45px 45px,
+    30px 30px;
+  background-size: 40px 40px;
+}
+
+.corner-bottom-right::before {
+  background-position:
+    calc(100% - 20px) calc(100% - 20px),
+    calc(100% - 50px) calc(100% - 15px),
+    calc(100% - 15px) calc(100% - 50px),
+    calc(100% - 45px) calc(100% - 45px),
+    calc(100% - 30px) calc(100% - 30px);
+  background-size: 40px 40px;
+}
+
+.corner-bottom-left::before {
+  background-position:
+    20px calc(100% - 20px),
+    50px calc(100% - 15px),
+    15px calc(100% - 50px),
+    45px calc(100% - 45px),
+    30px calc(100% - 30px);
+  background-size: 40px 40px;
+}
+
+/* Reduced motion: disable parallax animation */
+@media (prefers-reduced-motion: reduce) {
+  .polkaDots {
+    transform: none !important;
+    will-change: auto;
+  }
 }
 
 /* Floating Shapes */

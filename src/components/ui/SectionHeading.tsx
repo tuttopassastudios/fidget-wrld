@@ -1,0 +1,71 @@
+interface SectionHeadingProps {
+  heading: string
+  eyebrow?: string
+  dotAccent?: boolean
+  align?: 'left' | 'center'
+  as?: 'h1' | 'h2' | 'h3'
+  className?: string
+}
+
+export function SectionHeading({
+  heading,
+  eyebrow,
+  dotAccent = false,
+  align = 'left',
+  as: Tag = 'h2',
+  className,
+}: SectionHeadingProps) {
+  return (
+    <div
+      style={{
+        textAlign: align,
+        marginBottom: 'var(--space-6)',
+      }}
+      className={className}
+    >
+      {eyebrow && (
+        <p
+          style={{
+            fontFamily: 'var(--font-primary)',
+            fontSize: 'var(--text-xs)',
+            fontWeight: 'var(--font-medium)',
+            textTransform: 'uppercase',
+            letterSpacing: '0.1em',
+            color: 'var(--color-accent-primary)',
+            marginBottom: 'var(--space-2)',
+          }}
+        >
+          {eyebrow}
+        </p>
+      )}
+      <Tag
+        style={{
+          fontFamily: 'var(--font-display)',
+          fontSize: 'clamp(1.75rem, 4vw, 3rem)',
+          fontWeight: 'var(--font-bold)',
+          lineHeight: 'var(--leading-tight)',
+          color: 'var(--color-text-primary)',
+          margin: 0,
+        }}
+      >
+        {heading}
+        {dotAccent && (
+          <span
+            aria-hidden="true"
+            style={{
+              display: 'inline-block',
+              width: 10,
+              height: 10,
+              borderRadius: '50%',
+              backgroundColor: 'var(--color-accent-primary)',
+              marginLeft: 'var(--space-2)',
+              verticalAlign: 'middle',
+            }}
+          />
+        )}
+      </Tag>
+    </div>
+  )
+}
+
+export default SectionHeading
