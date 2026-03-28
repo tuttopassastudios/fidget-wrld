@@ -2,9 +2,8 @@ import Link from 'next/link';
 import { ProductCard } from '@/components/product/ProductCard';
 import { FadeIn } from '@/components/ui/FadeIn';
 import { PageReveal } from '@/components/ui/PageReveal';
-import { FidgetWrldLogo } from '@/components/ui/FidgetWrldLogo';
 import { NewsletterSignup } from '@/components/newsletter';
-import { BallpitBackground } from '@/components/effects/BallpitBackground';
+import { HeroBanner } from '@/components/hero/HeroBanner';
 import { getBestSellers } from '@/lib/products-db';
 import styles from './page.module.css';
 
@@ -28,22 +27,14 @@ export default async function HomePage() {
 
   return (
     <PageReveal>
-      <section className={styles.hero} id="top">
-        <div className={styles.ballpitBackground}>
-          <BallpitBackground
-            count={370}
-            colors={[0x3b82f6, 0x22c55e, 0x06b6d4, 0x8b5cf6]}
-          />
-        </div>
-        <div className={styles.heroInner}>
-          <FidgetWrldLogo className={styles.heroLogo} size="lg" />
-        </div>
-        <div className={styles.scrollIndicator} aria-hidden="true">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <polyline points="6 9 12 15 18 9" />
-          </svg>
-        </div>
-      </section>
+      <HeroBanner
+        headline="Premium Fidget Toys. Endless Satisfaction."
+        subtitle="Discover our curated collection of premium fidget toys designed for focus, calm, and endless fun. From magnetic marvels to squishy stress-busters."
+        ctaText="Shop Now"
+        ctaHref="/products"
+        mediaType="image"
+        mediaSrc="/images/products/mag-balls-rainbow.webp"
+      />
 
       <FadeIn><section className={styles.productsSection}>
         <div className="container">
