@@ -1,0 +1,232 @@
+.spotlight {
+  position: relative;
+  padding: var(--space-12) var(--space-8);
+  border-radius: var(--radius-2xl);
+  overflow: hidden;
+}
+
+.polkaBackground {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  opacity: 0.07;
+}
+
+.contentGrid {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: 1fr 1.5fr;
+  gap: var(--space-8);
+  align-items: center;
+}
+
+.contentGridReversed {
+  grid-template-columns: 1.5fr 1fr;
+}
+
+.avatarArea {
+  display: flex;
+  justify-content: center;
+}
+
+.avatarAreaReversed {
+  order: 2;
+}
+
+.avatarFrame {
+  width: 240px;
+  height: 240px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 4px dotted var(--avatar-accent, var(--color-accent-primary));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.avatarFallback {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--avatar-accent, var(--color-accent-primary));
+  font-family: var(--font-display);
+  font-size: var(--text-5xl);
+  font-weight: var(--font-bold);
+  color: white;
+  line-height: 1;
+}
+
+.infoArea {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.designerName {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 4vw, var(--text-5xl));
+  font-weight: var(--font-bold);
+  color: var(--color-text-primary);
+  margin: 0;
+  line-height: var(--leading-tight);
+}
+
+.designerRole {
+  font-size: var(--text-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--avatar-accent, var(--color-accent-primary));
+  margin: 0;
+}
+
+.designerBio {
+  font-size: var(--text-base);
+  color: var(--color-text-secondary);
+  max-width: 500px;
+  line-height: 1.7;
+  margin: 0;
+}
+
+.featuredHeading {
+  font-size: var(--text-sm);
+  font-weight: var(--font-semibold);
+  color: var(--color-text-primary);
+  margin: var(--space-4) 0 var(--space-2);
+}
+
+.featuredProducts {
+  display: flex;
+  gap: var(--space-4);
+  overflow-x: auto;
+}
+
+.featuredProducts > * {
+  flex: 0 0 220px;
+  min-width: 0;
+}
+
+/* Designer Card (compact grid card) */
+.card {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-4);
+  background: var(--color-bg-card);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--color-border);
+  transition: transform var(--transition-base), box-shadow var(--transition-base);
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-card);
+}
+
+.cardAvatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 3px dotted var(--avatar-accent, var(--color-accent-primary));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.cardAvatarFallback {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--avatar-accent, var(--color-accent-primary));
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  font-weight: var(--font-bold);
+  color: white;
+  line-height: 1;
+}
+
+.cardInfo {
+  min-width: 0;
+}
+
+.cardName {
+  font-size: var(--text-base);
+  font-weight: var(--font-bold);
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+.cardRole {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+/* Designers grid */
+.designersGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-4);
+  margin-top: var(--space-6);
+}
+
+.spotlightsContainer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-12);
+  margin-top: var(--space-12);
+}
+
+.introText {
+  text-align: center;
+  color: var(--color-text-secondary);
+  font-size: var(--text-lg);
+  max-width: 500px;
+  margin: 0 auto var(--space-2);
+  line-height: 1.6;
+}
+
+@media (max-width: 768px) {
+  .spotlight {
+    padding: var(--space-8) var(--space-4);
+  }
+
+  .contentGrid,
+  .contentGridReversed {
+    grid-template-columns: 1fr;
+  }
+
+  .avatarAreaReversed {
+    order: 0;
+  }
+
+  .avatarFrame {
+    width: 180px;
+    height: 180px;
+    margin: 0 auto;
+  }
+
+  .infoArea {
+    text-align: center;
+    align-items: center;
+  }
+
+  .designerBio {
+    max-width: 100%;
+  }
+
+  .designersGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .featuredProducts > * {
+    flex: 0 0 180px;
+  }
+}

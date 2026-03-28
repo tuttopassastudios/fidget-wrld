@@ -1,4 +1,10 @@
 import type { Metadata } from 'next';
+import { designers } from '@/data/designers';
+import { productPages } from '@/data/products';
+import { SectionHeading } from '@/components/ui/SectionHeading';
+import { DesignerCard } from '@/components/about/DesignerCard';
+import { DesignerSpotlight } from '@/components/about/DesignerSpotlight';
+import styles from '@/components/about/DesignerSpotlight.module.css';
 
 export const metadata: Metadata = {
   title: 'About Us',
@@ -58,6 +64,35 @@ export default function AboutPage() {
           <p style={{ color: 'var(--color-text-secondary)', lineHeight: 1.7, maxWidth: 600, margin: '0 auto' }}>
             To bring joy and focus to fidgeters everywhere through quality products, exceptional service, and a genuine passion for all things fidget.
           </p>
+        </div>
+      </div>
+
+      {/* Meet the Makers */}
+      <div className="container" style={{ maxWidth: 900, marginTop: 'var(--space-16)' }}>
+        <SectionHeading
+          heading="Meet the Makers"
+          eyebrow="The Team"
+          align="center"
+          dotAccent
+        />
+        <p className={styles.introText}>
+          The creative minds behind every click, squish, and spin.
+        </p>
+        <div className={styles.designersGrid}>
+          {designers.map((designer) => (
+            <DesignerCard key={designer.id} designer={designer} />
+          ))}
+        </div>
+
+        <div className={styles.spotlightsContainer}>
+          {designers.map((designer, i) => (
+            <DesignerSpotlight
+              key={designer.id}
+              designer={designer}
+              products={productPages}
+              layout={i % 2 === 0 ? 'left' : 'right'}
+            />
+          ))}
         </div>
       </div>
     </section>
