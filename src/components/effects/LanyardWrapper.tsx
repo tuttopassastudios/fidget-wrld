@@ -84,7 +84,7 @@ export function LanyardWrapper() {
             &#x2715;
           </button>
 
-          <Lanyard position={[0, 0, 30]} gravity={[0, -40, 0]} fov={20} transparent />
+          <Lanyard position={[0, 0, 30]} gravity={[0, -40, 0]} fov={30} transparent />
 
           <div className="lanyard-promo">
             <h2>Welcome to Fidget WRLD!</h2>
