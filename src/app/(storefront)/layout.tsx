@@ -1,7 +1,7 @@
 import { Suspense, ViewTransition } from "react";
 import dynamic from "next/dynamic";
 import { Header } from "@/components/layout/Header";
-import { AnnouncementBar } from "@/components/layout/AnnouncementBar";
+import { LanyardWrapper } from "@/components/effects/LanyardWrapper";
 import { Footer } from "@/components/layout/Footer";
 import { Dock } from "@/components/layout/Dock";
 import { ToastContainer } from "@/components/ui/ToastContainer";
@@ -20,7 +20,7 @@ export default function StorefrontLayout({
       <div className="storefront-content">
         <Suspense>
           <Header />
-          <AnnouncementBar />
+          <LanyardWrapper />
           <main style={{ viewTransitionName: 'main-content' }}>
             <ViewTransition>
               {children}

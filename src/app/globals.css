@@ -3,6 +3,34 @@
 @import './sidebar-menu.css';
 @import './dock.css';
 
+/* Lanyard — anchored top-right, overlays page content */
+.lanyard-wrapper {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: min(420px, 50vw);
+  height: min(520px, 60vh);
+  z-index: 50;
+  pointer-events: auto;
+}
+
+.lanyard-wrapper canvas {
+  pointer-events: auto;
+}
+
+@media (max-width: 768px) {
+  .lanyard-wrapper {
+    width: min(280px, 60vw);
+    height: min(380px, 50vh);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lanyard-wrapper {
+    display: none;
+  }
+}
+
 /* Hide storefront content behind the age gate until dismissed */
 html[data-gated] .storefront-content {
   visibility: hidden;
