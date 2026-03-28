@@ -1,0 +1,207 @@
+/* Public COA Viewer */
+
+.page {
+  min-height: 100vh;
+  background: var(--color-bg-primary, #001428);
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-4) var(--space-6);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.logoMark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: var(--color-accent-primary);
+  color: var(--color-bg-primary, #001428);
+  font-weight: 800;
+  font-size: 0.875rem;
+  letter-spacing: 0.02em;
+}
+
+.headerTitle {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--space-6);
+  gap: var(--space-5);
+  max-width: 900px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* Metadata card */
+
+.metaCard {
+  background: var(--color-bg-card, #0a1628);
+  border: 1px solid var(--color-border);
+  border-radius: 16px;
+  padding: var(--space-5);
+  width: 100%;
+}
+
+.productName {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin: 0 0 var(--space-4);
+}
+
+.metaGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: var(--space-4);
+}
+
+.metaItem {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.metaLabel {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-text-muted);
+}
+
+.metaValue {
+  font-size: 0.9375rem;
+  color: var(--color-text-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.expiredBadge {
+  display: inline-flex;
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  background: rgba(220, 70, 70, 0.15);
+  color: #f87171;
+  margin-left: var(--space-2);
+}
+
+/* PDF viewer */
+
+.pdfSection {
+  width: 100%;
+}
+
+.pdfEmbed {
+  width: 100%;
+  height: 70vh;
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  background: #fff;
+}
+
+.downloadBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  width: 100%;
+  background: var(--color-accent-primary);
+  color: var(--color-bg-primary, #001428);
+  border: none;
+  padding: var(--space-3) var(--space-5);
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: opacity 0.15s;
+  margin-top: var(--space-3);
+}
+
+.downloadBtn:hover {
+  opacity: 0.85;
+}
+
+/* Mobile: hide iframe, show download-only */
+.mobileOnly {
+  display: none;
+}
+
+/* Footer */
+
+.footer {
+  text-align: center;
+  padding: var(--space-5) var(--space-6);
+  border-top: 1px solid var(--color-border);
+}
+
+.footerLink {
+  color: var(--color-accent-primary);
+  text-decoration: none;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.footerLink:hover {
+  text-decoration: underline;
+}
+
+/* Not found */
+
+.notFound {
+  text-align: center;
+  padding: var(--space-8);
+}
+
+.notFound h1 {
+  font-size: 1.5rem;
+  color: var(--color-text-primary);
+  margin: 0 0 var(--space-3);
+}
+
+.notFound p {
+  color: var(--color-text-secondary);
+  margin: 0 0 var(--space-5);
+}
+
+@media (max-width: 768px) {
+  .header {
+    padding: var(--space-3) var(--space-4);
+  }
+
+  .main {
+    padding: var(--space-4);
+  }
+
+  .productName {
+    font-size: 1.25rem;
+  }
+
+  .pdfEmbed {
+    display: none;
+  }
+
+  .mobileOnly {
+    display: block;
+  }
+
+  .metaGrid {
+    grid-template-columns: 1fr 1fr;
+  }
+}

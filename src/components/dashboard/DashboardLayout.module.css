@@ -1,0 +1,31 @@
+.shell {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  min-height: 100vh;
+  background: var(--color-bg-dark, #001428);
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-width: 0;
+}
+
+.content {
+  flex: 1;
+  padding: var(--space-6);
+  overflow-y: auto;
+}
+
+@media (max-width: 768px) {
+  .shell {
+    display: flex;
+    flex-direction: column;
+    grid-template-columns: unset;
+  }
+
+  .content {
+    padding: var(--space-4);
+  }
+}

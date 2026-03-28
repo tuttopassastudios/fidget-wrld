@@ -1,0 +1,276 @@
+.carousel {
+  margin-top: 64px;
+}
+
+.header {
+  margin-bottom: 32px;
+}
+
+.label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-accent-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 8px;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.description {
+  color: var(--color-text-secondary);
+  line-height: 1.7;
+  max-width: 600px;
+}
+
+.carouselWrapper {
+  display: flex;
+  justify-content: center;
+  min-height: 420px;
+  width: 100%;
+}
+
+/* Card content styles */
+.cardContent {
+  padding: 24px;
+  height: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.cardIcon {
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
+  background: rgba(70, 200, 220, 0.1);
+  border: 1px solid rgba(70, 200, 220, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.cardTitle {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin-bottom: 2px;
+}
+
+.cardSubtitle {
+  font-size: 13px;
+  color: var(--color-text-muted);
+}
+
+.cardSection {
+  margin-bottom: 20px;
+}
+
+.cardSection:last-child {
+  margin-bottom: 0;
+}
+
+.sectionTitle {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin-bottom: 8px;
+}
+
+.sectionText {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+}
+
+/* Horizontal steps */
+.stepsRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  background: var(--color-bg-dark);
+  border-radius: 12px;
+  padding: 16px;
+}
+
+.step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  flex: 1;
+  gap: 6px;
+}
+
+.stepIcon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: rgba(70, 200, 220, 0.15);
+  border: 1px solid rgba(70, 200, 220, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-accent-primary);
+}
+
+.stepNumber {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--color-accent-primary);
+  color: var(--color-bg-dark);
+  font-size: 11px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.stepText {
+  font-size: 11px;
+  color: var(--color-text-secondary);
+  line-height: 1.3;
+  max-width: 100px;
+}
+
+.stepArrow {
+  color: var(--color-text-muted);
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+/* Benefits */
+.benefits {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.benefit {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--color-text-primary);
+}
+
+.benefit svg {
+  flex-shrink: 0;
+}
+
+@media (max-width: 768px) {
+  .carousel {
+    margin-top: 40px;
+  }
+
+  .header {
+    margin-bottom: 24px;
+  }
+
+  .title {
+    font-size: 20px;
+  }
+
+  .description {
+    font-size: 14px;
+  }
+
+  .carouselWrapper {
+    min-height: 480px;
+  }
+
+  .cardContent {
+    padding: 16px;
+  }
+
+  .cardHeader {
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  .cardIcon {
+    width: 40px;
+    height: 40px;
+  }
+
+  .cardTitle {
+    font-size: 15px;
+  }
+
+  .cardSubtitle {
+    font-size: 11px;
+  }
+
+  .cardSection {
+    margin-bottom: 14px;
+  }
+
+  .sectionTitle {
+    font-size: 12px;
+    margin-bottom: 6px;
+  }
+
+  .sectionText {
+    font-size: 12px;
+  }
+
+  .stepsRow {
+    flex-direction: column;
+    gap: 8px;
+    padding: 12px;
+  }
+
+  .step {
+    flex-direction: row;
+    gap: 10px;
+    text-align: left;
+  }
+
+  .stepIcon {
+    width: 32px;
+    height: 32px;
+  }
+
+  .stepIcon svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .stepNumber {
+    width: 18px;
+    height: 18px;
+    font-size: 10px;
+  }
+
+  .stepText {
+    font-size: 11px;
+    max-width: none;
+    flex: 1;
+  }
+
+  .stepArrow {
+    display: none;
+  }
+
+  .benefits {
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .benefit {
+    font-size: 11px;
+  }
+}
