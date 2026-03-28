@@ -3,7 +3,152 @@
 @import './sidebar-menu.css';
 @import './dock.css';
 
-/* Lanyard — anchored top-right, overlays page content */
+/* ── Lanyard overlay (full-screen promo on first visit) ── */
+.lanyard-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10001;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  opacity: 1;
+  transition: opacity 400ms ease-out;
+}
+
+.lanyard-overlay[data-closing="true"] {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.lanyard-overlay-content {
+  position: relative;
+  width: min(600px, 90vw);
+  height: min(700px, 80vh);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.lanyard-overlay .lanyard-wrapper {
+  position: relative;
+  top: auto;
+  right: auto;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.lanyard-promo {
+  position: absolute;
+  bottom: 8%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+  text-align: center;
+  color: #fff;
+  pointer-events: auto;
+  animation: promoFadeUp 600ms 300ms ease-out both;
+}
+
+.lanyard-promo h2 {
+  font-size: clamp(1.25rem, 4vw, 1.75rem);
+  font-weight: 700;
+  margin: 0 0 0.5rem;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
+}
+
+.lanyard-promo p {
+  font-size: clamp(0.875rem, 2.5vw, 1.05rem);
+  margin: 0.25rem 0;
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.3);
+}
+
+.lanyard-promo-code {
+  display: inline-block;
+  margin: 0.75rem 0;
+  padding: 0.5rem 1.25rem;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 8px;
+  font-family: var(--font-mono, monospace);
+  font-size: clamp(1.1rem, 3vw, 1.4rem);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: #fff;
+  user-select: all;
+}
+
+.lanyard-dismiss-btn {
+  margin-top: 1rem;
+  padding: 0.65rem 2rem;
+  border: none;
+  border-radius: 999px;
+  background: var(--color-accent-primary, #FF6B9D);
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 150ms ease, background 150ms ease;
+  touch-action: manipulation;
+}
+
+.lanyard-dismiss-btn:hover {
+  background: var(--color-accent-hover, #e5608d);
+  transform: scale(1.05);
+}
+
+.lanyard-dismiss-btn:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 3px;
+}
+
+.lanyard-close-btn {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  z-index: 3;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(8px);
+  color: #fff;
+  font-size: 1.25rem;
+  cursor: pointer;
+  transition: background 150ms ease, transform 150ms ease;
+  touch-action: manipulation;
+}
+
+.lanyard-close-btn:hover {
+  background: rgba(255, 255, 255, 0.35);
+  transform: scale(1.1);
+}
+
+.lanyard-close-btn:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 3px;
+}
+
+@keyframes promoFadeUp {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+/* ── Lanyard corner mode (after dismissal) ── */
 .lanyard-wrapper {
   position: fixed;
   top: 0;
@@ -19,6 +164,15 @@
 }
 
 @media (max-width: 768px) {
+  .lanyard-overlay-content {
+    width: 95vw;
+    height: 70vh;
+  }
+
+  .lanyard-promo {
+    bottom: 5%;
+  }
+
   .lanyard-wrapper {
     width: min(280px, 60vw);
     height: min(380px, 50vh);
@@ -26,7 +180,13 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .lanyard-wrapper {
+  .lanyard-overlay {
+    transition: none;
+  }
+  .lanyard-promo {
+    animation: none;
+  }
+  .lanyard-wrapper:not(.lanyard-overlay .lanyard-wrapper) {
     display: none;
   }
 }
