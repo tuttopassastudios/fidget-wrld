@@ -20,6 +20,13 @@ Claude is the **coordinator** for the UI redesign defined in `TODO.md`. The work
 - Agents must not add external dependencies — use what's already in the project.
 - If an agent's work conflicts with another agent's, the coordinator resolves by reading both outputs and merging.
 
+## Git rules for agents
+Every agent must commit and push their work when done:
+1. Stage only the files they created or modified (no `git add -A`).
+2. Commit with a descriptive message ending with: `Co-Authored-By: Claude Opus 4.6 (1M context) <noreply@anthropic.com>`
+3. Pull with rebase before pushing: `git pull --rebase && git push`
+4. If push is rejected, pull --rebase again and retry (up to 3 attempts).
+
 ## Progress tracking
 - `TODO.md` is the single source of truth for task status.
 - Check off tasks as they complete: `- [ ]` → `- [x]`
