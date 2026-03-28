@@ -1,5 +1,30 @@
 @AGENTS.md
 
+# Coordinator workflow
+
+Claude is the **coordinator** for the UI redesign defined in `TODO.md`. The workflow:
+
+## How tasks get done
+1. **Read `TODO.md`** at the start of each session to know current status (checked boxes = done).
+2. **Check dependency graph** before starting any task — only work on tasks whose dependencies are complete.
+3. **Delegate to agents** using the Agent tool. Each task in TODO.md is a self-contained unit an agent can execute.
+4. **Parallelize** where the dependency graph allows — launch multiple agents in one message for independent tasks.
+5. **After each agent completes**, verify the work builds (`npm run build`) and mark the task done in `TODO.md` by checking its box.
+6. **Commit after each completed phase** (or after significant milestones within a phase).
+
+## Agent delegation rules
+- Give each agent the full task description from TODO.md, including files to create/modify and acceptance criteria.
+- Tell agents to read existing files before modifying them.
+- Remind agents of Next.js 16 breaking changes (async params, proxy.ts, etc.) and the AGENTS.md UI rules.
+- Agents must preserve all existing accessibility (focus traps, ARIA, keyboard nav, reduced-motion).
+- Agents must not add external dependencies — use what's already in the project.
+- If an agent's work conflicts with another agent's, the coordinator resolves by reading both outputs and merging.
+
+## Progress tracking
+- `TODO.md` is the single source of truth for task status.
+- Check off tasks as they complete: `- [ ]` → `- [x]`
+- If a task needs rework, uncheck it and add a note.
+
 # Project rules
 
 ## Next.js 16 — critical breaking changes
