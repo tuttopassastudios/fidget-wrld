@@ -3,7 +3,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { Canvas, extend, useFrame } from '@react-three/fiber';
-import { useGLTF, useTexture, Environment, Lightformer } from '@react-three/drei';
+import { useGLTF, useTexture, Environment, Lightformer, Html } from '@react-three/drei';
 import {
   BallCollider,
   CuboidCollider,
@@ -22,11 +22,15 @@ export default function Lanyard({
   gravity = [0, -40, 0],
   fov = 20,
   transparent = true,
+  showPromo = false,
+  onDismissPromo,
 }: {
   position?: [number, number, number];
   gravity?: [number, number, number];
   fov?: number;
   transparent?: boolean;
+  showPromo?: boolean;
+  onDismissPromo?: () => void;
 }) {
   const [isMobile, setIsMobile] = useState(() =>
     typeof window !== 'undefined' && window.innerWidth < 768
@@ -50,7 +54,7 @@ export default function Lanyard({
       >
         <ambientLight intensity={Math.PI} />
         <Physics gravity={gravity} timeStep={isMobile ? 1 / 30 : 1 / 60}>
-          <Band isMobile={isMobile} />
+          <Band isMobile={isMobile} showPromo={showPromo} onDismissPromo={onDismissPromo} />
         </Physics>
         <Environment blur={0.75}>
           <Lightformer
@@ -91,10 +95,14 @@ function Band({
   maxSpeed = 50,
   minSpeed = 0,
   isMobile = false,
+  showPromo = false,
+  onDismissPromo,
 }: {
   maxSpeed?: number;
   minSpeed?: number;
   isMobile?: boolean;
+  showPromo?: boolean;
+  onDismissPromo?: () => void;
 }) {
   const band = useRef<any>(null!);
   const fixed = useRef<any>(null!);
@@ -239,6 +247,25 @@ function Band({
               material-roughness={0.3}
             />
             <mesh geometry={nodes.clamp.geometry} material={materials.metal} />
+            {showPromo && (
+              <Html
+                position={[0, -0.55, 0.02]}
+                center
+                distanceFactor={6}
+                transform
+                occlude={false}
+                style={{ pointerEvents: 'auto' }}
+              >
+                <div className="lanyard-card-promo" onClick={(e) => e.stopPropagation()}>
+                  <p className="lanyard-card-headline">10% Off</p>
+                  <span className="lanyard-card-code">FIDGETFUN</span>
+                  <p className="lanyard-card-shipping">Free shipping&nbsp;$50+</p>
+                  <a href="/products" className="lanyard-card-cta" onClick={onDismissPromo}>
+                    Shop Now
+                  </a>
+                </div>
+              </Html>
+            )}
           </group>
         </RigidBody>
       </group>
