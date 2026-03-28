@@ -8,7 +8,8 @@ import { FilterSidebar } from '@/components/product/FilterSidebar';
 import type { FilterState } from '@/components/product/FilterSidebar';
 import { useHaptics } from '@/hooks/useHaptics';
 import type { ProductPage } from '@/types';
-import styles from './FilterSidebar.module.css';
+import filterStyles from './FilterSidebar.module.css';
+import styles from './ProductsPageClient.module.css';
 
 type SortOption = 'featured' | 'price-asc' | 'price-desc' | 'name' | 'newest';
 
@@ -182,14 +183,14 @@ export function ProductsPageClient({ products }: { products: ProductPage[] }) {
   const headingLabel = filters.category ?? 'All Products';
 
   return (
-    <section className="product-page" style={{ padding: '32px 0 64px' }}>
+    <section className={`product-page ${styles.productPage}`}>
       <div className="container">
         <div className="reveal-item">
           <Breadcrumb
             items={[{ label: 'Home', href: '/' }, { label: 'All Products' }]}
           />
         </div>
-        <div className="page-grid-sidebar-left" style={{ marginTop: 16 }}>
+        <div className={`page-grid-sidebar-left ${styles.gridMargin}`}>
           {/* Sidebar */}
           <FilterSidebar
             products={products}
@@ -200,48 +201,20 @@ export function ProductsPageClient({ products }: { products: ProductPage[] }) {
           {/* Main */}
           <div>
             {/* Header */}
-            <div
-              className="reveal-item"
-              style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                marginBottom: 24,
-                paddingBottom: 16,
-                borderBottom: '1px solid var(--color-border)',
-                flexWrap: 'wrap',
-                gap: 12,
-              }}
-            >
-              <h1
-                style={{
-                  fontSize: '1rem',
-                  fontWeight: 600,
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.5px',
-                  color: 'var(--color-text-secondary)',
-                }}
-              >
+            <div className={`reveal-item ${styles.resultsHeader}`}>
+              <h1 className={styles.resultsCount}>
                 {headingLabel} &mdash;{' '}
                 <span aria-live="polite" aria-atomic="true">
                   {filtered.length} {filtered.length === 1 ? 'result' : 'results'}
                 </span>
               </h1>
-              <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+              <div className={styles.sortWrapper}>
                 {/* Mobile filter trigger is rendered by FilterSidebar */}
                 <select
                   value={sort}
                   onChange={e => setSort(e.target.value as SortOption)}
                   aria-label="Sort products"
-                  style={{
-                    background: 'var(--color-bg-elevated)',
-                    border: '1px solid var(--color-border)',
-                    borderRadius: 4,
-                    padding: '8px 12px',
-                    minHeight: 44,
-                    fontSize: 13,
-                    color: 'var(--color-text-secondary)',
-                  }}
+                  className={styles.sortSelect}
                 >
                   <option value="featured">Featured</option>
                   <option value="price-asc">Price: Low to High</option>
@@ -254,13 +227,13 @@ export function ProductsPageClient({ products }: { products: ProductPage[] }) {
 
             {/* Active filter pills */}
             {activePills.length > 0 && (
-              <div className={styles.filterPills}>
+              <div className={filterStyles.filterPills}>
                 {activePills.map((pill, i) => (
-                  <span key={`${pill.label}-${i}`} className={styles.filterPill}>
+                  <span key={`${pill.label}-${i}`} className={filterStyles.filterPill}>
                     {pill.label}
                     <button
                       type="button"
-                      className={styles.filterPillRemove}
+                      className={filterStyles.filterPillRemove}
                       onClick={pill.onRemove}
                       aria-label={`Remove ${pill.label} filter`}
                     >
@@ -285,13 +258,7 @@ export function ProductsPageClient({ products }: { products: ProductPage[] }) {
             </div>
 
             {filtered.length === 0 && (
-              <div
-                style={{
-                  textAlign: 'center',
-                  padding: '48px 0',
-                  color: 'var(--color-text-muted)',
-                }}
-              >
+              <div className={styles.emptyState}>
                 No products found matching your filters.
               </div>
             )}

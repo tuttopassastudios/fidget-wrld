@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { FaqAccordion } from '@/components/ui/FaqAccordion';
+import styles from './faq.module.css';
 
 export const metadata: Metadata = {
   title: 'FAQ',
@@ -53,46 +54,27 @@ export default function FaqPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
       />
-      <section className="product-page" style={{ padding: '0 0 64px' }}>
-      <div className="container" style={{ maxWidth: 900 }}>
+      <section className={`product-page ${styles.pageSection}`}>
+      <div className={`container ${styles.pageContainer}`}>
 
         {/* ── Hero / Intro ── */}
-        <div style={{ padding: '64px 0 48px', borderBottom: '1px solid var(--color-border)' }}>
-          <p style={{
-            fontSize: 'var(--text-xs)',
-            textTransform: 'uppercase',
-            letterSpacing: '1.5px',
-            color: 'var(--color-accent-primary)',
-            marginBottom: 16,
-            fontWeight: 700,
-          }}>
+        <div className={styles.heroSection}>
+          <p className={styles.heroBadge}>
             Support
           </p>
-          <h1 style={{ fontSize: 'var(--text-4xl)', fontWeight: 700, marginBottom: 16, lineHeight: 1.2 }}>
+          <h1 className={styles.heroTitle}>
             Frequently Asked Questions
           </h1>
-          <p style={{
-            color: 'var(--color-text-secondary)',
-            lineHeight: 1.7,
-            maxWidth: 700,
-            marginBottom: 20,
-            fontSize: 'var(--text-base)',
-          }}>
+          <p className={styles.heroDescription}>
             Everything you need to know about our fidget toys, ordering, shipping, and returns. Can&apos;t find what you&apos;re looking for? Reach out through our Contact page.
           </p>
-          <span className="badge-primary" style={{ fontSize: 'var(--text-xs)', padding: '6px 14px', borderRadius: 9999 }}>
+          <span className={`badge-primary ${styles.heroTag}`}>
             {faqItems.length} Questions Answered
           </span>
         </div>
 
         {/* ── Stats Strip ── */}
-        <div style={{
-          display: 'flex',
-          flexWrap: 'wrap',
-          justifyContent: 'center',
-          padding: '48px 0',
-          borderBottom: '1px solid var(--color-border)',
-        }}>
+        <div className={styles.statsStrip}>
           {[
             { value: `${faqItems.length}`, label: 'Questions' },
             { value: '4', label: 'Categories' },
@@ -101,30 +83,12 @@ export default function FaqPage() {
           ].map((stat, i) => (
             <div
               key={stat.label}
-              style={{
-                flex: '1 1 140px',
-                textAlign: 'center',
-                padding: '16px 0',
-                borderLeft: i === 0 ? 'none' : '1px solid var(--color-border)',
-              }}
+              className={`${styles.statItem} ${i !== 0 ? styles.statItemBorder : ''}`}
             >
-              <p style={{
-                fontSize: 'clamp(2rem, 5vw, 3.5rem)',
-                fontWeight: 700,
-                color: 'var(--color-accent-primary)',
-                letterSpacing: '-1px',
-                lineHeight: 1,
-                marginBottom: 8,
-                fontVariantNumeric: 'tabular-nums',
-              }}>
+              <p className={styles.statValue}>
                 {stat.value}
               </p>
-              <p style={{
-                fontSize: '11px',
-                textTransform: 'uppercase',
-                letterSpacing: '1.5px',
-                color: 'var(--color-text-muted)',
-              }}>
+              <p className={styles.statLabel}>
                 {stat.label}
               </p>
             </div>
@@ -132,36 +96,28 @@ export default function FaqPage() {
         </div>
 
         {/* ── FAQ Accordion ── */}
-        <div style={{ padding: '48px 0', borderBottom: '1px solid var(--color-border)' }}>
-          <p style={{
-            fontSize: 'var(--text-xs)',
-            textTransform: 'uppercase',
-            letterSpacing: '1.5px',
-            color: 'var(--color-text-muted)',
-            marginBottom: 32,
-            fontWeight: 700,
-          }}>
+        <div className={styles.faqSection}>
+          <p className={styles.faqSectionLabel}>
             Browse Questions
           </p>
           <FaqAccordion items={faqItems} />
         </div>
 
         {/* ── Still Have Questions? ── */}
-        <div style={{ padding: '48px 0' }}>
-          <div className="card" style={{ padding: 32, textAlign: 'center' }}>
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--color-accent-primary)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{ marginBottom: 16 }}>
+        <div className={styles.ctaSection}>
+          <div className={`card ${styles.ctaCard}`}>
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--color-accent-primary)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className={styles.ctaIcon}>
               <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
             </svg>
-            <h3 style={{ fontSize: 'var(--text-xl)', fontWeight: 700, marginBottom: 8 }}>
+            <h3 className={styles.ctaTitle}>
               Still have questions?
             </h3>
-            <p style={{ color: 'var(--color-text-secondary)', lineHeight: 1.7, fontSize: 'var(--text-sm)', marginBottom: 24, maxWidth: 480, margin: '0 auto 24px' }}>
+            <p className={styles.ctaDescription}>
               Our team is here to help with product questions and order support. We respond within 24 hours on business days.
             </p>
             <a
               href="/contact"
-              className="btn btn-primary"
-              style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '12px 28px', borderRadius: 9999, fontSize: 'var(--text-sm)', fontWeight: 700, textDecoration: 'none' }}
+              className={`btn btn-primary ${styles.ctaButton}`}
             >
               Contact Us
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">

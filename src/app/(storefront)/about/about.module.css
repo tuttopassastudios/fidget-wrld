@@ -1,0 +1,88 @@
+/* About page — inline style migration */
+
+.pageSection {
+  padding: var(--space-12) 0;
+}
+
+.contentContainer {
+  max-width: 800px;
+}
+
+.pageTitle {
+  margin-bottom: var(--space-6);
+}
+
+.bodyText {
+  color: var(--color-text-secondary);
+  line-height: 1.7;
+  margin-bottom: var(--space-4);
+}
+
+.featureGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-4);
+  margin-top: var(--space-8);
+}
+
+.featureCard {
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-6);
+}
+
+.featureIcon {
+  margin-bottom: var(--space-3);
+}
+
+.featureTitle {
+  font-size: 15px;
+  font-weight: var(--font-medium);
+  margin-bottom: var(--space-1);
+}
+
+.featureDescription {
+  font-size: 13px;
+  color: var(--color-text-muted);
+  line-height: var(--leading-relaxed);
+}
+
+.missionBanner {
+  margin-top: var(--space-12);
+  padding: var(--space-8);
+  background: var(--color-bg-elevated);
+  border-radius: var(--radius-lg);
+  text-align: center;
+}
+
+.missionTitle {
+  font-size: var(--text-xl);
+  margin-bottom: var(--space-3);
+}
+
+.missionText {
+  color: var(--color-text-secondary);
+  line-height: 1.7;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.makersContainer {
+  max-width: 900px;
+  margin-top: var(--space-16);
+}
+
+@media (max-width: 768px) {
+  .featureGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .missionBanner {
+    padding: var(--space-6);
+  }
+
+  .pageSection {
+    padding: var(--space-8) 0;
+  }
+}
