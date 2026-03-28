@@ -101,6 +101,7 @@ export function ProductCard({
               alt={product.name}
               style={{ width: '100%', height: '100%', objectFit: 'contain' }}
               loading={priority ? 'eager' : 'lazy'}
+              onError={(e) => { (e.currentTarget as HTMLImageElement).src = '/images/products/placeholder.svg'; }}
             />
             {/* Polka-dot hover overlay */}
             <div className="product-card-dot-overlay" aria-hidden="true" />

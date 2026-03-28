@@ -103,6 +103,7 @@ export function ProductPageClient({ product }: { product: ProductPage }) {
               alt={variant.name}
               loading="eager"
               style={{ viewTransitionName: `product-${product.slug}` }}
+              onError={(e) => { (e.currentTarget as HTMLImageElement).src = '/images/products/placeholder.svg'; }}
             />
             <div className={styles.galleryDecor} aria-hidden="true">
               <PolkaDots pattern="corner" size="sm" cornerPosition="top-right" />
@@ -118,7 +119,7 @@ export function ProductPageClient({ product }: { product: ProductPage }) {
                   onClick={() => { trigger('select'); setVariantIdx(i); }}
                   aria-label={`View ${v.variant}`}
                 >
-                  <img className={styles.thumbnailImg} src={v.image} alt={v.variant} loading="lazy" />
+                  <img className={styles.thumbnailImg} src={v.image} alt={v.variant} loading="lazy" onError={(e) => { (e.currentTarget as HTMLImageElement).src = '/images/products/placeholder.svg'; }} />
                 </button>
               ))}
             </div>

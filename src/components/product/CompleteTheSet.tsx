@@ -62,6 +62,7 @@ export function CompleteTheSet({ currentProduct, allProducts }: CompleteTheSetPr
                 height={120}
                 sizes="120px"
                 loading="lazy"
+                onError={(e) => { (e.currentTarget as HTMLImageElement).src = '/images/products/placeholder.svg'; }}
               />
               <span className={styles.miniCardName}>{p.name}</span>
               <span className={styles.miniCardPrice}>{formatCurrency(v.price)}</span>

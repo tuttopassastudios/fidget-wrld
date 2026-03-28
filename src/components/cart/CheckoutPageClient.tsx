@@ -231,7 +231,7 @@ export function CheckoutPageClient() {
             <div style={{ maxHeight: 300, overflowY: 'auto' }}>
               {items.map(item => (
                 <div key={item.sku} style={{ display: 'flex', gap: 12, padding: '8px 0', borderBottom: '1px solid rgba(51,65,85,0.5)' }}>
-                  <Image src={item.image} alt={item.name} width={40} height={40} sizes="40px" style={{ objectFit: 'contain', borderRadius: 6, background: 'var(--color-bg-elevated)' }} />
+                  <Image src={item.image} alt={item.name} width={40} height={40} sizes="40px" style={{ objectFit: 'contain', borderRadius: 6, background: 'var(--color-bg-elevated)' }} onError={(e) => { (e.currentTarget as HTMLImageElement).src = '/images/products/placeholder.svg'; }} />
                   <div style={{ flex: 1, fontSize: 13 }}>
                     <div style={{ fontWeight: 600 }}>{item.name}</div>
                     <div style={{ color: 'var(--color-text-muted)', fontSize: 11 }}>Qty: {item.quantity}</div>

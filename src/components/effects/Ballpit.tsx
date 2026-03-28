@@ -6,7 +6,7 @@ import React, { useEffect, useRef } from 'react';
 import {
   ACESFilmicToneMapping,
   AmbientLight,
-  Clock,
+  Timer,
   Color,
   InstancedMesh,
   MathUtils,
@@ -53,7 +53,7 @@ class X {
   #intersectionObserver?: IntersectionObserver;
   #resizeTimer?: number;
   #animationFrameId: number = 0;
-  #clock: Clock = new Clock();
+  #clock: Timer = new Timer();
   #animationState = { elapsed: 0, delta: 0 };
   #isAnimating: boolean = false;
   #isVisible: boolean = false;
@@ -232,24 +232,24 @@ class X {
 
   #startAnimation() {
     if (this.#isVisible) return;
-    const animateFrame = () => {
+    const animateFrame = (timestamp: number) => {
       this.#animationFrameId = requestAnimationFrame(animateFrame);
+      this.#clock.update(timestamp);
       this.#animationState.delta = this.#clock.getDelta();
-      this.#animationState.elapsed += this.#animationState.delta;
+      this.#animationState.elapsed = this.#clock.getElapsed();
       this.onBeforeRender(this.#animationState);
       this.render();
       this.onAfterRender(this.#animationState);
     };
     this.#isVisible = true;
-    this.#clock.start();
-    animateFrame();
+    this.#animationFrameId = requestAnimationFrame(animateFrame);
   }
 
   #stopAnimation() {
     if (this.#isVisible) {
       cancelAnimationFrame(this.#animationFrameId);
       this.#isVisible = false;
-      this.#clock.stop();
+      this.#clock.reset();
     }
   }
 
@@ -433,11 +433,9 @@ class Y extends MeshPhysicalMaterial {
     thicknessPower: { value: 2 },
     thicknessScale: { value: 10 }
   };
-  defines: { USE_UV: string };
-
   constructor(params: any) {
     super(params);
-    this.defines = { USE_UV: '' };
+    this.defines = { ...this.defines, USE_UV: '' };
     this.onBeforeCompile = shader => {
       Object.assign(shader.uniforms, this.uniforms);
       shader.fragmentShader =

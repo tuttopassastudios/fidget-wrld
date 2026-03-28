@@ -107,7 +107,7 @@ export function CartDrawer() {
                   &times;
                 </button>
                 {item.image ? (
-                  <Image src={item.image} alt={item.name} width={60} height={60} sizes="60px" style={{ objectFit: 'contain' }} />
+                  <Image src={item.image} alt={item.name} width={60} height={60} sizes="60px" style={{ objectFit: 'contain' }} onError={(e) => { (e.currentTarget as HTMLImageElement).src = '/images/products/placeholder.svg'; }} />
                 ) : (
                   <div style={{ width: 60, height: 60, background: 'var(--color-bg-elevated,#001428)', borderRadius: 'var(--radius-md, 6px)' }} />
                 )}
@@ -137,6 +137,7 @@ export function CartDrawer() {
                       width={48}
                       height={48}
                       sizes="48px"
+                      onError={(e) => { (e.currentTarget as HTMLImageElement).src = '/images/products/placeholder.svg'; }}
                       loading="lazy"
                     />
                     <div className={recStyles.drawerRecInfo}>

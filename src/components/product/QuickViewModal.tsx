@@ -131,6 +131,7 @@ export function QuickViewModal({ product, isOpen, onClose }: QuickViewModalProps
             <img
               src={variant.image}
               alt={`${product.name} — ${variant.variant}`}
+              onError={(e) => { (e.currentTarget as HTMLImageElement).src = '/images/products/placeholder.svg'; }}
             />
           </div>
 

@@ -104,7 +104,7 @@ export function CartPageClient() {
                 : item.price * item.quantity;
               return (
                 <div key={item.sku} className="cart-item">
-                  <Image className="cart-item-image" src={item.image} alt={item.name} width={80} height={80} sizes="80px" style={{ objectFit: 'contain', borderRadius: 8, background: 'var(--color-bg-elevated)' }} />
+                  <Image className="cart-item-image" src={item.image} alt={item.name} width={80} height={80} sizes="80px" style={{ objectFit: 'contain', borderRadius: 8, background: 'var(--color-bg-elevated)' }} onError={(e) => { (e.currentTarget as HTMLImageElement).src = '/images/products/placeholder.svg'; }} />
                   <div className="cart-item-info" style={{ flex: 1 }}>
                     <div style={{ fontWeight: 600, marginBottom: 4 }}>{item.name}</div>
                     {item.variant && <div style={{ fontSize: 13, color: 'var(--color-text-muted)' }}>{item.variant}</div>}
