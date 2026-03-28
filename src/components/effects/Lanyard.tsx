@@ -1,9 +1,9 @@
 /* eslint-disable react/no-unknown-property */
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Canvas, extend, useFrame } from '@react-three/fiber';
-import { useGLTF, useTexture, Environment, Lightformer, Html } from '@react-three/drei';
+import { useGLTF, useTexture, Environment, Lightformer } from '@react-three/drei';
 import {
   BallCollider,
   CuboidCollider,
@@ -16,6 +16,101 @@ import { MeshLineGeometry, MeshLineMaterial } from 'meshline';
 import * as THREE from 'three';
 
 extend({ MeshLineGeometry, MeshLineMaterial });
+
+function createPromoTexture(): THREE.CanvasTexture {
+  const w = 512;
+  const h = 720;
+  const canvas = document.createElement('canvas');
+  canvas.width = w;
+  canvas.height = h;
+  const ctx = canvas.getContext('2d')!;
+
+  // Card background — white with subtle warm tint
+  ctx.fillStyle = '#f8f9fc';
+  ctx.fillRect(0, 0, w, h);
+
+  // Subtle border
+  ctx.strokeStyle = '#e2e4ea';
+  ctx.lineWidth = 3;
+  ctx.roundRect(4, 4, w - 8, h - 8, 20);
+  ctx.stroke();
+
+  // "10% OFF" headline
+  ctx.fillStyle = '#1e40af';
+  ctx.font = '800 72px system-ui, -apple-system, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText('10% OFF', w / 2, 160);
+
+  // Divider line
+  ctx.strokeStyle = '#cbd5e1';
+  ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  ctx.moveTo(80, 220);
+  ctx.lineTo(w - 80, 220);
+  ctx.stroke();
+
+  // "Use code" label
+  ctx.fillStyle = '#6b7280';
+  ctx.font = '500 28px system-ui, -apple-system, sans-serif';
+  ctx.fillText('Use code', w / 2, 270);
+
+  // Promo code box
+  const codeY = 330;
+  const codeW = 320;
+  const codeH = 64;
+  const codeX = (w - codeW) / 2;
+
+  // Dashed border
+  ctx.strokeStyle = '#3b82f6';
+  ctx.lineWidth = 3;
+  ctx.setLineDash([10, 6]);
+  ctx.roundRect(codeX, codeY - codeH / 2, codeW, codeH, 12);
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Code bg
+  ctx.fillStyle = '#eef5ff';
+  ctx.roundRect(codeX + 2, codeY - codeH / 2 + 2, codeW - 4, codeH - 4, 10);
+  ctx.fill();
+
+  // Code text
+  ctx.fillStyle = '#1e40af';
+  ctx.font = '800 38px monospace';
+  ctx.fillText('FIDGETFUN', w / 2, codeY + 2);
+
+  // Free shipping
+  ctx.fillStyle = '#6b7280';
+  ctx.font = '500 26px system-ui, -apple-system, sans-serif';
+  ctx.fillText('Free shipping $50+', w / 2, 420);
+
+  // "Shop Now" button
+  const btnW = 240;
+  const btnH = 60;
+  const btnX = (w - btnW) / 2;
+  const btnY = 490;
+
+  const grad = ctx.createLinearGradient(btnX, btnY, btnX + btnW, btnY + btnH);
+  grad.addColorStop(0, '#6366f1');
+  grad.addColorStop(1, '#8b5cf6');
+  ctx.fillStyle = grad;
+  ctx.roundRect(btnX, btnY, btnW, btnH, 14);
+  ctx.fill();
+
+  ctx.fillStyle = '#ffffff';
+  ctx.font = '700 28px system-ui, -apple-system, sans-serif';
+  ctx.fillText('Shop Now', w / 2, btnY + btnH / 2 + 1);
+
+  // Fidget WRLD branding at bottom
+  ctx.fillStyle = '#9ca3af';
+  ctx.font = '600 20px system-ui, -apple-system, sans-serif';
+  ctx.fillText('FIDGET WRLD', w / 2, 620);
+
+  const tex = new THREE.CanvasTexture(canvas);
+  tex.flipY = false;
+  tex.colorSpace = THREE.SRGBColorSpace;
+  return tex;
+}
 
 export default function Lanyard({
   position = [0, 0, 30],
@@ -126,6 +221,7 @@ function Band({
 
   const { nodes, materials } = useGLTF('/models/card.glb') as any;
   const texture = useTexture('/images/lanyard.png');
+  const promoTexture = useMemo(() => showPromo ? createPromoTexture() : null, [showPromo]);
 
   const [curve] = useState(
     () =>
@@ -233,12 +329,12 @@ function Band({
           >
             <mesh geometry={nodes.card.geometry}>
               <meshPhysicalMaterial
-                map={materials.base.map}
+                map={promoTexture ?? materials.base.map}
                 map-anisotropy={16}
                 clearcoat={isMobile ? 0 : 1}
                 clearcoatRoughness={0.15}
-                roughness={0.9}
-                metalness={0.8}
+                roughness={showPromo ? 0.3 : 0.9}
+                metalness={showPromo ? 0.1 : 0.8}
               />
             </mesh>
             <mesh
@@ -247,25 +343,6 @@ function Band({
               material-roughness={0.3}
             />
             <mesh geometry={nodes.clamp.geometry} material={materials.metal} />
-            {showPromo && (
-              <Html
-                position={[0, -0.55, 0.02]}
-                center
-                distanceFactor={6}
-                transform
-                occlude={false}
-                style={{ pointerEvents: 'auto' }}
-              >
-                <div className="lanyard-card-promo" onClick={(e) => e.stopPropagation()}>
-                  <p className="lanyard-card-headline">10% Off</p>
-                  <span className="lanyard-card-code">FIDGETFUN</span>
-                  <p className="lanyard-card-shipping">Free shipping&nbsp;$50+</p>
-                  <a href="/products" className="lanyard-card-cta" onClick={onDismissPromo}>
-                    Shop Now
-                  </a>
-                </div>
-              </Html>
-            )}
           </group>
         </RigidBody>
       </group>

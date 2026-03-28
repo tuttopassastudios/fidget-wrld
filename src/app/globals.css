@@ -18,96 +18,10 @@
   pointer-events: auto;
 }
 
-/* ── Promo info on the 3D card ── */
-.lanyard-card-promo {
-  width: 120px;
-  text-align: center;
-  font-family: system-ui, -apple-system, sans-serif;
-  pointer-events: auto;
-  user-select: none;
-}
-
-.lanyard-card-headline {
-  margin: 0 0 4px;
-  font-size: 16px;
-  font-weight: 800;
-  color: #1e40af;
-  letter-spacing: -0.01em;
-  line-height: 1.1;
-}
-
-.lanyard-card-code {
-  display: inline-block;
-  margin: 0 0 4px;
-  padding: 3px 8px;
-  background: linear-gradient(135deg, #f0f9ff, #e8f4fd);
-  border: 1.5px dashed #3b82f6;
-  border-radius: 5px;
-  font-family: var(--font-mono, monospace);
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: 0.12em;
-  color: #1e40af;
-  user-select: all;
-}
-
-.lanyard-card-shipping {
-  margin: 0 0 6px;
-  font-size: 9px;
-  color: #6b7280;
-  font-weight: 500;
-}
-
-.lanyard-card-cta {
-  display: inline-block;
-  padding: 4px 14px;
-  border-radius: 8px;
-  background: linear-gradient(135deg, #6366f1, #8b5cf6);
-  color: #fff;
-  font-size: 10px;
-  font-weight: 700;
-  text-decoration: none;
-  letter-spacing: 0.02em;
-  transition: transform 150ms ease, box-shadow 150ms ease;
-  touch-action: manipulation;
-}
-
-.lanyard-card-cta:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.4);
-}
-
-.lanyard-card-cta:focus-visible {
-  outline: 2px solid #6366f1;
-  outline-offset: 2px;
-}
-
 @media (max-width: 768px) {
   .lanyard-wrapper {
     width: min(280px, 60vw);
     height: min(380px, 50vh);
-  }
-
-  .lanyard-card-promo {
-    width: 100px;
-  }
-
-  .lanyard-card-headline {
-    font-size: 13px;
-  }
-
-  .lanyard-card-code {
-    font-size: 9px;
-    padding: 2px 6px;
-  }
-
-  .lanyard-card-shipping {
-    font-size: 8px;
-  }
-
-  .lanyard-card-cta {
-    font-size: 9px;
-    padding: 3px 10px;
   }
 }
 
