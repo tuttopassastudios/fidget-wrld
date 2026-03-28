@@ -55,3 +55,9 @@
 .backLink:hover {
   text-decoration: underline;
 }
+
+@media (prefers-reduced-motion: reduce) {
+  .spinner {
+    animation: none;
+  }
+}

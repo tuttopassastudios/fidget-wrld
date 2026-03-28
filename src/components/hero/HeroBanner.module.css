@@ -145,3 +145,26 @@
     animation: none;
   }
 }
+
+/* Small mobile */
+@media (max-width: 480px) {
+  .contentColumn {
+    padding: var(--space-6);
+    padding-top: calc(var(--space-6) + 60px);
+  }
+
+  .cta {
+    align-self: stretch;
+  }
+
+  .subtitle {
+    font-size: var(--text-base);
+  }
+}
+
+/* Mobile CTA full-width */
+@media (max-width: 768px) {
+  .cta {
+    align-self: stretch;
+  }
+}

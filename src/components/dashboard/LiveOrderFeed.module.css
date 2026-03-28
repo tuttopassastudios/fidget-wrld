@@ -105,3 +105,17 @@
   min-width: 48px;
   text-align: right;
 }
+
+@media (prefers-reduced-motion: reduce) {
+  .dot {
+    animation: none;
+  }
+
+  .itemNew {
+    animation: none;
+  }
+
+  .item {
+    transition: none;
+  }
+}

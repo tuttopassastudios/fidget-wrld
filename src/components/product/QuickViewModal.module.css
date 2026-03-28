@@ -146,6 +146,11 @@
   .panel {
     padding: var(--space-4);
   }
+
+  .closeBtn {
+    width: 44px;
+    height: 44px;
+  }
 }
 
 /* Animations */

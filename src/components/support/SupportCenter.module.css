@@ -179,6 +179,12 @@
   animation: spin 0.8s linear infinite;
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .spinner {
+    animation: none;
+  }
+}
+
 /* Success state */
 .successState {
   text-align: center;

@@ -505,3 +505,55 @@
   flex-direction: column;
   gap: var(--space-6);
 }
+
+/* Hide desktop sidebar on mobile; show mobile trigger only */
+@media (max-width: 768px) {
+  .sidebar {
+    display: none;
+  }
+
+  /* Enlarge color swatches for mobile touch targets */
+  .colorSwatch {
+    width: 44px;
+    height: 44px;
+  }
+
+  /* Enlarge slider thumbs for mobile touch targets */
+  .sliderInput::-webkit-slider-thumb {
+    width: 44px;
+    height: 44px;
+  }
+
+  .sliderInput::-moz-range-thumb {
+    width: 44px;
+    height: 44px;
+  }
+
+  .sliderInput {
+    height: 44px;
+    top: -20px;
+  }
+
+  /* Enlarge checkbox targets for mobile */
+  .checkboxLabel {
+    min-height: 44px;
+  }
+
+  .checkboxInput {
+    width: 22px;
+    height: 22px;
+  }
+
+  .categoryButton {
+    min-height: 44px;
+  }
+
+  /* Safe area for mobile panel bottom */
+  .mobilePanel {
+    padding-bottom: calc(var(--space-6) + 60px + env(safe-area-inset-bottom));
+  }
+
+  .panelApply {
+    padding-bottom: calc(var(--space-4) + env(safe-area-inset-bottom));
+  }
+}
