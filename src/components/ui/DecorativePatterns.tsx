@@ -38,12 +38,52 @@ export function PolkaDots({
   const dotColors = colors || defaultColors;
   const ref = useRef<HTMLDivElement>(null);
   const [offsetY, setOffsetY] = useState(0);
+  const [revealed, setRevealed] = useState(!animated);
 
   useEffect(() => {
     if (!animated) return;
 
     const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
-    if (mediaQuery.matches) return;
+    if (mediaQuery.matches) {
+      setRevealed(true);
+      return;
+    }
+
+    // Scroll-triggered fade-in via IntersectionObserver
+    const el = ref.current;
+    if (el) {
+      const observer = new IntersectionObserver(
+        ([entry]) => {
+          if (entry.isIntersecting) {
+            setRevealed(true);
+            observer.disconnect();
+          }
+        },
+        { threshold: 0.1 }
+      );
+      observer.observe(el);
+      // Cleanup
+      const cleanup = () => observer.disconnect();
+
+      // Parallax scroll effect
+      let ticking = false;
+      const onScroll = () => {
+        if (!ticking) {
+          ticking = true;
+          requestAnimationFrame(() => {
+            const scrollY = window.scrollY;
+            setOffsetY(Math.sin(scrollY * 0.005) * 10);
+            ticking = false;
+          });
+        }
+      };
+
+      window.addEventListener('scroll', onScroll, { passive: true });
+      return () => {
+        cleanup();
+        window.removeEventListener('scroll', onScroll);
+      };
+    }
 
     let ticking = false;
     const onScroll = () => {
@@ -51,7 +91,6 @@ export function PolkaDots({
         ticking = true;
         requestAnimationFrame(() => {
           const scrollY = window.scrollY;
-          // Map scroll to a ±10px range using a sine-like oscillation
           setOffsetY(Math.sin(scrollY * 0.005) * 10);
           ticking = false;
         });
@@ -96,7 +135,13 @@ export function PolkaDots({
     cssVars['--dot-border-color'] = dotColors[0] || 'var(--color-dot-pink, #FF6B9D)';
   }
 
-  const animStyle = animated ? { transform: `translateY(${offsetY}px)` } : {};
+  const animStyle = animated
+    ? {
+        transform: `translateY(${offsetY}px)`,
+        opacity: revealed ? undefined : 0,
+        transition: 'opacity 600ms ease-out',
+      }
+    : {};
 
   return (
     <div

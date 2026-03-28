@@ -49,6 +49,7 @@ export function RecommendationCarousel({
                 isNew: p.isNew,
                 isBestseller: p.isBestseller,
               }}
+              enableViewTransition={false}
             />
           ),
         };

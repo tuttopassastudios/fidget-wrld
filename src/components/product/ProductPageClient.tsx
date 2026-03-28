@@ -102,6 +102,7 @@ export function ProductPageClient({ product }: { product: ProductPage }) {
               src={variant.image}
               alt={variant.name}
               loading="eager"
+              style={{ viewTransitionName: `product-${product.slug}` }}
             />
             <div className={styles.galleryDecor} aria-hidden="true">
               <PolkaDots pattern="corner" size="sm" cornerPosition="top-right" />

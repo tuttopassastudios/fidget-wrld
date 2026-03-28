@@ -193,6 +193,15 @@
   line-height: 1.6;
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .card {
+    transition: none;
+  }
+  .card:hover {
+    transform: none;
+  }
+}
+
 @media (max-width: 768px) {
   .spotlight {
     padding: var(--space-8) var(--space-4);

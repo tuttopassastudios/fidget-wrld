@@ -3,7 +3,7 @@ import Image from 'next/image';
 
 export function Footer() {
   return (
-    <footer className="footer-minimal">
+    <footer className="footer-minimal" style={{ viewTransitionName: 'footer' }}>
       <div className="container">
         <div className="footer-top">
           <div className="footer-brand">

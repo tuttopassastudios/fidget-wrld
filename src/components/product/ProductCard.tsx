@@ -28,6 +28,7 @@ interface ProductCardProps {
   description?: string;
   onQuickView?: () => void;
   productData?: ProductPage;
+  enableViewTransition?: boolean;
 }
 
 export function ProductCard({
@@ -42,6 +43,7 @@ export function ProductCard({
   description,
   onQuickView,
   productData,
+  enableViewTransition = true,
 }: ProductCardProps) {
   const { addItem } = useCart();
   const { show } = useToast();
@@ -92,7 +94,7 @@ export function ProductCard({
   return (
     <>
       <ReflectiveCard className="product-card" enableTilt={false}>
-        <Link href={`/products/${slug}`} className="product-card-link" prefetch={true}>
+        <Link href={`/products/${slug}`} className="product-card-link" prefetch={true} style={enableViewTransition ? { viewTransitionName: `product-${slug}` } : undefined}>
           <div className="product-card-image" style={size !== 'standard' ? { aspectRatio: imageAspect } : undefined}>
             <img
               src={product.image}
