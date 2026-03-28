@@ -11,7 +11,7 @@ import { useHaptics } from '@/hooks/useHaptics';
 const FREE_SHIP_THRESHOLD = 150;
 
 export function CartDrawer() {
-  const { items, getCount, getSubtotal, isDrawerOpen, closeDrawer } = useCart();
+  const { items, getCount, getSubtotal, isDrawerOpen, closeDrawer, removeItem } = useCart();
   const timerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
   const drawerRef = useRef<HTMLDivElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
@@ -46,6 +46,7 @@ export function CartDrawer() {
         <div className="cart-drawer-header">
           <span className="cart-drawer-title">
             Cart{count > 0 ? ` (${count} item${count !== 1 ? 's' : ''})` : ''}
+            <span aria-hidden="true" style={{ display: 'inline-block', width: 8, height: 8, borderRadius: '50%', background: 'var(--color-accent-primary)', marginLeft: 6, flexShrink: 0 }} />
           </span>
           <button ref={closeRef} className="cart-drawer-close" onClick={() => { trigger('tap'); closeDrawer(); }} aria-label="Close cart">&times;</button>
         </div>
@@ -78,11 +79,19 @@ export function CartDrawer() {
             </div>
           ) : (
             items.map(item => (
-              <div key={item.sku} className="cart-drawer-item-inner">
+              <div key={item.sku} className="cart-drawer-item-inner" style={{ position: 'relative' }}>
+                <button
+                  className="cart-drawer-remove"
+                  onClick={() => { trigger('tap'); removeItem(item.sku); }}
+                  aria-label={`Remove ${item.name} from cart`}
+                  style={{ position: 'absolute', top: 4, right: 0 }}
+                >
+                  &times;
+                </button>
                 {item.image ? (
-                  <Image src={item.image} alt={item.name} width={50} height={50} sizes="50px" style={{ objectFit: 'contain' }} />
+                  <Image src={item.image} alt={item.name} width={60} height={60} sizes="60px" style={{ objectFit: 'contain' }} />
                 ) : (
-                  <div style={{ width: 50, height: 50, background: 'var(--color-bg-elevated,#001428)', borderRadius: 6 }} />
+                  <div style={{ width: 60, height: 60, background: 'var(--color-bg-elevated,#001428)', borderRadius: 'var(--radius-md, 6px)' }} />
                 )}
                 <div className="cart-drawer-item-info">
                   <strong>{item.name}</strong>
