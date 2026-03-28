@@ -3,7 +3,9 @@ import { Quicksand } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
+import "./card-nav.css";
 import { Providers } from "@/components/Providers";
+import ClickSpark from "@/components/effects/ClickSpark";
 
 const quicksand = Quicksand({
   variable: "--font-quicksand",
@@ -99,9 +101,11 @@ export default function RootLayout({
         />
       </head>
       <body style={{ background: '#FFF9FB', color: '#1F2937' }}>
-        <Providers>
-          {children}
-        </Providers>
+        <ClickSpark>
+          <Providers>
+            {children}
+          </Providers>
+        </ClickSpark>
         <Analytics />
         <SpeedInsights />
       </body>
