@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { usePathname } from 'next/navigation';
 import dynamic from 'next/dynamic';
 
 const Lanyard = dynamic(() => import('./Lanyard'), { ssr: false });
@@ -8,6 +9,7 @@ const Lanyard = dynamic(() => import('./Lanyard'), { ssr: false });
 const STORAGE_KEY = 'fidget-lanyard-dismissed';
 
 export function LanyardWrapper() {
+  const pathname = usePathname();
   const [showOverlay, setShowOverlay] = useState(false);
   const [closing, setClosing] = useState(false);
   const overlayRef = useRef<HTMLDivElement>(null);
@@ -62,7 +64,7 @@ export function LanyardWrapper() {
     if (e.target === overlayRef.current) dismiss();
   }, [dismiss]);
 
-  // Overlay mode — big, centered, with promo text
+  // Overlay mode — centered modal with promo
   if (showOverlay) {
     return (
       <div
@@ -74,7 +76,7 @@ export function LanyardWrapper() {
         aria-label="Welcome discount"
         onClick={handleBackdropClick}
       >
-        <div className="lanyard-overlay-content">
+        <div className="lanyard-overlay-card">
           <button
             ref={closeRef}
             className="lanyard-close-btn"
@@ -84,16 +86,17 @@ export function LanyardWrapper() {
             &#x2715;
           </button>
 
-          <Lanyard position={[0, 0, 30]} gravity={[0, -40, 0]} fov={30} transparent />
+          <div className="lanyard-canvas-area">
+            <Lanyard position={[0, 0, 30]} gravity={[0, -40, 0]} fov={30} transparent />
+          </div>
 
           <div className="lanyard-promo">
-            <h2>Welcome to Fidget WRLD!</h2>
-            <p>Use code</p>
+            <h2>Get 10% Off Your First Order</h2>
+            <p className="lanyard-promo-sub">Use the code below at checkout</p>
             <span className="lanyard-promo-code">FIDGETFUN</span>
-            <p>for 10% off your first order</p>
-            <p style={{ opacity: 0.85, fontSize: '0.9em' }}>+ Free shipping on orders over $50</p>
+            <p className="lanyard-promo-shipping">+ Free shipping on orders over $50</p>
             <button className="lanyard-dismiss-btn" onClick={dismiss}>
-              Start Shopping
+              Shop Now
             </button>
           </div>
         </div>
@@ -101,6 +104,7 @@ export function LanyardWrapper() {
     );
   }
 
-  // Corner mode — small top-right after dismissal
+  // Corner mode — small top-right after dismissal (hidden on homepage)
+  if (pathname === '/') return null;
   return <Lanyard position={[0, 0, 30]} gravity={[0, -40, 0]} fov={20} transparent />;
 }
