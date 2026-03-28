@@ -200,6 +200,12 @@ body {
   }
 }
 
+/* Dot accent pop animation */
+@keyframes dotPop {
+  0% { transform: scale(0); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
 /* Typography */
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-heading);

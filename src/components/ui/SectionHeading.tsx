@@ -52,6 +52,7 @@ export function SectionHeading({
         {dotAccent && (
           <span
             aria-hidden="true"
+            className="section-heading-dot"
             style={{
               display: 'inline-block',
               width: 10,
@@ -60,6 +61,7 @@ export function SectionHeading({
               backgroundColor: 'var(--color-accent-primary)',
               marginLeft: 'var(--space-2)',
               verticalAlign: 'middle',
+              animation: 'dotPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) both',
             }}
           />
         )}
