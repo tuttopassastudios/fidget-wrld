@@ -30,11 +30,6 @@ export default async function HomePage() {
       <section className={styles.hero} id="top">
         <div className={styles.heroInner}>
           <FidgetWrldLogo className={styles.heroLogo} size="lg" />
-          <h1 className={styles.heroTitle}>Premium Fidget Toys.<br />Endless Satisfaction.</h1>
-          <p className={styles.heroSubtitle}>
-            Discover magnetic balls, squishy toys, clicky cubes, and more. Quality fidgets for focus, calm, and play.
-          </p>
-          <Link href="/products" className="btn btn-primary">Shop Fidgets</Link>
         </div>
         <div className={styles.scrollIndicator} aria-hidden="true">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
