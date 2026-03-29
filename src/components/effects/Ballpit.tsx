@@ -18,7 +18,6 @@ import {
   PointLight,
   Raycaster,
   Scene,
-  ShaderChunk,
   SphereGeometry,
   SRGBColorSpace,
   Vector2,
@@ -114,6 +113,16 @@ class X {
       console.error('Three: Missing canvas or id parameter');
     }
     this.canvas!.style.display = 'block';
+
+    // Ensure canvas has dimensions for WebGL context creation
+    if (!this.canvas!.width || !this.canvas!.height) {
+      const parent = this.canvas!.parentElement;
+      const w = parent?.offsetWidth || window.innerWidth;
+      const h = parent?.offsetHeight || window.innerHeight;
+      this.canvas!.width = w;
+      this.canvas!.height = h;
+    }
+
     const rendererOptions: WebGLRendererParameters = {
       canvas: this.canvas,
       powerPreference: 'high-performance',
@@ -425,56 +434,18 @@ class W {
   }
 }
 
+// Simplified material - using standard MeshPhysicalMaterial
+// The custom subsurface scattering shader was incompatible with current Three.js
 class Y extends MeshPhysicalMaterial {
-  uniforms: { [key: string]: { value: any } } = {
-    thicknessDistortion: { value: 0.1 },
-    thicknessAmbient: { value: 0 },
-    thicknessAttenuation: { value: 0.1 },
-    thicknessPower: { value: 2 },
-    thicknessScale: { value: 10 }
-  };
   constructor(params: any) {
-    super(params);
-    this.defines = { ...this.defines, USE_UV: '' };
-    this.onBeforeCompile = shader => {
-      Object.assign(shader.uniforms, this.uniforms);
-      shader.fragmentShader =
-        `
-        uniform float thicknessPower;
-        uniform float thicknessScale;
-        uniform float thicknessDistortion;
-        uniform float thicknessAmbient;
-        uniform float thicknessAttenuation;
-        ` + shader.fragmentShader;
-      shader.fragmentShader = shader.fragmentShader.replace(
-        'void main() {',
-        `
-        void RE_Direct_Scattering(const in IncidentLight directLight, const in vec2 uv, const in vec3 geometryPosition, const in vec3 geometryNormal, const in vec3 geometryViewDir, const in vec3 geometryClearcoatNormal, inout ReflectedLight reflectedLight) {
-          vec3 scatteringHalf = normalize(directLight.direction + (geometryNormal * thicknessDistortion));
-          float scatteringDot = pow(saturate(dot(geometryViewDir, -scatteringHalf)), thicknessPower) * thicknessScale;
-          #ifdef USE_COLOR
-            vec3 scatteringIllu = (scatteringDot + thicknessAmbient) * vColor;
-          #else
-            vec3 scatteringIllu = (scatteringDot + thicknessAmbient) * diffuse;
-          #endif
-          reflectedLight.directDiffuse += scatteringIllu * thicknessAttenuation * directLight.color;
-        }
-
-        void main() {
-        `
-      );
-      const lightsChunk = ShaderChunk.lights_fragment_begin.replaceAll(
-        'RE_Direct( directLight, geometryPosition, geometryNormal, geometryViewDir, geometryClearcoatNormal, material, reflectedLight );',
-        `
-          RE_Direct( directLight, geometryPosition, geometryNormal, geometryViewDir, geometryClearcoatNormal, material, reflectedLight );
-          RE_Direct_Scattering(directLight, vUv, geometryPosition, geometryNormal, geometryViewDir, geometryClearcoatNormal, reflectedLight);
-        `
-      );
-      shader.fragmentShader = shader.fragmentShader.replace('#include <lights_fragment_begin>', lightsChunk);
-      if (this.onBeforeCompile2) this.onBeforeCompile2(shader);
-    };
+    super({
+      ...params,
+      // Use built-in transmission for a glassy/translucent look
+      transmission: 0.2,
+      thickness: 0.5,
+      ior: 1.5,
+    });
   }
-  onBeforeCompile2?: (shader: any) => void;
 }
 
 const XConfig = {
@@ -860,12 +831,20 @@ const Ballpit: React.FC<BallpitProps> = ({ className = '', followCursor = true, 
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    spheresInstanceRef.current = createBallpit(canvas, {
-      followCursor,
-      ...props
+    // Wait for next frame to ensure layout is complete
+    const frameId = requestAnimationFrame(() => {
+      try {
+        spheresInstanceRef.current = createBallpit(canvas, {
+          followCursor,
+          ...props
+        });
+      } catch (err) {
+        console.error('[Ballpit] Failed to create:', err);
+      }
     });
 
     return () => {
+      cancelAnimationFrame(frameId);
       if (spheresInstanceRef.current) {
         spheresInstanceRef.current.dispose();
       }
