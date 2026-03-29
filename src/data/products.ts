@@ -237,6 +237,7 @@ export const productPages: ProductPage[] = [
     variants: [
       { sku: 'FW-CUBE-BLK', name: 'Fidget Cube', variant: 'Midnight Black', color: 'Black', colorHex: '#1a1a1a', price: 14.99, image: '/images/products/fidget-cube-black.webp' },
       { sku: 'FW-CUBE-WHT', name: 'Fidget Cube', variant: 'Arctic White', color: 'White', colorHex: '#f5f5f5', price: 14.99, image: '/images/products/fidget-cube-white.webp' },
+      { sku: 'FW-CUBE-RED', name: 'Fidget Cube', variant: 'Cherry Red', color: 'Red', colorHex: '#C9475B', price: 14.99, image: '/images/products/fidget-cube-red.png' },
       { sku: 'FW-CUBE-RBW', name: 'Fidget Cube', variant: 'Rainbow', color: 'Rainbow', colorHex: '#ff6b6b', price: 16.99, image: '/images/products/fidget-cube-rainbow.webp' },
       { sku: 'FW-CUBE-GLOW', name: 'Fidget Cube', variant: 'Glow in Dark', color: 'Glow', colorHex: '#90EE90', price: 17.99, image: '/images/products/fidget-cube-glow.webp' },
     ],
