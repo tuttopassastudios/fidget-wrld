@@ -286,7 +286,7 @@ export async function getBestSellers(): Promise<ProductPage[]> {
   const bestsellers = products.filter(p => p.isBestseller);
   if (bestsellers.length > 0) return bestsellers.slice(0, 4);
 
-  const featuredSlugs = ['n52-magnetic-balls', 'fidget-cube', 'pop-it-rainbow', 'stress-ball-set'];
+  const featuredSlugs = ['magnet-balls', 'fidget-cube', 'pop-it-rainbow', 'stress-ball-set'];
   return featuredSlugs
     .map(slug => products.find(p => p.slug === slug))
     .filter((p): p is ProductPage => p !== undefined);

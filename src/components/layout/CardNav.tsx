@@ -25,7 +25,7 @@ const NAV_ITEMS: NavCardItem[] = [
     textColor: '#fff',
     links: [
       { label: 'Top Picks', href: '/products' },
-      { label: 'N52 Magnetic Balls', href: '/products/n52-magnetic-balls' },
+      { label: 'N52 Magnetic Balls', href: '/products/magnet-balls' },
       { label: 'Gift Sets', href: '/products?category=Gift+Set' },
     ],
   },

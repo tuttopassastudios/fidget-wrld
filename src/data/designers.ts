@@ -16,7 +16,7 @@ export const designers: Designer[] = [
     bio: 'With a background in industrial design and a passion for tactile experiences, Maya leads the creation of our magnetic product line. Her designs focus on the perfect balance between visual beauty and satisfying fidget mechanics.',
     avatar: '/images/designers/maya-chen.jpg',
     accentColor: 'var(--color-dot-violet)',
-    featuredProductSlugs: ['n52-magnetic-balls', 'magnetic-putty'],
+    featuredProductSlugs: ['magnet-balls', 'magnetic-putty'],
   },
   {
     id: 'alex-rivera',
