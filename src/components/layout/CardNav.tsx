@@ -20,7 +20,7 @@ interface NavCardItem {
 
 const NAV_ITEMS: NavCardItem[] = [
   {
-    label: 'Magnetic',
+    label: 'Best Sellers',
     bgColor: '#00B4D8',
     textColor: '#fff',
     links: [
@@ -30,7 +30,7 @@ const NAV_ITEMS: NavCardItem[] = [
     ],
   },
   {
-    label: 'Squishy',
+    label: 'Fidget Toys',
     bgColor: '#FF6B9D',
     textColor: '#fff',
     links: [
@@ -40,7 +40,7 @@ const NAV_ITEMS: NavCardItem[] = [
     ],
   },
   {
-    label: 'Clicky',
+    label: 'Stress-Relief Toys',
     bgColor: '#4ADE80',
     textColor: '#1F2937',
     links: [
