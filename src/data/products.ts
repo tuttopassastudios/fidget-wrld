@@ -186,7 +186,6 @@ export const productPages: ProductPage[] = [
     textures: ['smooth', 'soft'],
     ageRecommendation: '3+',
     materials: ['Silicone'],
-    isBestseller: true,
     relatedSlugs: ['fidget-cube', 'simple-dimple'],
     metaTitle: 'Pop It Rainbow | Bubble Pop Fidget Toy',
     metaDescription: 'Premium silicone Pop It fidget toy in rainbow colors. Satisfying pops for endless entertainment.',
