@@ -98,10 +98,17 @@
   text-decoration: none;
 }
 
-.card-nav-logo img {
-  height: 32px;
-  width: auto;
-  border-radius: 6px;
+.card-nav-logo-text {
+  font-family: var(--font-heading);
+  font-size: 20px;
+  font-weight: var(--font-bold);
+  letter-spacing: -0.5px;
+  background: linear-gradient(135deg, #00B4D8 0%, #4ADE80 50%, #00B4D8 100%);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  white-space: nowrap;
 }
 
 /* Right actions */

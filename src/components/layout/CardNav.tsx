@@ -4,7 +4,6 @@ import { useLayoutEffect, useRef, useState, useEffect, useCallback } from 'react
 import { gsap } from 'gsap';
 import Link from 'next/link';
 import { useCart } from '@/context/CartContext';
-import { HolographicLogo } from '@/components/ui/HolographicLogo';
 import { useHaptics } from '@/hooks/useHaptics';
 
 interface NavCardLink {
@@ -258,7 +257,7 @@ export function CardNav() {
             </button>
 
             <Link href="/" className="card-nav-logo" transitionTypes={['navigation']}>
-              <HolographicLogo priority />
+              <span className="card-nav-logo-text">FIDGET WRLD</span>
             </Link>
 
             <div className="card-nav-actions">
