@@ -120,9 +120,9 @@ export default async function HomePage() {
               <SectionHeading heading="Best Sellers" eyebrow="Fan Favorites" dotAccent />
               <Link href="/products" className={styles.viewAllLink}>View All &rarr;</Link>
             </div>
-            <EditorialGrid layout="featured">
+            <EditorialGrid layout="row">
               {bestSellers.map((p, i) => (
-                <ProductCard key={p.sku} product={p} slug={p.slug} meta={p.meta} priority={i < 3} variantCount={p.variantCount} />
+                <ProductCard key={p.sku} product={p} slug={p.slug} meta={p.meta} priority={i < 4} variantCount={p.variantCount} />
               ))}
             </EditorialGrid>
           </div>

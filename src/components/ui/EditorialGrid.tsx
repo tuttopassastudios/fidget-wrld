@@ -1,7 +1,7 @@
 import styles from './EditorialGrid.module.css';
 
 interface EditorialGridProps {
-  layout: 'even' | 'featured' | 'magazine';
+  layout: 'even' | 'featured' | 'magazine' | 'row';
   children: React.ReactNode;
   gap?: string;
   className?: string;
