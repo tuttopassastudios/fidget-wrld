@@ -33,7 +33,6 @@ const imagesToUpload = [
   'fidget-cube-black-green.png',
   'fidget-cube-grey-black.png',
   'fidget-cube-black-blue.png',
-  'fidget-cube-red-white.png',
 ];
 
 async function uploadImages(): Promise<Record<string, string>> {
@@ -77,7 +76,6 @@ async function updateProduct(imageUrls: Record<string, string>) {
     { sku: 'FW-CUBE-BG', name: 'Fidget Cube', variant: 'Black/Green', color: 'Black/Green', colorHex: '#2d5a27', price: 14.99, image: imageUrls['fidget-cube-black-green.png'] || `${supabaseUrl}/storage/v1/object/public/${BUCKET_NAME}/fidget-cube-black-green.png` },
     { sku: 'FW-CUBE-GB', name: 'Fidget Cube', variant: 'Grey/Black', color: 'Grey/Black', colorHex: '#4a4a4a', price: 14.99, image: imageUrls['fidget-cube-grey-black.png'] || `${supabaseUrl}/storage/v1/object/public/${BUCKET_NAME}/fidget-cube-grey-black.png` },
     { sku: 'FW-CUBE-BB', name: 'Fidget Cube', variant: 'Black/Blue', color: 'Black/Blue', colorHex: '#1e3a5f', price: 14.99, image: imageUrls['fidget-cube-black-blue.png'] || `${supabaseUrl}/storage/v1/object/public/${BUCKET_NAME}/fidget-cube-black-blue.png` },
-    { sku: 'FW-CUBE-RW', name: 'Fidget Cube', variant: 'Red/White', color: 'Red/White', colorHex: '#C9475B', price: 14.99, image: imageUrls['fidget-cube-red-white.png'] || `${supabaseUrl}/storage/v1/object/public/${BUCKET_NAME}/fidget-cube-red-white.png` },
   ];
 
   const { data: product } = await supabase
