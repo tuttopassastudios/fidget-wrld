@@ -22,7 +22,7 @@ export const productPages: ProductPage[] = [
       { sku: 'FW-MAG-512-SIL', name: 'Magnet Balls', variant: '512pc Silver', color: 'Silver', colorHex: '#C0C0C0', price: 44.99, image: '/images/products/mag-balls-silver-512.webp' },
       { sku: 'FW-MAG-1000-SIL', name: 'Magnet Balls', variant: '1000pc Silver', color: 'Silver', colorHex: '#C0C0C0', price: 74.99, image: '/images/products/mag-balls-silver-1000.webp' },
     ],
-    defaultVariantIndex: 0,
+    defaultVariantIndex: 3,
     description: `<p>Experience the mesmerizing world of magnetic sculpture with our premium N52 neodymium magnetic balls. These ultra-strong rare earth magnets snap together with satisfying precision, allowing you to create endless 3D shapes, patterns, and sculptures.</p>
 <p>Each 5mm sphere features a precision-machined surface with a triple-layer nickel-copper-nickel coating for durability and a smooth, premium feel. The N52 grade delivers maximum magnetic strength for secure connections and complex builds.</p>`,
     features: [
@@ -242,7 +242,7 @@ export const productPages: ProductPage[] = [
       { sku: 'FW-CUBE-RBW', name: 'Fidget Cube', variant: 'Rainbow', color: 'Rainbow', colorHex: '#ff6b6b', price: 16.99, image: '/images/products/fidget-cube-rainbow.webp' },
       { sku: 'FW-CUBE-GLOW', name: 'Fidget Cube', variant: 'Glow in Dark', color: 'Glow', colorHex: '#90EE90', price: 17.99, image: '/images/products/fidget-cube-glow.webp' },
     ],
-    defaultVariantIndex: 0,
+    defaultVariantIndex: 2,
     description: `<p>The original 6-sided fidget companion. Each face of this pocket-sized cube features a different tactile experience: click, glide, flip, breathe, roll, and spin.</p>
 <p>Engineered for quality with premium materials and satisfying feedback on every interaction. Perfect for meetings, studying, or any time you need to keep your hands busy.</p>`,
     features: [
