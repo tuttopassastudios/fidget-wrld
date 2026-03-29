@@ -27,13 +27,10 @@ if (!supabaseUrl || !serviceRoleKey) {
 const supabase = createClient(supabaseUrl, serviceRoleKey);
 
 const variants = [
-  { sku: 'FW-MAG-216-SIL', name: 'Magnet Balls', variant: '216pc Silver', color: 'Silver', colorHex: '#C0C0C0', price: 24.99, image: '/images/products/mag-balls-silver.webp' },
-  { sku: 'FW-MAG-216-GLD', name: 'Magnet Balls', variant: '216pc Gold', color: 'Gold', colorHex: '#FFD700', price: 24.99, image: '/images/products/mag-balls-gold.webp' },
-  { sku: 'FW-MAG-216-BLK', name: 'Magnet Balls', variant: '216pc Black', color: 'Black', colorHex: '#1a1a1a', price: 24.99, image: '/images/products/mag-balls-black.webp' },
-  { sku: 'FW-MAG-216-RED', name: 'Magnet Balls', variant: '216pc Red', color: 'Red', colorHex: '#8B0000', price: 24.99, image: 'https://jzfesgxooirrjsnluphz.supabase.co/storage/v1/object/public/products/mag-balls-red.png' },
-  { sku: 'FW-MAG-216-RBW', name: 'Magnet Balls', variant: '216pc Rainbow', color: 'Rainbow', colorHex: '#ff6b6b', price: 29.99, image: '/images/products/mag-balls-rainbow.webp' },
-  { sku: 'FW-MAG-512-SIL', name: 'Magnet Balls', variant: '512pc Silver', color: 'Silver', colorHex: '#C0C0C0', price: 44.99, image: '/images/products/mag-balls-silver-512.webp' },
-  { sku: 'FW-MAG-1000-SIL', name: 'Magnet Balls', variant: '1000pc Silver', color: 'Silver', colorHex: '#C0C0C0', price: 74.99, image: '/images/products/mag-balls-silver-1000.webp' },
+  { sku: 'FW-MAG-216-RED', name: 'Magnet Balls', variant: 'Red', color: 'Red', colorHex: '#8B0000', price: 24.99, image: 'https://jzfesgxooirrjsnluphz.supabase.co/storage/v1/object/public/products/mag-balls-red.png' },
+  { sku: 'FW-MAG-216-BLU', name: 'Magnet Balls', variant: 'Blue', color: 'Blue', colorHex: '#1E90FF', price: 24.99, image: 'https://jzfesgxooirrjsnluphz.supabase.co/storage/v1/object/public/products/mag-balls-blue.png' },
+  { sku: 'FW-MAG-216-GLD', name: 'Magnet Balls', variant: 'Gold', color: 'Gold', colorHex: '#FFD700', price: 24.99, image: 'https://jzfesgxooirrjsnluphz.supabase.co/storage/v1/object/public/products/mag-balls-gold.png' },
+  { sku: 'FW-MAG-216-SIL', name: 'Magnet Balls', variant: 'Silver', color: 'Silver', colorHex: '#C0C0C0', price: 24.99, image: 'https://jzfesgxooirrjsnluphz.supabase.co/storage/v1/object/public/products/mag-balls-silver.png' },
 ];
 
 async function main() {
