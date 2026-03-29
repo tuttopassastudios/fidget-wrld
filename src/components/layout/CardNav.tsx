@@ -24,9 +24,9 @@ const NAV_ITEMS: NavCardItem[] = [
     bgColor: '#00B4D8',
     textColor: '#fff',
     links: [
-      { label: 'N52 Balls', href: '/products?category=Magnetic' },
-      { label: 'Magnetic Putty', href: '/products?category=Magnetic&type=putty' },
-      { label: 'Desk Sculptures', href: '/products?category=Desk+Toys' },
+      { label: 'Top Picks', href: '/products' },
+      { label: 'N52 Magnetic Balls', href: '/products/n52-magnetic-balls' },
+      { label: 'Gift Sets', href: '/products?category=Gift+Set' },
     ],
   },
   {
@@ -34,9 +34,9 @@ const NAV_ITEMS: NavCardItem[] = [
     bgColor: '#FF6B9D',
     textColor: '#fff',
     links: [
-      { label: 'Stress Balls', href: '/products?category=Squishy' },
-      { label: 'Foam Toys', href: '/products?category=Squishy&type=foam' },
-      { label: 'Squeeze Toys', href: '/products?category=Squishy&type=squeeze' },
+      { label: 'Fidget Cubes', href: '/products?category=Clicky' },
+      { label: 'Desk Toys', href: '/products?category=Desk+Toy' },
+      { label: 'Magnetic Toys', href: '/products?category=Magnetic' },
     ],
   },
   {
@@ -44,9 +44,9 @@ const NAV_ITEMS: NavCardItem[] = [
     bgColor: '#4ADE80',
     textColor: '#1F2937',
     links: [
-      { label: 'Fidget Cubes', href: '/products?category=Clicky' },
-      { label: 'Pop Its', href: '/products?category=Clicky&type=popper' },
-      { label: 'Switches', href: '/products?category=Clicky&type=switch' },
+      { label: 'Stress Balls', href: '/products?category=Squishy' },
+      { label: 'Squishy Toys', href: '/products?category=Squishy' },
+      { label: 'Stretchy Toys', href: '/products?category=Stretchy' },
     ],
   },
 ];
