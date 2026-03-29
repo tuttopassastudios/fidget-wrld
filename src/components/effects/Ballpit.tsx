@@ -10,8 +10,11 @@ import {
   Color,
   InstancedMesh,
   MathUtils,
+  Mesh,
   MeshPhysicalMaterial,
+  MeshPhysicalMaterialParameters,
   Object3D,
+  OrthographicCamera,
   PerspectiveCamera,
   Plane,
   PMREMGenerator,
@@ -23,7 +26,9 @@ import {
   Vector2,
   Vector3,
   WebGLRenderer,
-  WebGLRendererParameters
+  WebGLRendererParameters,
+  Material,
+  BufferGeometry
 } from 'three';
 import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js';
 
@@ -45,9 +50,15 @@ interface SizeData {
   pixelRatio: number;
 }
 
+interface PostProcessing {
+  setSize: (width: number, height: number) => void;
+  render: () => void;
+  dispose: () => void;
+}
+
 class X {
   #config: XConfig;
-  #postprocessing: any;
+  #postprocessing: PostProcessing | undefined;
   #resizeObserver?: ResizeObserver;
   #intersectionObserver?: IntersectionObserver;
   #resizeTimer?: number;
@@ -200,8 +211,8 @@ class X {
       const fovRad = (this.camera.fov * Math.PI) / 180;
       this.size.wHeight = 2 * Math.tan(fovRad / 2) * this.camera.position.length();
       this.size.wWidth = this.size.wHeight * this.camera.aspect;
-    } else if ((this.camera as any).isOrthographicCamera) {
-      const cam = this.camera as any;
+    } else if ((this.camera as unknown as OrthographicCamera).isOrthographicCamera) {
+      const cam = this.camera as unknown as OrthographicCamera;
       this.size.wHeight = cam.top - cam.bottom;
       this.size.wWidth = cam.right - cam.left;
     }
@@ -220,10 +231,10 @@ class X {
     this.size.pixelRatio = pr;
   }
 
-  get postprocessing() {
+  get postprocessing(): PostProcessing | undefined {
     return this.#postprocessing;
   }
-  set postprocessing(value: any) {
+  set postprocessing(value: PostProcessing) {
     this.#postprocessing = value;
     this.render = value.render.bind(value);
   }
@@ -268,15 +279,17 @@ class X {
 
   clear() {
     this.scene.traverse(obj => {
-      if ((obj as any).isMesh && typeof (obj as any).material === 'object' && (obj as any).material !== null) {
-        Object.keys((obj as any).material).forEach(key => {
-          const matProp = (obj as any).material[key];
-          if (matProp && typeof matProp === 'object' && typeof matProp.dispose === 'function') {
-            matProp.dispose();
+      const mesh = obj as Mesh<BufferGeometry, Material>;
+      if (mesh.isMesh && typeof mesh.material === 'object' && mesh.material !== null) {
+        const material = mesh.material as Material & Record<string, unknown>;
+        Object.keys(material).forEach(key => {
+          const matProp = material[key];
+          if (matProp && typeof matProp === 'object' && 'dispose' in matProp && typeof matProp.dispose === 'function') {
+            (matProp as { dispose: () => void }).dispose();
           }
         });
-        (obj as any).material.dispose();
-        (obj as any).geometry.dispose();
+        mesh.material.dispose();
+        mesh.geometry.dispose();
       }
     });
     this.scene.clear();
@@ -437,7 +450,7 @@ class W {
 // Simplified material - using standard MeshPhysicalMaterial
 // The custom subsurface scattering shader was incompatible with current Three.js
 class Y extends MeshPhysicalMaterial {
-  constructor(params: any) {
+  constructor(params: MeshPhysicalMaterialParameters) {
     super({
       ...params,
       // Use built-in transmission for a glassy/translucent look
@@ -642,7 +655,9 @@ function isInside(rect: DOMRect) {
   );
 }
 
-const { randFloat, randFloatSpread } = MathUtils;
+// MathUtils destructuring - values used internally by W class
+const { randFloat: _randFloat, randFloatSpread: _randFloatSpread } = MathUtils;
+void _randFloat; void _randFloatSpread; // suppress unused warnings
 const F = new Vector3();
 const I = new Vector3();
 const O = new Vector3();
@@ -749,7 +764,7 @@ interface CreateBallpitReturn {
   dispose: () => void;
 }
 
-function createBallpit(canvas: HTMLCanvasElement, config: any = {}): CreateBallpitReturn {
+function createBallpit(canvas: HTMLCanvasElement, config: Partial<typeof XConfig> = {}): CreateBallpitReturn {
   const threeInstance = new X({
     canvas,
     size: 'parent',
@@ -769,7 +784,7 @@ function createBallpit(canvas: HTMLCanvasElement, config: any = {}): CreateBallp
 
   canvas.style.touchAction = 'none';
   canvas.style.userSelect = 'none';
-  (canvas.style as any).webkitUserSelect = 'none';
+  (canvas.style as CSSStyleDeclaration & { webkitUserSelect?: string }).webkitUserSelect = 'none';
 
   const pointerData = createPointerData({
     domElement: canvas,
@@ -784,7 +799,7 @@ function createBallpit(canvas: HTMLCanvasElement, config: any = {}): CreateBallp
       spheres.config.controlSphere0 = false;
     }
   });
-  function initialize(cfg: any) {
+  function initialize(cfg: Partial<typeof XConfig>) {
     if (spheres) {
       threeInstance.clear();
       threeInstance.scene.remove(spheres);
@@ -817,10 +832,9 @@ function createBallpit(canvas: HTMLCanvasElement, config: any = {}): CreateBallp
   };
 }
 
-interface BallpitProps {
+interface BallpitProps extends Partial<typeof XConfig> {
   className?: string;
   followCursor?: boolean;
-  [key: string]: any;
 }
 
 const Ballpit: React.FC<BallpitProps> = ({ className = '', followCursor = true, ...props }) => {

@@ -1,21 +1,31 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useSyncExternalStore } from 'react';
 import { BallpitBackground } from '@/components/effects/BallpitBackground';
 
 interface BallpitHeroProps {
   className?: string;
 }
 
+// Check reduced motion preference without triggering setState in effect
+function getReducedMotionSnapshot() {
+  return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+}
+
+function subscribeToReducedMotion(callback: () => void) {
+  const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+  mq.addEventListener('change', callback);
+  return () => mq.removeEventListener('change', callback);
+}
+
 export function BallpitHero({ className }: BallpitHeroProps) {
-  const [show, setShow] = useState(false);
+  const prefersReducedMotion = useSyncExternalStore(
+    subscribeToReducedMotion,
+    getReducedMotionSnapshot,
+    () => true // Server: assume reduced motion to avoid hydration mismatch
+  );
 
-  useEffect(() => {
-    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
-    if (!mq.matches) setShow(true);
-  }, []);
-
-  if (!show) return null;
+  if (prefersReducedMotion) return null;
 
   return (
     <div className={className}>

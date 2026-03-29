@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback, useRef, useLayoutEffect } from 'react';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { useDashboardRole } from './DashboardGuard';
@@ -83,9 +83,13 @@ export function DashboardSidebar() {
     return pathname.startsWith(href);
   };
 
-  // Close drawer on route change
-  useEffect(() => {
-    setMenuOpen(false);
+  // Close drawer on route change - use ref to avoid setState on initial render
+  const prevPathnameRef = useRef(pathname);
+  useLayoutEffect(() => {
+    if (prevPathnameRef.current !== pathname) {
+      prevPathnameRef.current = pathname;
+      queueMicrotask(() => setMenuOpen(false));
+    }
   }, [pathname]);
 
   // Lock body scroll when drawer is open

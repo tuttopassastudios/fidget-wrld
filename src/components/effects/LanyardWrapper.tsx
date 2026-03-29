@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import dynamic from 'next/dynamic';
 
@@ -10,17 +10,15 @@ const STORAGE_KEY = 'fidget-lanyard-dismissed';
 
 export function LanyardWrapper() {
   const pathname = usePathname();
-  const [showPromo, setShowPromo] = useState(false);
-
-  useEffect(() => {
+  // Lazy initialize from localStorage
+  const [showPromo, setShowPromo] = useState(() => {
+    if (typeof window === 'undefined') return false;
     try {
-      if (!localStorage.getItem(STORAGE_KEY)) {
-        setShowPromo(true);
-      }
+      return !localStorage.getItem(STORAGE_KEY);
     } catch {
-      // localStorage unavailable
+      return false;
     }
-  }, []);
+  });
 
   const dismissPromo = useCallback(() => {
     setShowPromo(false);

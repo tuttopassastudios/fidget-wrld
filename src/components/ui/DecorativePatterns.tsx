@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useLayoutEffect, useRef, useState } from 'react';
 import styles from './DecorativePatterns.module.css';
 
 type PatternVariant = 'scatter' | 'grid' | 'border' | 'corner';
@@ -38,14 +38,21 @@ export function PolkaDots({
   const dotColors = colors || defaultColors;
   const ref = useRef<HTMLDivElement>(null);
   const [offsetY, setOffsetY] = useState(0);
-  const [revealed, setRevealed] = useState(!animated);
+  // Initialize revealed state based on animated prop (avoid effect for initial state)
+  const [revealed, setRevealed] = useState(() => {
+    if (!animated) return true;
+    if (typeof window === 'undefined') return false;
+    return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  });
+  const revealedRef = useRef(revealed);
 
-  useEffect(() => {
-    if (!animated) return;
+  useLayoutEffect(() => {
+    if (!animated || revealedRef.current) return;
 
     const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
     if (mediaQuery.matches) {
-      setRevealed(true);
+      revealedRef.current = true;
+      queueMicrotask(() => setRevealed(true));
       return;
     }
 
@@ -54,8 +61,9 @@ export function PolkaDots({
     if (el) {
       const observer = new IntersectionObserver(
         ([entry]) => {
-          if (entry.isIntersecting) {
-            setRevealed(true);
+          if (entry.isIntersecting && !revealedRef.current) {
+            revealedRef.current = true;
+            queueMicrotask(() => setRevealed(true));
             observer.disconnect();
           }
         },

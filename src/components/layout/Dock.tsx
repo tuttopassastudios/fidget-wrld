@@ -1,11 +1,16 @@
 'use client';
 
-import { useRef, useCallback, useEffect, useState } from 'react';
+import { useRef, useCallback, useSyncExternalStore } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useCart } from '@/context/CartContext';
 import { GlassSurface } from '@/components/effects/GlassSurface';
 import { useHaptics } from '@/hooks/useHaptics';
+
+// Hydration-safe mounted state
+const subscribe = () => () => {};
+const getSnapshot = () => true;
+const getServerSnapshot = () => false;
 
 const BASE_SCALE = 1.5;
 const MAGNIFY_RANGE = 150;
@@ -62,11 +67,9 @@ export function Dock() {
   const { getCount } = useCart();
   const dockRef = useRef<HTMLElement>(null);
   const itemRefs = useRef<(HTMLElement | null)[]>([]);
-  const [mounted, setMounted] = useState(false);
+  const mounted = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
 
   const { trigger } = useHaptics();
-
-  useEffect(() => { setMounted(true); }, []);
 
   const count = mounted ? getCount() : 0;
 

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { useAuth } from '@/context/AuthContext';
 import { useDashboardSession } from '@/hooks/useDashboardSession';
 import styles from './DashboardGuard.module.css';
@@ -52,7 +53,7 @@ export function DashboardGuard({ children, requiredRole = ['admin', 'team'] }: D
       <div className={styles.denied}>
         <h2>Access Denied</h2>
         <p>You do not have permission to view this page.</p>
-        <a href="/" className={styles.backLink}>Back to home</a>
+        <Link href="/" className={styles.backLink}>Back to home</Link>
       </div>
     );
   }
@@ -63,7 +64,7 @@ export function DashboardGuard({ children, requiredRole = ['admin', 'team'] }: D
       <div className={styles.denied}>
         <h2>Insufficient Permissions</h2>
         <p>Your role ({role}) does not have access to this section.</p>
-        <a href="/dashboard" className={styles.backLink}>Back to dashboard</a>
+        <Link href="/dashboard" className={styles.backLink}>Back to dashboard</Link>
       </div>
     );
   }

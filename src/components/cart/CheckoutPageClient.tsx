@@ -1,19 +1,23 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useCart } from '@/context/CartContext';
 import { usePromo } from '@/context/PromoContext';
 import { formatCurrency } from '@/lib/utils';
-import { getBulkTier } from '@/data/products';
 import { calculateOrderPricing, STANDARD_SHIPPING } from '@/lib/pricing';
 import { useSubmissionGuard } from '@/lib/submission-guard';
 import { useHaptics } from '@/hooks/useHaptics';
 import { CheckoutProgress } from '@/components/checkout/CheckoutProgress';
 
+// Generate order ID once per component instance
+function generateOrderId() {
+  return Math.random().toString(36).substring(2, 10).toUpperCase();
+}
+
 export function CheckoutPageClient() {
-  const { items, getSubtotal, clear } = useCart();
+  const { items, clear } = useCart();
   const { calculateDiscount } = usePromo();
   const [shipping, setShipping] = useState(STANDARD_SHIPPING);
   const [researchAffirm, setResearchAffirm] = useState(false);
@@ -22,6 +26,8 @@ export function CheckoutPageClient() {
   const { isSubmitting: submitting, isCompleted, submit: guardedSubmit } = useSubmissionGuard();
   const { trigger } = useHaptics();
   const [affirmError, setAffirmError] = useState('');
+  // Stable order ID generated once when confirmation is shown
+  const orderId = useMemo(() => generateOrderId(), []);
 
   // Use extracted pricing module — single source of truth
   const orderPricing = (() => {
@@ -67,7 +73,7 @@ export function CheckoutPageClient() {
             <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="var(--color-success)" strokeWidth="2"><path d="m9 12 2 2 4-4" /><circle cx="12" cy="12" r="10" /></svg>
           </div>
           <h1 style={{ marginBottom: 8 }}>Order Confirmed!</h1>
-          <p style={{ color: 'var(--color-text-muted)', marginBottom: 8 }}>Order #{Math.random().toString(36).substring(2, 10).toUpperCase()}</p>
+          <p style={{ color: 'var(--color-text-muted)', marginBottom: 8 }}>Order #{orderId}</p>
           <p style={{ color: 'var(--color-text-secondary)', marginBottom: 24, fontSize: 14 }}>Thank you for your order. You will receive a confirmation email shortly.</p>
           <Link href="/products" className="btn btn-primary">Continue Shopping</Link>
         </div>

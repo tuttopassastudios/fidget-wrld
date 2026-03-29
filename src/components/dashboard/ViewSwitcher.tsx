@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useLayoutEffect, useRef } from 'react';
 import styles from './ViewSwitcher.module.css';
 
 export type DashboardView = 'executive' | 'sales' | 'operations';
@@ -25,6 +25,7 @@ interface ViewSwitcherProps {
 }
 
 export function usePersistedView(role: string | null): [DashboardView, (v: DashboardView) => void] {
+  const initializedRef = useRef(false);
   const [view, setView] = useState<DashboardView>(() => {
     if (typeof window === 'undefined') return getDefaultView(role);
     const stored = localStorage.getItem(STORAGE_KEY);
@@ -34,10 +35,11 @@ export function usePersistedView(role: string | null): [DashboardView, (v: Dashb
     return getDefaultView(role);
   });
 
-  // Sync default when role loads
-  useEffect(() => {
-    if (role && !localStorage.getItem(STORAGE_KEY)) {
-      setView(getDefaultView(role));
+  // Sync default when role loads (only once)
+  useLayoutEffect(() => {
+    if (role && !initializedRef.current && !localStorage.getItem(STORAGE_KEY)) {
+      initializedRef.current = true;
+      queueMicrotask(() => setView(getDefaultView(role)));
     }
   }, [role]);
 

@@ -11,7 +11,21 @@ import {
   RigidBody,
   useRopeJoint,
   useSphericalJoint,
+  RapierRigidBody,
 } from '@react-three/rapier';
+
+// Extended RigidBody type with lerped position for smooth animation
+interface LerpedRigidBody extends RapierRigidBody {
+  lerped?: THREE.Vector3;
+}
+
+// Extended mesh type with MeshLineGeometry
+interface MeshLineGeometryWithSetPoints extends THREE.BufferGeometry {
+  setPoints: (points: THREE.Vector3[]) => void;
+}
+
+type MeshLineMesh = THREE.Mesh<MeshLineGeometryWithSetPoints, THREE.Material>;
+import type { ThreeEvent } from '@react-three/fiber';
 import { MeshLineGeometry, MeshLineMaterial } from 'meshline';
 import * as THREE from 'three';
 
@@ -199,12 +213,12 @@ function Band({
   showPromo?: boolean;
   onDismissPromo?: () => void;
 }) {
-  const band = useRef<any>(null!);
-  const fixed = useRef<any>(null!);
-  const j1 = useRef<any>(null!);
-  const j2 = useRef<any>(null!);
-  const j3 = useRef<any>(null!);
-  const card = useRef<any>(null!);
+  const band = useRef<MeshLineMesh>(null!);
+  const fixed = useRef<LerpedRigidBody>(null!);
+  const j1 = useRef<LerpedRigidBody>(null!);
+  const j2 = useRef<LerpedRigidBody>(null!);
+  const j3 = useRef<LerpedRigidBody>(null!);
+  const card = useRef<LerpedRigidBody>(null!);
 
   const vec = new THREE.Vector3();
   const ang = new THREE.Vector3();
@@ -219,19 +233,23 @@ function Band({
     linearDamping: 4,
   };
 
-  const { nodes, materials } = useGLTF('/models/card.glb') as any;
+  const { nodes, materials } = useGLTF('/models/card.glb') as unknown as {
+    nodes: Record<string, THREE.Mesh>;
+    materials: Record<string, THREE.MeshStandardMaterial>;
+  };
   const texture = useTexture('/images/lanyard.png');
   const promoTexture = useMemo(() => showPromo ? createPromoTexture() : null, [showPromo]);
 
-  const [curve] = useState(
-    () =>
-      new THREE.CatmullRomCurve3([
-        new THREE.Vector3(),
-        new THREE.Vector3(),
-        new THREE.Vector3(),
-        new THREE.Vector3(),
-      ])
-  );
+  const [curve] = useState(() => {
+    const c = new THREE.CatmullRomCurve3([
+      new THREE.Vector3(),
+      new THREE.Vector3(),
+      new THREE.Vector3(),
+      new THREE.Vector3(),
+    ]);
+    c.curveType = 'chordal';
+    return c;
+  });
 
   const [dragged, drag] = useState<false | THREE.Vector3>(false);
   const [hovered, hover] = useState(false);
@@ -250,6 +268,14 @@ function Band({
       return () => void (document.body.style.cursor = 'auto');
     }
   }, [hovered, dragged]);
+
+  // Configure texture wrapping (Three.js texture config, not React state)
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/immutability -- Three.js texture configuration
+    texture.wrapS = THREE.RepeatWrapping;
+    // eslint-disable-next-line react-hooks/immutability -- Three.js texture configuration
+    texture.wrapT = THREE.RepeatWrapping;
+  }, [texture]);
 
   useFrame((state, delta) => {
     if (dragged) {
@@ -277,18 +303,15 @@ function Band({
         );
       });
       curve.points[0].copy(j3.current.translation());
-      curve.points[1].copy(j2.current.lerped);
-      curve.points[2].copy(j1.current.lerped);
+      curve.points[1].copy(j2.current.lerped!);
+      curve.points[2].copy(j1.current.lerped!);
       curve.points[3].copy(fixed.current.translation());
       band.current.geometry.setPoints(curve.getPoints(isMobile ? 16 : 32));
       ang.copy(card.current.angvel());
       rot.copy(card.current.rotation());
-      card.current.setAngvel({ x: ang.x, y: ang.y - rot.y * 0.25, z: ang.z });
+      card.current.setAngvel({ x: ang.x, y: ang.y - rot.y * 0.25, z: ang.z }, true);
     }
   });
-
-  curve.curveType = 'chordal';
-  texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
 
   return (
     <>
@@ -315,11 +338,11 @@ function Band({
             position={[0, -1.2, -0.05]}
             onPointerOver={() => hover(true)}
             onPointerOut={() => hover(false)}
-            onPointerUp={(e: any) => (
-              e.target.releasePointerCapture(e.pointerId), drag(false)
+            onPointerUp={(e: ThreeEvent<PointerEvent>) => (
+              (e.target as Element).releasePointerCapture(e.pointerId), drag(false)
             )}
-            onPointerDown={(e: any) => (
-              e.target.setPointerCapture(e.pointerId),
+            onPointerDown={(e: ThreeEvent<PointerEvent>) => (
+              (e.target as Element).setPointerCapture(e.pointerId),
               drag(
                 new THREE.Vector3()
                   .copy(e.point)

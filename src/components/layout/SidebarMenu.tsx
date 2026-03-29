@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useCallback, useState } from 'react';
+import { useEffect, useRef, useCallback, useState, useLayoutEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useHaptics } from '@/hooks/useHaptics';
@@ -59,6 +59,8 @@ export function SidebarMenu({ open, onClose }: SidebarMenuProps) {
   const { trigger } = useHaptics();
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
   const [shopExpanded, setShopExpanded] = useState(false);
+  const prevOpenRef = useRef(open);
+  const prevPathnameRef = useRef(pathname);
 
   // Close on ESC
   useEffect(() => {
@@ -117,17 +119,23 @@ export function SidebarMenu({ open, onClose }: SidebarMenuProps) {
     };
   }, [open]);
 
-  // Reset state when menu closes
-  useEffect(() => {
-    if (!open) {
-      setHoveredItem(null);
-      setShopExpanded(false);
+  // Reset state when menu closes (only on transition from open to closed)
+  useLayoutEffect(() => {
+    if (prevOpenRef.current && !open) {
+      queueMicrotask(() => {
+        setHoveredItem(null);
+        setShopExpanded(false);
+      });
     }
+    prevOpenRef.current = open;
   }, [open]);
 
-  // Close on route change
-  useEffect(() => {
-    onClose();
+  // Close on route change (only when pathname actually changes)
+  useLayoutEffect(() => {
+    if (prevPathnameRef.current !== pathname) {
+      prevPathnameRef.current = pathname;
+      onClose();
+    }
   }, [pathname, onClose]);
 
   const handleBackdropClick = useCallback(() => {

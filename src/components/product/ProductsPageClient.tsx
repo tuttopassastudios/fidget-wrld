@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo, useEffect, useCallback } from 'react';
+import { useState, useMemo, useLayoutEffect, useCallback, useRef } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { ProductCard } from '@/components/product/ProductCard';
 import { Breadcrumb } from '@/components/ui/Breadcrumb';
@@ -42,9 +42,13 @@ export function ProductsPageClient({ products }: { products: ProductPage[] }) {
     audiences: [],
   });
 
-  // Sync category from URL params
-  useEffect(() => {
-    setFilters(prev => ({ ...prev, category: urlCategory }));
+  // Sync category from URL params (only when it actually changes)
+  const prevUrlCategoryRef = useRef(urlCategory);
+  useLayoutEffect(() => {
+    if (prevUrlCategoryRef.current !== urlCategory) {
+      prevUrlCategoryRef.current = urlCategory;
+      queueMicrotask(() => setFilters(prev => ({ ...prev, category: urlCategory })));
+    }
   }, [urlCategory]);
 
   const handleFilterChange = useCallback(

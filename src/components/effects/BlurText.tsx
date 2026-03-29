@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'motion/react';
-import { useEffect, useRef, useState, useMemo } from 'react';
+import { useEffect, useRef, useState, useMemo, useSyncExternalStore } from 'react';
 
 type AnimationValue = string | number;
 type AnimationState = Record<string, AnimationValue>;
@@ -14,6 +14,19 @@ const buildKeyframes = (from: AnimationState, steps: AnimationState[]) => {
   });
   return keyframes;
 };
+
+// External store for reduced motion preference
+function subscribeToReducedMotion(callback: () => void) {
+  const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+  mq.addEventListener('change', callback);
+  return () => mq.removeEventListener('change', callback);
+}
+function getReducedMotionSnapshot() {
+  return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+}
+function getReducedMotionServerSnapshot() {
+  return true; // Assume reduced motion on server for safety
+}
 
 interface BlurTextProps {
   text: string;
@@ -33,18 +46,20 @@ export function BlurText({
   rootMargin = '0px',
 }: BlurTextProps) {
   const characters = text.split('');
-  const [inView, setInView] = useState(false);
   const ref = useRef<HTMLSpanElement>(null);
 
-  // Respect prefers-reduced-motion
-  const prefersReducedMotion = useRef(false);
-  useEffect(() => {
-    prefersReducedMotion.current = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (prefersReducedMotion.current) setInView(true);
-  }, []);
+  // Respect prefers-reduced-motion using external store (safe for render)
+  const prefersReducedMotion = useSyncExternalStore(
+    subscribeToReducedMotion,
+    getReducedMotionSnapshot,
+    getReducedMotionServerSnapshot
+  );
+
+  // Initialize inView based on reduced motion preference
+  const [inView, setInView] = useState(() => prefersReducedMotion);
 
   useEffect(() => {
-    if (!ref.current || prefersReducedMotion.current) return;
+    if (!ref.current || prefersReducedMotion) return;
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
@@ -56,7 +71,7 @@ export function BlurText({
     );
     observer.observe(ref.current);
     return () => observer.disconnect();
-  }, [threshold, rootMargin]);
+  }, [threshold, rootMargin, prefersReducedMotion]);
 
   const fromSnapshot = useMemo(
     () => ({ filter: 'blur(10px)', opacity: 0, y: 50 }),
@@ -93,7 +108,7 @@ export function BlurText({
           <motion.span
             key={index}
             style={{ display: 'inline-block', willChange: 'transform, filter, opacity' }}
-            initial={prefersReducedMotion.current ? false : fromSnapshot}
+            initial={prefersReducedMotion ? false : fromSnapshot}
             animate={inView ? animateKeyframes : fromSnapshot}
             transition={spanTransition}
           >

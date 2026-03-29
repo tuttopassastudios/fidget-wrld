@@ -1,8 +1,22 @@
 'use client';
 
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useSyncExternalStore } from 'react';
 import DOMPurify from 'isomorphic-dompurify';
 import { useHaptics } from '@/hooks/useHaptics';
+
+// Mobile media query with useSyncExternalStore
+const mobileQuery = '(max-width: 768px)';
+function subscribeMobile(callback: () => void) {
+  const mq = window.matchMedia(mobileQuery);
+  mq.addEventListener('change', callback);
+  return () => mq.removeEventListener('change', callback);
+}
+function getMobileSnapshot() {
+  return window.matchMedia(mobileQuery).matches;
+}
+function getMobileServerSnapshot() {
+  return false; // SSR default to desktop
+}
 
 interface ProductTabsProps {
   description: string;
@@ -27,17 +41,9 @@ export function ProductTabs({ description, about, specifications, careInstructio
     return true;
   });
   const [activeTab, setActiveTab] = useState(hideDescription ? 'specifications' : 'description');
-  const [isMobile, setIsMobile] = useState(false);
+  const isMobile = useSyncExternalStore(subscribeMobile, getMobileSnapshot, getMobileServerSnapshot);
   const [openAccordion, setOpenAccordion] = useState<string | null>(null);
   const { trigger } = useHaptics();
-
-  useEffect(() => {
-    const mq = window.matchMedia('(max-width: 768px)');
-    setIsMobile(mq.matches);
-    const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches);
-    mq.addEventListener('change', handler);
-    return () => mq.removeEventListener('change', handler);
-  }, []);
 
   const handleTabKeyDown = useCallback((e: React.KeyboardEvent<HTMLButtonElement>) => {
     const currentIndex = tabs.findIndex(t => t.id === activeTab);

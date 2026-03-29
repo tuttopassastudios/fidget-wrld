@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
+import { useEffect, useMemo, useRef, useState, useLayoutEffect, type ReactNode } from 'react';
 import { motion, useMotionValue, useTransform } from 'motion/react';
 import './Carousel.css';
 
@@ -96,12 +96,19 @@ export function Carousel({
   const [isAnimating, setIsAnimating] = useState(false);
 
   const containerRef = useRef<HTMLDivElement>(null);
+  const isHoveredRef = useRef(false);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (pauseOnHover && containerRef.current) {
       const container = containerRef.current;
-      const handleMouseEnter = () => setIsHovered(true);
-      const handleMouseLeave = () => setIsHovered(false);
+      const handleMouseEnter = () => {
+        isHoveredRef.current = true;
+        setIsHovered(true);
+      };
+      const handleMouseLeave = () => {
+        isHoveredRef.current = false;
+        setIsHovered(false);
+      };
       container.addEventListener('mouseenter', handleMouseEnter);
       container.addEventListener('mouseleave', handleMouseLeave);
       return () => {
@@ -122,15 +129,22 @@ export function Carousel({
     return () => clearInterval(timer);
   }, [autoplay, autoplayDelay, isHovered, pauseOnHover, itemsForRender.length]);
 
-  useEffect(() => {
-    const startingPosition = loop ? 1 : 0;
-    setPosition(startingPosition);
-    x.set(-startingPosition * trackItemOffset);
+  // Track previous values to avoid unnecessary state updates
+  const prevItemsLengthRef = useRef(items.length);
+  const prevLoopRef = useRef(loop);
+  useLayoutEffect(() => {
+    if (prevItemsLengthRef.current !== items.length || prevLoopRef.current !== loop) {
+      prevItemsLengthRef.current = items.length;
+      prevLoopRef.current = loop;
+      const startingPosition = loop ? 1 : 0;
+      queueMicrotask(() => setPosition(startingPosition));
+      x.set(-startingPosition * trackItemOffset);
+    }
   }, [items.length, loop, trackItemOffset, x]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!loop && position > itemsForRender.length - 1) {
-      setPosition(Math.max(0, itemsForRender.length - 1));
+      queueMicrotask(() => setPosition(Math.max(0, itemsForRender.length - 1)));
     }
   }, [itemsForRender.length, loop, position]);
 

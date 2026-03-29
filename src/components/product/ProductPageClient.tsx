@@ -10,9 +10,9 @@ import { QuantitySelector } from './QuantitySelector';
 import { ProductTabs } from './ProductTabs';
 import { ProductCard } from './ProductCard';
 import { AboutCarousel } from './AboutCarousel';
-import { RecommendationCarousel } from './RecommendationCarousel';
 import { CompleteTheSet } from './CompleteTheSet';
 import { SectionHeading } from '@/components/ui/SectionHeading';
+import { EditorialGrid } from '@/components/ui/EditorialGrid';
 import { PolkaDots } from '@/components/ui/DecorativePatterns';
 import { formatCurrency } from '@/lib/utils';
 import { useHaptics } from '@/hooks/useHaptics';
@@ -23,7 +23,8 @@ import styles from './ProductPageClient.module.css';
 import './AboutCarousel.css';
 
 export function ProductPageClient({ product }: { product: ProductPage }) {
-  const ModelComponent = getModelComponent(product.slug);
+  // Memoize model component lookup to satisfy React 19 render rules
+  const ModelComponent = useMemo(() => getModelComponent(product.slug), [product.slug]);
   const hasModel = ModelComponent !== null;
   const [variantIdx, setVariantIdx] = useState(product.defaultVariantIndex);
   const [quantity, setQuantity] = useState(1);
@@ -229,7 +230,8 @@ export function ProductPageClient({ product }: { product: ProductPage }) {
             <AboutCarousel about={product.about} productName={product.name} />
           </div>
           <div className="model-carousel-row__model">
-            <ModelComponent />
+            {/* eslint-disable-next-line react-hooks/static-components -- Dynamic component from getModelComponent is intentional */}
+            {ModelComponent && <ModelComponent />}
           </div>
         </section>
       )}
@@ -250,11 +252,26 @@ export function ProductPageClient({ product }: { product: ProductPage }) {
 
       {relatedProductPages.length > 0 && (
         <div className="reveal-item">
-          <RecommendationCarousel
-            products={relatedProductPages}
-            title="You May Also Like"
-            context="pdp"
-          />
+          <section className={styles.youMayAlsoLike}>
+            <SectionHeading heading="You May Also Like" eyebrow="Explore More" dotAccent as="h2" />
+            <EditorialGrid layout="row">
+              {relatedProductPages.slice(0, 3).map((p) => {
+                const v = p.variants[p.defaultVariantIndex];
+                return (
+                  <ProductCard
+                    key={p.slug}
+                    product={{ ...v, sku: v.sku }}
+                    slug={p.slug}
+                    variantCount={p.variants.length}
+                    badges={{
+                      isNew: p.isNew,
+                      isBestseller: p.isBestseller,
+                    }}
+                  />
+                );
+              })}
+            </EditorialGrid>
+          </section>
         </div>
       )}
     </>

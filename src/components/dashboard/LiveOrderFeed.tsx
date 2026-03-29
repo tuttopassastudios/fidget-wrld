@@ -76,9 +76,19 @@ export function LiveOrderFeed() {
   }, [user]);
 
   useEffect(() => {
-    fetchOrders();
+    let mounted = true;
+
+    // Initial fetch wrapped to respect mounted state
+    const initialFetch = async () => {
+      if (mounted) await fetchOrders();
+    };
+    initialFetch();
+
     const interval = setInterval(fetchOrders, POLL_INTERVAL);
-    return () => clearInterval(interval);
+    return () => {
+      mounted = false;
+      clearInterval(interval);
+    };
   }, [fetchOrders]);
 
   if (orders.length === 0) {

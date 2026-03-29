@@ -217,8 +217,8 @@ export interface Database {
         Relationships: [];
       };
     };
-    Views: {};
-    Functions: {};
+    Views: Record<string, never>;
+    Functions: Record<string, never>;
     Enums: {
       product_category: ProductCategory;
       mood: Mood;
@@ -226,7 +226,7 @@ export interface Database {
       texture: Texture;
       order_status: 'pending' | 'paid' | 'shipped' | 'delivered' | 'cancelled';
     };
-    CompositeTypes: {};
+    CompositeTypes: Record<string, never>;
   };
 }
 

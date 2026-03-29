@@ -1,10 +1,15 @@
 'use client';
 
-import { useLayoutEffect, useRef, useState, useEffect, useCallback } from 'react';
+import { useLayoutEffect, useRef, useState, useCallback, useSyncExternalStore } from 'react';
 import { gsap } from 'gsap';
 import Link from 'next/link';
 import { useCart } from '@/context/CartContext';
 import { useHaptics } from '@/hooks/useHaptics';
+
+// Hydration-safe mounted state
+const subscribe = () => () => {};
+const getSnapshot = () => true;
+const getServerSnapshot = () => false;
 
 interface NavCardLink {
   label: string;
@@ -74,15 +79,14 @@ export function CardNav() {
   const { getCount, openDrawer } = useCart();
   const { trigger } = useHaptics();
   const [isExpanded, setIsExpanded] = useState(false);
-  const [mounted, setMounted] = useState(false);
+  const mounted = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
   const navRef = useRef<HTMLElement>(null);
   const cardsRef = useRef<(HTMLDivElement | null)[]>([]);
   const extraLinksRef = useRef<HTMLDivElement>(null);
   const tlRef = useRef<gsap.core.Timeline | null>(null);
   const prefersReducedMotion = useRef(false);
 
-  useEffect(() => {
-    setMounted(true);
+  useLayoutEffect(() => {
     prefersReducedMotion.current = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   }, []);
 
