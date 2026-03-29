@@ -58,11 +58,13 @@
 /* === Row layout === */
 .row {
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  justify-content: center;
 }
 
 @media (min-width: 769px) {
   .row {
-    grid-template-columns: repeat(4, 1fr);
+    /* Use auto-fit with max-width to center fewer items */
+    grid-template-columns: repeat(auto-fit, minmax(220px, 280px));
   }
 }
 
