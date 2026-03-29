@@ -243,6 +243,8 @@ export function ProductPageClient({ product }: { product: ProductPage }) {
           specifications={product.specifications}
           careInstructions={product.careInstructions}
           hideDescription={hasModel}
+          showMagnetWarning={product.slug === 'magnet-balls'}
+          defaultTab={product.slug === 'magnet-balls' ? 'warning' : undefined}
         />
       </div>
 

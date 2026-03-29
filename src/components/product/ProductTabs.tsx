@@ -24,23 +24,34 @@ interface ProductTabsProps {
   specifications: Record<string, string>;
   careInstructions?: string;
   hideDescription?: boolean;
+  showMagnetWarning?: boolean;
+  defaultTab?: string;
 }
 
 const allTabs = [
   { id: 'description', label: 'Description' },
   { id: 'about', label: 'About' },
   { id: 'specifications', label: 'Specifications' },
+  { id: 'warning', label: 'Warning' },
   { id: 'care', label: 'Care & Safety' },
 ];
 
-export function ProductTabs({ description, about, specifications, careInstructions, hideDescription }: ProductTabsProps) {
+export function ProductTabs({ description, about, specifications, careInstructions, hideDescription, showMagnetWarning, defaultTab }: ProductTabsProps) {
   const tabs = allTabs.filter(t => {
     if (t.id === 'description' && hideDescription) return false;
     if (t.id === 'about' && !about) return false;
+    if (t.id === 'warning' && !showMagnetWarning) return false;
     if (t.id === 'care' && !careInstructions) return false;
     return true;
   });
-  const [activeTab, setActiveTab] = useState(hideDescription ? 'specifications' : 'description');
+
+  // Determine initial tab: use defaultTab if provided, otherwise fall back to existing logic
+  const getInitialTab = () => {
+    if (defaultTab && tabs.some(t => t.id === defaultTab)) return defaultTab;
+    if (hideDescription) return 'specifications';
+    return 'description';
+  };
+  const [activeTab, setActiveTab] = useState(getInitialTab);
   const isMobile = useSyncExternalStore(subscribeMobile, getMobileSnapshot, getMobileServerSnapshot);
   const [openAccordion, setOpenAccordion] = useState<string | null>(null);
   const { trigger } = useHaptics();
@@ -100,6 +111,61 @@ export function ProductTabs({ description, about, specifications, careInstructio
               </tbody>
             </table>
           </>
+        );
+      case 'warning':
+        return (
+          <div className="magnet-warning" style={{
+            padding: '1.5rem',
+            backgroundColor: 'var(--color-error-bg, #fef2f2)',
+            border: '2px solid var(--color-error, #dc2626)',
+            borderRadius: '8px',
+          }}>
+            <h3 style={{
+              marginBottom: '1rem',
+              color: 'var(--color-error, #dc2626)',
+              fontSize: '1.25rem',
+              fontWeight: 700,
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.5rem',
+            }}>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                <line x1="12" y1="9" x2="12" y2="13"/>
+                <line x1="12" y1="17" x2="12.01" y2="17"/>
+              </svg>
+              INTERNAL INJURY HAZARD
+            </h3>
+            <p style={{
+              fontSize: '1rem',
+              fontWeight: 600,
+              marginBottom: '1rem',
+              color: 'var(--color-text-primary)',
+            }}>
+              Swallowed magnets can damage internal organs and have resulted in <strong>DEATH</strong> and <strong>SERIOUS INJURIES</strong>.
+            </p>
+            <ul style={{
+              listStyle: 'disc',
+              paddingLeft: '1.5rem',
+              marginBottom: '1rem',
+              color: 'var(--color-text-primary)',
+              lineHeight: 1.8,
+            }}>
+              <li>Keep away from <strong>ALL</strong> children.</li>
+              <li>Be aware of dropped or separated magnets.</li>
+              <li><strong>NEVER</strong> put near mouth or nose.</li>
+            </ul>
+            <p style={{
+              fontSize: '0.95rem',
+              fontWeight: 600,
+              color: 'var(--color-error, #dc2626)',
+              padding: '0.75rem',
+              backgroundColor: 'rgba(220, 38, 38, 0.1)',
+              borderRadius: '4px',
+            }}>
+              Seek prompt medical attention if you think magnet(s) have been swallowed or inhaled.
+            </p>
+          </div>
         );
       case 'care':
         return careInstructions ? (
