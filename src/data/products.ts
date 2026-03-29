@@ -17,7 +17,7 @@ export const productPages: ProductPage[] = [
       { sku: 'FW-MAG-216-SIL', name: 'N52 Magnetic Balls', variant: '216pc Silver', color: 'Silver', colorHex: '#C0C0C0', price: 24.99, image: '/images/products/mag-balls-silver.webp' },
       { sku: 'FW-MAG-216-GLD', name: 'N52 Magnetic Balls', variant: '216pc Gold', color: 'Gold', colorHex: '#FFD700', price: 24.99, image: '/images/products/mag-balls-gold.webp' },
       { sku: 'FW-MAG-216-BLK', name: 'N52 Magnetic Balls', variant: '216pc Black', color: 'Black', colorHex: '#1a1a1a', price: 24.99, image: '/images/products/mag-balls-black.webp' },
-      { sku: 'FW-MAG-216-RED', name: 'N52 Magnetic Balls', variant: '216pc Red', color: 'Red', colorHex: '#8B0000', price: 24.99, image: '/images/products/mag-balls-red.png' },
+      { sku: 'FW-MAG-216-RED', name: 'N52 Magnetic Balls', variant: '216pc Red', color: 'Red', colorHex: '#8B0000', price: 24.99, image: 'https://jzfesgxooirrjsnluphz.supabase.co/storage/v1/object/public/products/mag-balls-red.png' },
       { sku: 'FW-MAG-216-RBW', name: 'N52 Magnetic Balls', variant: '216pc Rainbow', color: 'Rainbow', colorHex: '#ff6b6b', price: 29.99, image: '/images/products/mag-balls-rainbow.webp' },
       { sku: 'FW-MAG-512-SIL', name: 'N52 Magnetic Balls', variant: '512pc Silver', color: 'Silver', colorHex: '#C0C0C0', price: 44.99, image: '/images/products/mag-balls-silver-512.webp' },
       { sku: 'FW-MAG-1000-SIL', name: 'N52 Magnetic Balls', variant: '1000pc Silver', color: 'Silver', colorHex: '#C0C0C0', price: 74.99, image: '/images/products/mag-balls-silver-1000.webp' },
@@ -238,7 +238,7 @@ export const productPages: ProductPage[] = [
     variants: [
       { sku: 'FW-CUBE-BLK', name: 'Fidget Cube', variant: 'Midnight Black', color: 'Black', colorHex: '#1a1a1a', price: 14.99, image: '/images/products/fidget-cube-black.webp' },
       { sku: 'FW-CUBE-WHT', name: 'Fidget Cube', variant: 'Arctic White', color: 'White', colorHex: '#f5f5f5', price: 14.99, image: '/images/products/fidget-cube-white.webp' },
-      { sku: 'FW-CUBE-RED', name: 'Fidget Cube', variant: 'Cherry Red', color: 'Red', colorHex: '#C9475B', price: 14.99, image: '/images/products/fidget-cube-red.png' },
+      { sku: 'FW-CUBE-RED', name: 'Fidget Cube', variant: 'Cherry Red', color: 'Red', colorHex: '#C9475B', price: 14.99, image: 'https://jzfesgxooirrjsnluphz.supabase.co/storage/v1/object/public/products/fidget-cube-red.png' },
       { sku: 'FW-CUBE-RBW', name: 'Fidget Cube', variant: 'Rainbow', color: 'Rainbow', colorHex: '#ff6b6b', price: 16.99, image: '/images/products/fidget-cube-rainbow.webp' },
       { sku: 'FW-CUBE-GLOW', name: 'Fidget Cube', variant: 'Glow in Dark', color: 'Glow', colorHex: '#90EE90', price: 17.99, image: '/images/products/fidget-cube-glow.webp' },
     ],
