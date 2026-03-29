@@ -14,6 +14,9 @@ interface BallpitBackgroundProps {
   friction?: number;
   wallBounce?: number;
   maxVelocity?: number;
+  minSize?: number;
+  maxSize?: number;
+  size0?: number;
   className?: string;
 }
 
@@ -25,6 +28,9 @@ export function BallpitBackground({
   friction = 0.9975,
   wallBounce = 0.95,
   maxVelocity = 0.15,
+  minSize = 0.5,
+  maxSize = 1,
+  size0 = 1,
   className,
 }: BallpitBackgroundProps) {
   return (
@@ -37,6 +43,9 @@ export function BallpitBackground({
       friction={friction}
       wallBounce={wallBounce}
       maxVelocity={maxVelocity}
+      minSize={minSize}
+      maxSize={maxSize}
+      size0={size0}
     />
   );
 }
