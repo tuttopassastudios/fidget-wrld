@@ -7,9 +7,8 @@ import { SectionHeading } from '@/components/ui/SectionHeading';
 import { EditorialGrid } from '@/components/ui/EditorialGrid';
 import { CategoryBubbles } from '@/components/ui/CategoryBubbles';
 import { NewsletterSignup } from '@/components/newsletter';
-import { RecommendationCarousel } from '@/components/product/RecommendationCarousel';
 import { BallpitHero } from './BallpitHero';
-import { getBestSellers, getProductPagesAsync } from '@/lib/products-db';
+import { getBestSellers } from '@/lib/products-db';
 import styles from './page.module.css';
 
 const CATEGORY_ITEMS = [
@@ -52,14 +51,7 @@ const CATEGORY_ITEMS = [
 ];
 
 export default async function HomePage() {
-  const [bestSellersData, allProducts] = await Promise.all([
-    getBestSellers(),
-    getProductPagesAsync(),
-  ]);
-
-  const trendingProducts = allProducts
-    .filter(p => p.isBestseller || p.isNew)
-    .slice(0, 8);
+  const bestSellersData = await getBestSellers();
 
   const bestSellers = bestSellersData.map(p => {
     const v = p.variants[p.defaultVariantIndex];
@@ -129,21 +121,7 @@ export default async function HomePage() {
         </section>
       </FadeIn>
 
-      {/* 4. Trending Carousel */}
-      {trendingProducts.length > 0 && (
-        <FadeIn>
-          <div className="container">
-            <RecommendationCarousel
-              products={trendingProducts}
-              title="Trending Now"
-              eyebrow="What's Hot"
-              context="homepage"
-            />
-          </div>
-        </FadeIn>
-      )}
-
-      {/* 5. Newsletter */}
+      {/* 4. Newsletter */}
       <FadeIn>
         <section className={styles.newsletterSection}>
           <div className="container">
