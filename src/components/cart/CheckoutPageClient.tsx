@@ -10,11 +10,7 @@ import { calculateOrderPricing, STANDARD_SHIPPING } from '@/lib/pricing';
 import { useSubmissionGuard } from '@/lib/submission-guard';
 import { useHaptics } from '@/hooks/useHaptics';
 import { CheckoutProgress } from '@/components/checkout/CheckoutProgress';
-
-// Generate order ID once per component instance
-function generateOrderId() {
-  return Math.random().toString(36).substring(2, 10).toUpperCase();
-}
+import { getStripe } from '@/lib/stripe-client';
 
 export function CheckoutPageClient() {
   const { items, clear } = useCart();
@@ -22,12 +18,10 @@ export function CheckoutPageClient() {
   const [shipping, setShipping] = useState(STANDARD_SHIPPING);
   const [researchAffirm, setResearchAffirm] = useState(false);
   const [termsAffirm, setTermsAffirm] = useState(false);
-  const [showConfirmation, setShowConfirmation] = useState(false);
   const { isSubmitting: submitting, isCompleted, submit: guardedSubmit } = useSubmissionGuard();
   const { trigger } = useHaptics();
   const [affirmError, setAffirmError] = useState('');
-  // Stable order ID generated once when confirmation is shown
-  const orderId = useMemo(() => generateOrderId(), []);
+  const [checkoutError, setCheckoutError] = useState('');
 
   // Use extracted pricing module — single source of truth
   const orderPricing = (() => {
@@ -38,7 +32,7 @@ export function CheckoutPageClient() {
   const { subtotal, freeShipping: freeStandardShipping, effectiveShipping, tax: estimatedTax, total } = orderPricing;
   const promoResult = orderPricing.promoResult;
 
-  const handlePlaceOrder = (e: React.FormEvent) => {
+  const handlePlaceOrder = async (e: React.FormEvent) => {
     e.preventDefault();
     const form = e.target as HTMLFormElement;
 
@@ -53,33 +47,60 @@ export function CheckoutPageClient() {
       return;
     }
     setAffirmError('');
+    setCheckoutError('');
 
     if (items.length === 0) return;
 
-    guardedSubmit(() => {
-      // When payment is added, the idempotency key will be sent to the payment API
-      trigger('success');
-      setShowConfirmation(true);
-      clear();
+    // Get customer email from form
+    const emailInput = form.elements.namedItem('email') as HTMLInputElement;
+    const customerEmail = emailInput?.value || undefined;
+
+    guardedSubmit(async () => {
+      try {
+        // Create Stripe checkout session
+        const response = await fetch('/api/checkout', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            items,
+            shippingPrice: effectiveShipping,
+            promoDiscount: promoResult.discount,
+            customerEmail,
+          }),
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.error || 'Failed to create checkout session');
+        }
+
+        // Redirect to Stripe Checkout
+        // Use the URL directly (more reliable than loading Stripe.js)
+        if (data.url) {
+          window.location.href = data.url;
+          return;
+        }
+
+        // Fallback to Stripe.js redirect
+        const stripe = await getStripe();
+        if (!stripe) {
+          throw new Error('Failed to load payment processor');
+        }
+
+        const { error } = await stripe.redirectToCheckout({ sessionId: data.sessionId });
+        if (error) {
+          throw error;
+        }
+
+        // Clear cart on successful redirect (this may not execute as we redirect)
+        clear();
+      } catch (error) {
+        trigger('error');
+        setCheckoutError(error instanceof Error ? error.message : 'Payment failed. Please try again.');
+      }
     });
   };
-
-  if (showConfirmation) {
-    return (
-      <section className="product-page" style={{ padding: '80px 0', textAlign: 'center' }}>
-        <div className="container" style={{ maxWidth: 600, margin: '0 auto' }}>
-          <CheckoutProgress currentStep={4} />
-          <div style={{ fontSize: 48, marginBottom: 16 }}>
-            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="var(--color-success)" strokeWidth="2"><path d="m9 12 2 2 4-4" /><circle cx="12" cy="12" r="10" /></svg>
-          </div>
-          <h1 style={{ marginBottom: 8 }}>Order Confirmed!</h1>
-          <p style={{ color: 'var(--color-text-muted)', marginBottom: 8 }}>Order #{orderId}</p>
-          <p style={{ color: 'var(--color-text-secondary)', marginBottom: 24, fontSize: 14 }}>Thank you for your order. You will receive a confirmation email shortly.</p>
-          <Link href="/products" className="btn btn-primary">Continue Shopping</Link>
-        </div>
-      </section>
-    );
-  }
 
   if (items.length === 0) {
     return (
@@ -186,8 +207,8 @@ export function CheckoutPageClient() {
                 <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--color-accent-primary)" strokeWidth="1.5" style={{ marginBottom: 8 }}>
                   <rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/>
                 </svg>
-                <p style={{ fontSize: 14, fontWeight: 600, color: 'var(--color-text-secondary)', marginBottom: 4 }}>Secure payment processing coming soon</p>
-                <p style={{ fontSize: 12, color: 'var(--color-text-muted)', margin: 0 }}>Payment will be handled by a PCI-compliant provider.</p>
+                <p style={{ fontSize: 14, fontWeight: 600, color: 'var(--color-text-secondary)', marginBottom: 4 }}>Secure payment via Stripe</p>
+                <p style={{ fontSize: 12, color: 'var(--color-text-muted)', margin: 0 }}>You will be redirected to complete your payment securely.</p>
               </div>
             </div>
 
@@ -207,8 +228,14 @@ export function CheckoutPageClient() {
               </div>
             )}
 
+            {checkoutError && (
+              <div style={{ background: 'rgba(248, 113, 113, 0.1)', border: '1px solid rgba(248, 113, 113, 0.3)', borderRadius: 8, padding: 12, marginBottom: 12, color: 'var(--color-error)', fontSize: 13 }}>
+                {checkoutError}
+              </div>
+            )}
+
             <button type="submit" className="btn btn-primary btn-lg" disabled={submitting || isCompleted} style={{ width: '100%', opacity: submitting || isCompleted ? 0.7 : (!researchAffirm || !termsAffirm) ? 0.5 : 1 }}>
-              {submitting ? 'Placing Order\u2026' : `Place Order — ${formatCurrency(total)}`}
+              {submitting ? 'Redirecting to payment\u2026' : `Proceed to Payment — ${formatCurrency(total)}`}
             </button>
 
             {/* Trust Badges */}
