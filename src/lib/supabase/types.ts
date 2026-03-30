@@ -50,6 +50,7 @@ export interface Database {
           is_new: boolean;
           is_bestseller: boolean;
           is_limited: boolean;
+          is_out_of_stock: boolean;
           related_slugs: string[] | null;
           about: string | null;
           care_instructions: string | null;
@@ -80,6 +81,7 @@ export interface Database {
           is_new?: boolean;
           is_bestseller?: boolean;
           is_limited?: boolean;
+          is_out_of_stock?: boolean;
           related_slugs?: string[] | null;
           about?: string | null;
           care_instructions?: string | null;
@@ -110,6 +112,7 @@ export interface Database {
           is_new?: boolean;
           is_bestseller?: boolean;
           is_limited?: boolean;
+          is_out_of_stock?: boolean;
           related_slugs?: string[] | null;
           about?: string | null;
           care_instructions?: string | null;

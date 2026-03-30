@@ -1,6 +1,6 @@
-// CJ SDK is a CommonJS module - use require for compatibility
+// CJ SDK - local copy for Vercel compatibility
 // eslint-disable-next-line @typescript-eslint/no-require-imports
-const CJDropshipping = require('cj-dropshipping-sdk');
+const CJDropshipping = require('./cj-sdk/index.js');
 
 type CJClient = InstanceType<typeof CJDropshipping>;
 
