@@ -1,0 +1,55 @@
+{
+  "description": "CJ Dropshipping Fidget Toy Product IDs - Found via web search",
+  "lastUpdated": "2026-03-30",
+  "instructions": "Look up products one at a time with 5-min intervals: node scripts/cj-product-lookup.js <productId>",
+  "products": [
+    {
+      "pid": "1541333689475944448",
+      "name": "Creative Fidget Spinner Toy Keychain",
+      "type": "Fidget Spinner",
+      "description": "Hand spinner anti-anxiety toy with bottle opener, keychain attachment",
+      "sourceUrl": "https://cjdropshipping.com/product/creative-fidget-spinner-toy-keychain-hand-spinner-anti-anxiety-toy-relieves-stress-finger-spinner-keychain-bottle-opener-kids-toy-p-1541333689475944448.html",
+      "notes": "Multi-functional: spinner + keychain + bottle opener"
+    },
+    {
+      "pid": "1527233425990758400",
+      "name": "Colorful Alloy Fidget Spinner Electroplating",
+      "type": "Fidget Spinner",
+      "description": "Metal alloy six-axis fidget spinner with electroplated finish",
+      "sourceUrl": "https://cjdropshipping.com/product/colorful-alloy-fidget-spinner-electroplating-toy-p-1527233425990758400.html",
+      "notes": "Premium metal construction"
+    },
+    {
+      "pid": "C4880398-A6C6-48C2-AF37-7852296CD892",
+      "name": "Stress Relief Simulation Popcorn Cup",
+      "type": "Squeeze/Squishy Toy",
+      "description": "Anti-anxiety squeeze fidget toy shaped like popcorn cup",
+      "sourceUrl": "https://cjdropshipping.com/product/stress-relief--simulation-popcorn-cup--anti-anxiety-squeeze-fidget-toy-for-kids-adults-p-C4880398-A6C6-48C2-AF37-7852296CD892.html",
+      "notes": "Unique design, good for kids and adults"
+    },
+    {
+      "pid": "1719271582901743616",
+      "name": "Dancing Ferrofluid Magnetic Desk Toy",
+      "type": "Magnetic/Desk Toy",
+      "description": "Ferrofluid that dances with music rhythm, magnetic liquid desk decoration",
+      "sourceUrl": "https://cjdropshipping.com/product/dancing-ferrofluid-with-music-rhythm-magnetic-fluid-speaker-creative-ferrofluid-desk-toy-magnet-liquid-toy-home-decor-p-1719271582901743616.html",
+      "notes": "Premium desk toy, music-reactive, higher price point"
+    }
+  ],
+  "searchTermsToTryOnCJWebsite": [
+    "fidget spinner metal",
+    "pop it silicone",
+    "stress ball squishy",
+    "fidget cube",
+    "magnetic putty",
+    "infinity cube",
+    "sensory toy autism",
+    "squeeze toy kawaii",
+    "fidget ring magnetic",
+    "mesh marble fidget"
+  ],
+  "categoryUrls": [
+    "https://cjdropshipping.com/list/wholesale-toys-kids-babies-l-A50A92FA-BCB3-4716-9BD9-BEC629BEE735.html",
+    "https://cjdropshipping.com/list/wholesale-toys-hobbies-l-04D68B68-1048-4971-BAFA-18FA0A6DB95C.html"
+  ]
+}
