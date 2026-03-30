@@ -10,10 +10,8 @@ afterEach(() => {
 
 // Mock next/image
 vi.mock('next/image', () => ({
-  default: (props: Record<string, unknown>) => {
-    const { fill: _fill, priority: _priority, sizes: _sizes, ...rest } = props;
-    return <img {...rest} />;
-  },
+  // eslint-disable-next-line @next/next/no-img-element, jsx-a11y/alt-text
+  default: ({ fill, priority, sizes, ...rest }: Record<string, unknown>) => <img {...rest} data-fill={fill} data-priority={priority} data-sizes={sizes} />,
 }));
 
 // Mock next/link

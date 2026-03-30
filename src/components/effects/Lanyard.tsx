@@ -267,7 +267,9 @@ function Band({
 
   // Configure texture wrapping (Three.js texture config, not React state)
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/immutability -- Three.js texture objects are mutable
     texture.wrapS = THREE.RepeatWrapping;
+     
     texture.wrapT = THREE.RepeatWrapping;
   }, [texture]);
 

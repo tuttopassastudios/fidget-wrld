@@ -122,8 +122,7 @@ export function PolkaDots({
     const spacing = radius * 6;
     cssVars['--dot-spacing'] = `${spacing}px`;
     cssVars['--dot-bg'] = dotColors
-      .map((c, i) => {
-        const offset = i * spacing;
+      .map((c) => {
         return `radial-gradient(circle, ${c} ${radius}px, transparent ${radius}px)`;
       })
       .join(', ');

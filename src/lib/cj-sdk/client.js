@@ -130,7 +130,7 @@ class CJClient {
     if (this.tokenData && this._isRefreshTokenValid()) {
       try {
         return await this._refreshToken();
-      } catch (_error) {
+      } catch {
         // Fall through to get new token
         console.warn('Token refresh failed, getting new token');
       }
