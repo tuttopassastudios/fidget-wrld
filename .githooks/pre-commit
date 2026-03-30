@@ -1,0 +1,32 @@
+#!/bin/bash
+# Pre-commit hook: auto-remove backgrounds from newly added product images
+# Uses rembg via the project's .venv
+
+REPO_ROOT="$(git rev-parse --show-toplevel)"
+PRODUCTS_DIR="public/images/products"
+VENV_PYTHON="$REPO_ROOT/.venv/bin/python"
+REMBG_SCRIPT="$REPO_ROOT/scripts/remove-bg.py"
+
+# Check venv exists
+if [ ! -f "$VENV_PYTHON" ]; then
+  echo "Warning: .venv not found — skipping background removal."
+  echo "Run: python3 -m venv .venv && .venv/bin/pip install 'rembg[cli]' onnxruntime Pillow"
+  exit 0
+fi
+
+# Find newly staged product images (Added files only)
+NEW_IMAGES=$(git diff --cached --name-only --diff-filter=A -- "$PRODUCTS_DIR" | grep -iE '\.(png|jpg|jpeg|webp)$')
+
+if [ -z "$NEW_IMAGES" ]; then
+  exit 0
+fi
+
+echo "Removing backgrounds from new product images..."
+
+for img in $NEW_IMAGES; do
+  "$VENV_PYTHON" "$REMBG_SCRIPT" "$img"
+  # Re-stage the processed image
+  git add "$img"
+done
+
+echo "Background removal complete"
