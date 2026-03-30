@@ -165,6 +165,7 @@ class CJLoopAgent {
     const price = parseFloat(product.sellPrice) || 0;
     const stock = product.warehouseInventoryNum || 0;
     const pid = product.id || product.pid;
+    const name = (product.nameEn || product.productNameEn || '').toLowerCase();
 
     // Basic filters
     if (price > config.DISCOVERY.MAX_PRICE) return false;
@@ -173,6 +174,14 @@ class CJLoopAgent {
     // Check if already in store
     const existing = this.loadExistingProducts();
     if (existing.alreadyFetched?.includes(pid)) return false;
+
+    // Must contain at least one fidget-related keyword
+    const hasFidgetKeyword = config.FIDGET_KEYWORDS.some(kw => name.includes(kw.toLowerCase()));
+    if (!hasFidgetKeyword) return false;
+
+    // Must NOT contain excluded keywords (jewelry, appliances, etc.)
+    const hasExcludedKeyword = config.EXCLUDE_KEYWORDS.some(kw => name.includes(kw.toLowerCase()));
+    if (hasExcludedKeyword) return false;
 
     return true;
   }
