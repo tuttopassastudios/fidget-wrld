@@ -1,11 +1,37 @@
 {
   "description": "CJ Dropshipping Fidget Toy Product IDs - Found via web search",
-  "lastUpdated": "2026-03-30",
+  "lastUpdated": "2026-03-29",
   "instructions": "Look up products one at a time with 5-min intervals: node scripts/cj-product-lookup.js <productId>",
-  "products": [
+  "alreadyFetched": [
+    "1541333689475944448",
+    "1527233425990758400",
+    "C4880398-A6C6-48C2-AF37-7852296CD892",
+    "1719271582901743616",
+    "3D7BC0C9-CC09-4FAB-94A2-5775F0D11661"
+  ],
+  "pendingToFetch": [
+    {
+      "pid": "1463420820905922560",
+      "name": "Finger Spinner Rings Fidget Anxiety Ring",
+      "type": "Fidget Ring",
+      "description": "Spinner rings for women, anxiety relief jewelry",
+      "sourceUrl": "https://cjdropshipping.com/product/finger-spinner-rings-fidget-anxiety-ring-for-women-relieving-p-1463420820905922560.html",
+      "notes": "Fashionable fidget jewelry for women"
+    },
+    {
+      "pid": "1547121202051952640",
+      "name": "Vintage Heart Rotating Ring Fidget Rings",
+      "type": "Fidget Ring",
+      "description": "Heart-shaped rotating fidget ring, anti-stress spinner jewelry",
+      "sourceUrl": "https://cjdropshipping.com/product/vintage-heart-rotating-ring-fidget-rings-for-women-anti-stress-anxiety-ring-spinner-ring-anti-worry-stress-meditation-jewelry-gifts-for-girls-p-1547121202051952640.html",
+      "notes": "Decorative anxiety ring, gift for girls"
+    }
+  ],
+  "productsAlreadyInStore": [
     {
       "pid": "1541333689475944448",
       "name": "Creative Fidget Spinner Toy Keychain",
+      "slug": "cj-spinner-keychain",
       "type": "Fidget Spinner",
       "description": "Hand spinner anti-anxiety toy with bottle opener, keychain attachment",
       "sourceUrl": "https://cjdropshipping.com/product/creative-fidget-spinner-toy-keychain-hand-spinner-anti-anxiety-toy-relieves-stress-finger-spinner-keychain-bottle-opener-kids-toy-p-1541333689475944448.html",
@@ -14,6 +40,7 @@
     {
       "pid": "1527233425990758400",
       "name": "Colorful Alloy Fidget Spinner Electroplating",
+      "slug": "cj-alloy-spinner",
       "type": "Fidget Spinner",
       "description": "Metal alloy six-axis fidget spinner with electroplated finish",
       "sourceUrl": "https://cjdropshipping.com/product/colorful-alloy-fidget-spinner-electroplating-toy-p-1527233425990758400.html",
@@ -22,6 +49,7 @@
     {
       "pid": "C4880398-A6C6-48C2-AF37-7852296CD892",
       "name": "Stress Relief Simulation Popcorn Cup",
+      "slug": "cj-popcorn-squishy",
       "type": "Squeeze/Squishy Toy",
       "description": "Anti-anxiety squeeze fidget toy shaped like popcorn cup",
       "sourceUrl": "https://cjdropshipping.com/product/stress-relief--simulation-popcorn-cup--anti-anxiety-squeeze-fidget-toy-for-kids-adults-p-C4880398-A6C6-48C2-AF37-7852296CD892.html",
@@ -30,26 +58,42 @@
     {
       "pid": "1719271582901743616",
       "name": "Dancing Ferrofluid Magnetic Desk Toy",
+      "slug": "cj-ferrofluid-speaker",
       "type": "Magnetic/Desk Toy",
       "description": "Ferrofluid that dances with music rhythm, magnetic liquid desk decoration",
       "sourceUrl": "https://cjdropshipping.com/product/dancing-ferrofluid-with-music-rhythm-magnetic-fluid-speaker-creative-ferrofluid-desk-toy-magnet-liquid-toy-home-decor-p-1719271582901743616.html",
-      "notes": "Premium desk toy, music-reactive, higher price point"
+      "notes": "Premium desk toy, music-reactive, higher price point ($150)"
+    },
+    {
+      "pid": "3D7BC0C9-CC09-4FAB-94A2-5775F0D11661",
+      "name": "Sticky Wall Ball",
+      "slug": "cj-sticky-wall-ball",
+      "type": "Stress Ball/Squishy",
+      "description": "Sticky squash ball that sticks to walls, stress relief toy with LED options",
+      "sourceUrl": "https://cjdropshipping.com/product/stick-wall-ball-stress-relief-toys-sticky-squash-ball-p-3D7BC0C9-CC09-4FAB-94A2-5775F0D11661.html",
+      "notes": "Fun sticky wall ball, various colors and LED variants, 66 variants available"
     }
   ],
   "searchTermsToTryOnCJWebsite": [
     "fidget spinner metal",
-    "pop it silicone",
-    "stress ball squishy",
-    "fidget cube",
-    "magnetic putty",
-    "infinity cube",
-    "sensory toy autism",
-    "squeeze toy kawaii",
-    "fidget ring magnetic",
-    "mesh marble fidget"
+    "pop it silicone bubble",
+    "stress ball squishy squeeze",
+    "fidget cube 6 sided",
+    "magnetic putty slime",
+    "infinity cube aluminum",
+    "sensory toy autism ADHD",
+    "squeeze toy kawaii slow rising",
+    "fidget ring spinner anxiety",
+    "mesh marble fidget",
+    "wacky tracks snap click",
+    "tangle fidget twist",
+    "simple dimple keychain",
+    "stretchy string noodle",
+    "flippy chain bike"
   ],
   "categoryUrls": [
     "https://cjdropshipping.com/list/wholesale-toys-kids-babies-l-A50A92FA-BCB3-4716-9BD9-BEC629BEE735.html",
     "https://cjdropshipping.com/list/wholesale-toys-hobbies-l-04D68B68-1048-4971-BAFA-18FA0A6DB95C.html"
-  ]
+  ],
+  "notes": "CJ API has rate limits - wait 5 minutes between lookups. Use: node scripts/cj-product-lookup.js <pid>"
 }

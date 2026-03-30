@@ -741,6 +741,46 @@ export const cjDropshippingProducts: ProductPage[] = [
     metaTitle: 'Dancing Ferrofluid Speaker | Fidget WRLD',
     metaDescription: 'Mesmerizing ferrofluid desk toy that dances to music. Premium magnetic fluid speaker with 8-hour battery life.',
   },
+  // Product 5: Sticky Wall Ball (CJ PID: 3D7BC0C9-CC09-4FAB-94A2-5775F0D11661)
+  {
+    slug: 'cj-sticky-wall-ball',
+    name: 'Sticky Wall Ball',
+    tagline: 'Throw, stick, squeeze, repeat',
+    category: 'Squishy',
+    variants: [
+      { sku: 'CJ-WALL-BALL-4PK', name: 'Sticky Wall Ball', variant: '4-Pack Rainbow', price: 5.99, image: 'https://cf.cjdropshipping.com/2044/18607719711932.png' },
+      { sku: 'CJ-WALL-BALL-GLOW4', name: 'Sticky Wall Ball', variant: '4-Pack Glow', price: 6.99, image: 'https://cf.cjdropshipping.com/2054/4786525385188.png' },
+      { sku: 'CJ-WALL-BALL-BLU', name: 'Sticky Wall Ball', variant: 'Blue LED', color: 'Blue', colorHex: '#1E90FF', price: 2.99, image: 'https://cf.cjdropshipping.com/203104/1350329882.jpg' },
+      { sku: 'CJ-WALL-BALL-GRN', name: 'Sticky Wall Ball', variant: 'Green LED', color: 'Green', colorHex: '#32CD32', price: 2.99, image: 'https://cf.cjdropshipping.com/203104/2589223855002.jpg' },
+      { sku: 'CJ-WALL-BALL-RED', name: 'Sticky Wall Ball', variant: 'Red LED', color: 'Red', colorHex: '#DC143C', price: 2.99, image: 'https://cf.cjdropshipping.com/203104/488402365204.jpg' },
+      { sku: 'CJ-WALL-BALL-8PK', name: 'Sticky Wall Ball', variant: '8-Pack LED', price: 9.99, image: 'https://cf.cjdropshipping.com/2054/5811979488440.jpg' },
+    ],
+    defaultVariantIndex: 0,
+    description: `<p>Fun and satisfying sticky wall balls that stick to walls, ceilings, and smooth surfaces! Throw them against the wall and watch them stick, then slowly peel off. Perfect stress relief for all ages.</p>
+<p>Made from safe TPR material with soft rubber filling. LED variants light up on impact for extra fun. Washable - just rinse with water to restore stickiness.</p>`,
+    features: [
+      'Sticks to walls and smooth surfaces',
+      'LED variants light up on impact',
+      'Soft, squeezable material',
+      'Washable to restore stickiness',
+      'Safe for kids 3+',
+    ],
+    specifications: {
+      'Material': 'TPR (Thermoplastic Rubber)',
+      'Size': '4.5-6.5cm diameter',
+      'Weight': '12-50g per ball',
+      'Type': 'Stress Relief / Throwing Toy',
+    },
+    moods: ['play', 'calm'],
+    audiences: ['kids', 'all'],
+    textures: ['soft'],
+    ageRecommendation: '3+',
+    materials: ['TPR', 'Soft Rubber'],
+    isNew: true,
+    relatedSlugs: ['stress-ball-set', 'cj-popcorn-squishy', 'squishy-animals'],
+    metaTitle: 'Sticky Wall Ball | Fidget WRLD',
+    metaDescription: 'Fun sticky stress balls that stick to walls. LED light-up options available. Perfect for stress relief and play.',
+  },
 ];
 
 // Add CJ products to the main product list
