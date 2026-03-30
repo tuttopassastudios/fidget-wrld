@@ -40,7 +40,7 @@ module.exports = {
   // Discovery settings
   DISCOVERY: {
     MIN_PROFIT_MARGIN: 0.4,  // 40% minimum margin
-    MIN_STOCK: 100,           // Minimum stock level
+    MIN_STOCK: 10,            // Minimum stock level (lowered to find more products)
     MAX_PRICE: 50,            // Max cost price to consider
     PREFER_US_WAREHOUSE: true,
   },
