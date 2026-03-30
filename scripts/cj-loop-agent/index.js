@@ -126,8 +126,13 @@ class CJLoopAgent {
         pageSize: 20,
       });
 
-      const products = results.data?.list || results.list || [];
+      // CJ API V2 structure: content[0].productList contains the actual products
+      const contentList = results.data?.content || results.content || [];
+      const products = contentList[0]?.productList || results.data?.list || results.list || [];
       this.log(`   Found ${products.length} products`);
+      if (products.length === 0) {
+        this.log(`   API response keys: ${Object.keys(results.data || results).join(', ')}`);
+      }
 
       // Filter and score products
       const validProducts = products.filter(p => this.isValidCandidate(p));
@@ -136,7 +141,8 @@ class CJLoopAgent {
       // Add new candidates
       let newCount = 0;
       for (const product of validProducts) {
-        if (!this.candidateExists(product.pid)) {
+        const pid = product.id || product.pid;
+        if (!this.candidateExists(pid)) {
           this.addCandidate(product, searchTerm);
           newCount++;
         }
@@ -158,6 +164,7 @@ class CJLoopAgent {
   isValidCandidate(product) {
     const price = parseFloat(product.sellPrice) || 0;
     const stock = product.warehouseInventoryNum || 0;
+    const pid = product.id || product.pid;
 
     // Basic filters
     if (price > config.DISCOVERY.MAX_PRICE) return false;
@@ -165,7 +172,7 @@ class CJLoopAgent {
 
     // Check if already in store
     const existing = this.loadExistingProducts();
-    if (existing.alreadyFetched?.includes(product.pid)) return false;
+    if (existing.alreadyFetched?.includes(pid)) return false;
 
     return true;
   }
@@ -175,13 +182,15 @@ class CJLoopAgent {
   }
 
   addCandidate(product, searchTerm) {
+    // API V2 uses 'id' field, we store as 'pid' for consistency
+    const pid = product.id || product.pid;
     this.candidates.products.push({
-      pid: product.pid,
-      name: product.productNameEn || product.nameEn,
+      pid,
+      name: product.nameEn || product.productNameEn,
       price: product.sellPrice,
       stock: product.warehouseInventoryNum,
       hasUSWarehouse: product.warehouseInventoryNum > 0,
-      image: product.productImage || product.bigImage,
+      image: product.bigImage || product.productImage,
       searchTerm,
       foundAt: new Date().toISOString(),
       score: this.scoreProduct(product),
