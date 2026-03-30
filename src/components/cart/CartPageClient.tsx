@@ -16,7 +16,7 @@ import { RecommendationCarousel } from '@/components/product/RecommendationCarou
 import { productPages, getProductBySlug } from '@/data/products';
 
 export function CartPageClient() {
-  const { items, removeItem, updateQuantity, getSubtotal } = useCart();
+  const { items, removeItem, updateQuantity } = useCart();
   const { activePromo, apply, remove, calculateDiscount } = usePromo();
   const { show } = useToast();
   const { trigger } = useHaptics();

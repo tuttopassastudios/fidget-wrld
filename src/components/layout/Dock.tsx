@@ -77,7 +77,6 @@ export function Dock() {
     const dock = dockRef.current;
     if (!dock) return;
 
-    const dockRect = dock.getBoundingClientRect();
     const mouseX = e.clientX;
 
     for (const item of itemRefs.current) {

@@ -655,9 +655,6 @@ function isInside(rect: DOMRect) {
   );
 }
 
-// MathUtils destructuring - values used internally by W class
-const { randFloat: _randFloat, randFloatSpread: _randFloatSpread } = MathUtils;
-void _randFloat; void _randFloatSpread; // suppress unused warnings
 const F = new Vector3();
 const I = new Vector3();
 const O = new Vector3();

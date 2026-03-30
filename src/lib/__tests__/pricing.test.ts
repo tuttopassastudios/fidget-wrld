@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { calculateSubtotal, calculateOrderPricing, FREE_SHIP_THRESHOLD, STANDARD_SHIPPING, TAX_RATE } from '@/lib/pricing';
+import { calculateSubtotal, calculateOrderPricing, STANDARD_SHIPPING, TAX_RATE } from '@/lib/pricing';
 import { mockCartItem, mockBulkCartItem, noDiscount } from '@/test/helpers';
 import type { PromoResult } from '@/types';
 

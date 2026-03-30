@@ -41,7 +41,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Invalid payload' }, { status: 400 });
     }
 
-    const { orderId: cjOrderId, orderNumber, status, trackingNumber, shippingCarrier } = payload.data;
+    const { orderId: cjOrderId, orderNumber, status, trackingNumber } = payload.data;
 
     // Map CJ status to our internal status
     const mappedStatus = STATUS_MAP[status?.toUpperCase()] || 'processing';

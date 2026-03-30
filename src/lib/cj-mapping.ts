@@ -1,5 +1,4 @@
 import { productPages, cjDropshippingProducts } from '@/data/products';
-import type { ProductVariant } from '@/types';
 
 export interface CJMapping {
   cjPid: string;

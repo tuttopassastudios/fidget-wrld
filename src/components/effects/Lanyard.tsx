@@ -1,4 +1,3 @@
-/* eslint-disable react/no-unknown-property */
 'use client';
 
 import { useEffect, useMemo, useRef, useState } from 'react';
@@ -132,7 +131,6 @@ export default function Lanyard({
   fov = 20,
   transparent = true,
   showPromo = false,
-  onDismissPromo,
 }: {
   position?: [number, number, number];
   gravity?: [number, number, number];
@@ -163,7 +161,7 @@ export default function Lanyard({
       >
         <ambientLight intensity={Math.PI} />
         <Physics gravity={gravity} timeStep={isMobile ? 1 / 30 : 1 / 60}>
-          <Band isMobile={isMobile} showPromo={showPromo} onDismissPromo={onDismissPromo} />
+          <Band isMobile={isMobile} showPromo={showPromo} />
         </Physics>
         <Environment blur={0.75}>
           <Lightformer
@@ -205,13 +203,11 @@ function Band({
   minSpeed = 0,
   isMobile = false,
   showPromo = false,
-  onDismissPromo,
 }: {
   maxSpeed?: number;
   minSpeed?: number;
   isMobile?: boolean;
   showPromo?: boolean;
-  onDismissPromo?: () => void;
 }) {
   const band = useRef<MeshLineMesh>(null!);
   const fixed = useRef<LerpedRigidBody>(null!);
@@ -271,9 +267,7 @@ function Band({
 
   // Configure texture wrapping (Three.js texture config, not React state)
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/immutability -- Three.js texture configuration
     texture.wrapS = THREE.RepeatWrapping;
-    // eslint-disable-next-line react-hooks/immutability -- Three.js texture configuration
     texture.wrapT = THREE.RepeatWrapping;
   }, [texture]);
 

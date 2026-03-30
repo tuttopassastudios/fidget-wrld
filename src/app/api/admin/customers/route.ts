@@ -6,13 +6,6 @@ import type { Database } from '@/lib/supabase/types';
 
 type Order = Database['public']['Tables']['orders']['Row'];
 
-interface OrderItem {
-  sku: string;
-  name: string;
-  price: number;
-  quantity: number;
-}
-
 function toMonthKey(dateStr: string): string {
   const d = new Date(dateStr);
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;

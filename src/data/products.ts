@@ -164,7 +164,6 @@ export function getNewArrivals(): ProductPage[] {
 }
 
 export function getRecommendations(cartItems: { sku: string; name: string }[]): (ProductVariant & { sku: string; slug: string; variantCount: number; category: ProductCategory })[] {
-  const cartSkus = new Set(cartItems.map(i => i.sku));
   const cartSlugs = new Set<string>();
 
   // Get slugs of items in cart

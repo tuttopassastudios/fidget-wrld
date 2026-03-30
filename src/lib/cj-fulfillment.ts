@@ -174,10 +174,9 @@ export async function createCJOrder(
 
 /**
  * Retry CJ order creation for failed orders
- * @param maxAttempts Maximum retry attempts (default: 3)
  * @returns Number of orders successfully retried
  */
-export async function retryFailedOrders(maxAttempts: number = 3): Promise<{
+export async function retryFailedOrders(): Promise<{
   retried: number;
   failed: number;
   errors: string[];

@@ -20,7 +20,7 @@ function getSafeRedirect(param: string | null): string {
  * If the redirect target requires a __session cookie (dashboard routes),
  * sync it before navigating so the proxy doesn't bounce us back.
  */
-async function syncSessionIfNeeded(_redirectTo: string): Promise<void> {
+async function syncSessionIfNeeded(): Promise<void> {
   // Session sync is handled by useDashboardSession hook
   return;
 }
@@ -42,7 +42,7 @@ function LoginForm() {
   const navigateAfterAuth = useCallback(async (target: string) => {
     if (target.startsWith('/dashboard')) {
       try {
-        await syncSessionIfNeeded(target);
+        await syncSessionIfNeeded();
         window.location.href = target;
       } catch {
         // Session sync failed — go to /account to avoid redirect loop

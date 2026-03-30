@@ -132,9 +132,9 @@ export function PolkaDots({
       .join(', ');
     cssVars['--dot-bg-position'] = dotColors
       .map((_, i) => {
-        const offset = Math.floor(i / 2) * spacing + (i % 2 ? spacing / 2 : 0);
+        const xOffset = Math.floor(i / 2) * spacing + (i % 2 ? spacing / 2 : 0);
         const yOffset = i % 2 ? spacing / 2 : 0;
-        return `${offset}px ${yOffset}px`;
+        return `${xOffset}px ${yOffset}px`;
       })
       .join(', ');
   }

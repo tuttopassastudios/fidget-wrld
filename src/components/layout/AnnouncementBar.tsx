@@ -1,6 +1,5 @@
 'use client';
 
-import Link from 'next/link';
 import styles from './AnnouncementBar.module.css';
 
 export function AnnouncementBar() {

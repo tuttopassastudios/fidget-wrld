@@ -109,7 +109,7 @@ export function CardNav() {
         contentEl.style.pointerEvents = 'auto';
         contentEl.style.position = 'static';
         contentEl.style.height = 'auto';
-        contentEl.offsetHeight; // force reflow
+        void contentEl.offsetHeight; // force reflow
 
         const contentHeight = contentEl.scrollHeight;
 
