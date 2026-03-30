@@ -1,150 +1,95 @@
 /**
- * CJ Dropshipping API Client with Rate Limiting
+ * CJ Client - Cache-Only Mode
+ *
+ * Reads product data from the Loop Agent's cache instead of calling the CJ API.
+ * This allows the QA agent to run without consuming API quota.
  */
 
+const fs = require('fs');
 const path = require('path');
-const CJDropshipping = require(path.join(process.env.USERPROFILE, 'cj-dropshipping-sdk'));
 const config = require('../config');
+
+// Path to Loop Agent's product cache
+const LOOP_AGENT_CACHE = path.join(__dirname, '../../cj-loop-agent/data/product-cache.json');
 
 class CJClient {
   constructor() {
-    this.cj = new CJDropshipping({ apiKey: config.CJ_API_KEY });
-    this.lastRequestTime = 0;
+    this.cache = this.loadCache();
     this.requestLog = [];
   }
 
   /**
-   * Wait for rate limit cooldown
+   * Load the Loop Agent's product cache
    */
-  async waitForRateLimit() {
-    const now = Date.now();
-    const timeSinceLastRequest = now - this.lastRequestTime;
-
-    if (this.lastRequestTime > 0 && timeSinceLastRequest < config.CJ_RATE_LIMIT_MS) {
-      const waitTime = config.CJ_RATE_LIMIT_MS - timeSinceLastRequest;
-      console.log(`\n   Rate limit: waiting ${Math.round(waitTime / 1000)}s...`);
-
-      // Show countdown
-      const startWait = Date.now();
-      while (Date.now() - startWait < waitTime) {
-        const remaining = Math.ceil((waitTime - (Date.now() - startWait)) / 1000);
-        process.stdout.write(`\r   Waiting: ${remaining}s remaining...    `);
-        await this.sleep(1000);
+  loadCache() {
+    try {
+      if (fs.existsSync(LOOP_AGENT_CACHE)) {
+        const data = JSON.parse(fs.readFileSync(LOOP_AGENT_CACHE, 'utf8'));
+        const productCount = Object.keys(data.products || {}).length;
+        console.log(`   Loaded ${productCount} products from Loop Agent cache`);
+        if (data.lastUpdated) {
+          console.log(`   Cache last updated: ${new Date(data.lastUpdated).toLocaleString()}`);
+        }
+        return data;
       }
-      process.stdout.write('\r   Ready!                              \n');
+    } catch (error) {
+      console.log(`   Warning: Could not load cache: ${error.message}`);
     }
-
-    this.lastRequestTime = Date.now();
-  }
-
-  sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
+    return { products: {}, lastUpdated: null };
   }
 
   /**
-   * Get product details from CJ API
+   * Get product details from cache
    */
   async getProduct(pid) {
-    await this.waitForRateLimit();
+    const cached = this.cache.products[pid];
 
-    try {
-      console.log(`   Fetching product ${pid}...`);
-      const result = await this.cj.product.getProduct({ pid });
+    this.requestLog.push({
+      time: new Date().toISOString(),
+      endpoint: 'getProduct (cache)',
+      pid,
+      success: !!cached,
+      source: 'loop-agent-cache',
+    });
 
-      this.requestLog.push({
-        time: new Date().toISOString(),
-        endpoint: 'getProduct',
-        pid,
-        success: true,
-      });
-
-      return result.data || result;
-    } catch (error) {
-      this.requestLog.push({
-        time: new Date().toISOString(),
-        endpoint: 'getProduct',
-        pid,
-        success: false,
-        error: error.message,
-      });
-
-      if (error.message?.includes('Too Many Requests')) {
-        console.log('   Rate limited by CJ API. Waiting 5 minutes...');
-        await this.sleep(config.CJ_RATE_LIMIT_MS);
-        return this.getProduct(pid); // Retry
-      }
-      throw error;
+    if (cached && cached.product) {
+      console.log(`   Using cached data for ${pid} (cached: ${new Date(cached.cachedAt).toLocaleString()})`);
+      return cached.product;
     }
+
+    console.log(`   ⚠️  No cached data for ${pid} - run Loop Agent to sync`);
+    return null;
   }
 
   /**
-   * Get product variants from CJ API
+   * Get product variants from cache
    */
   async getVariants(pid) {
-    await this.waitForRateLimit();
+    const cached = this.cache.products[pid];
 
-    try {
-      console.log(`   Fetching variants for ${pid}...`);
-      const result = await this.cj.product.getVariants({ pid });
+    this.requestLog.push({
+      time: new Date().toISOString(),
+      endpoint: 'getVariants (cache)',
+      pid,
+      success: !!cached,
+      source: 'loop-agent-cache',
+    });
 
-      this.requestLog.push({
-        time: new Date().toISOString(),
-        endpoint: 'getVariants',
-        pid,
-        success: true,
-      });
-
-      return result.data || result;
-    } catch (error) {
-      this.requestLog.push({
-        time: new Date().toISOString(),
-        endpoint: 'getVariants',
-        pid,
-        success: false,
-        error: error.message,
-      });
-
-      if (error.message?.includes('Too Many Requests')) {
-        console.log('   Rate limited by CJ API. Waiting 5 minutes...');
-        await this.sleep(config.CJ_RATE_LIMIT_MS);
-        return this.getVariants(pid);
-      }
-      throw error;
+    if (cached && cached.variants) {
+      return cached.variants;
     }
-  }
 
-  /**
-   * Get all warehouses (to find US warehouses)
-   */
-  async getWarehouses() {
-    await this.waitForRateLimit();
-
-    try {
-      console.log('   Fetching warehouse list...');
-      const result = await this.cj.warehouse.getWarehouses();
-
-      this.requestLog.push({
-        time: new Date().toISOString(),
-        endpoint: 'getWarehouses',
-        success: true,
-      });
-
-      return result.data || result;
-    } catch (error) {
-      this.requestLog.push({
-        time: new Date().toISOString(),
-        endpoint: 'getWarehouses',
-        success: false,
-        error: error.message,
-      });
-      throw error;
-    }
+    return [];
   }
 
   /**
    * Check if product has US warehouse availability
    */
   checkUSWarehouse(productData) {
+    if (!productData) {
+      return { available: false, inventoryNum: 0, verifiedWarehouse: 0, totalVerified: 0 };
+    }
+
     return {
       available: (productData.warehouseInventoryNum > 0 ||
                   productData.verifiedWarehouse > 0 ||
@@ -163,11 +108,36 @@ class CJClient {
   }
 
   /**
-   * Estimate time to complete remaining audits
+   * Get cache status for reporting
+   */
+  getCacheStatus() {
+    const products = Object.keys(this.cache.products || {});
+    const ages = products.map(pid => {
+      const cached = this.cache.products[pid];
+      return cached?.cachedAt ? Date.now() - new Date(cached.cachedAt).getTime() : Infinity;
+    });
+
+    return {
+      productCount: products.length,
+      lastUpdated: this.cache.lastUpdated,
+      oldestCacheMs: Math.max(...ages),
+      newestCacheMs: Math.min(...ages),
+    };
+  }
+
+  /**
+   * Check which PIDs are missing from cache
+   */
+  getMissingProducts(requiredPids) {
+    return requiredPids.filter(pid => !this.cache.products[pid]);
+  }
+
+  /**
+   * No-op for cache mode (was used for ETA calculations)
    */
   getEstimatedCompletion(remainingProducts) {
-    const msNeeded = remainingProducts * config.CJ_RATE_LIMIT_MS;
-    return new Date(Date.now() + msNeeded);
+    // In cache mode, no waiting needed
+    return new Date();
   }
 }
 

@@ -3,16 +3,18 @@
  * CJ Product QA Agent
  *
  * Audits CJ Dropshipping products in the Fidget WRLD store:
- * - Validates variants, prices, and images against CJ API
+ * - Validates variants, prices, and images against Loop Agent's cache
  * - Checks US warehouse availability
  * - Suggests description improvements
  * - Generates a detailed markdown audit report
  *
+ * NOTE: This agent reads from the Loop Agent's cache (no API calls).
+ * Run the Loop Agent first to populate fresh data.
+ *
  * Usage:
  *   node scripts/cj-product-qa/index.js              # Full audit
  *   node scripts/cj-product-qa/index.js --product X  # Single product
- *   node scripts/cj-product-qa/index.js --offline    # Use cached data
- *   node scripts/cj-product-qa/index.js --resume     # Resume interrupted
+ *   node scripts/cj-product-qa/index.js --skip-descriptions
  */
 
 require('dotenv').config({ path: '.env.local' });
@@ -31,8 +33,6 @@ const config = require('./config');
 const args = process.argv.slice(2);
 const flags = {
   product: args.find((a, i) => args[i - 1] === '--product'),
-  offline: args.includes('--offline'),
-  resume: args.includes('--resume'),
   skipDescriptions: args.includes('--skip-descriptions'),
 };
 
@@ -50,10 +50,19 @@ class ProductQAAgent {
    */
   async run() {
     console.log('═'.repeat(60));
-    console.log('CJ Product QA Agent');
+    console.log('CJ Product QA Agent (Cache Mode)');
     console.log('═'.repeat(60));
+    console.log('\n   Using Loop Agent cache - no API calls will be made.');
 
     try {
+      // Check cache status
+      const cacheStatus = this.cjClient.getCacheStatus();
+      if (cacheStatus.productCount === 0) {
+        console.log('\n   ⚠️  Cache is empty! Run the Loop Agent first to sync products.');
+        console.log('   Command: node scripts/cj-loop-agent/index.js --update');
+        return;
+      }
+
       // Load products
       const products = await this.storeClient.getCJProducts();
 
@@ -72,8 +81,15 @@ class ProductQAAgent {
         }
       }
 
+      // Check for missing cache entries
+      const pids = productsToAudit.map(p => p.cjPid).filter(Boolean);
+      const missingPids = this.cjClient.getMissingProducts(pids);
+      if (missingPids.length > 0) {
+        console.log(`\n   ⚠️  ${missingPids.length} product(s) not in cache - will be flagged`);
+      }
+
       console.log(`\n   Found ${productsToAudit.length} products to audit`);
-      console.log(`   Estimated time: ~${productsToAudit.length * 5} minutes (due to API rate limits)`);
+      console.log(`   Cache has ${cacheStatus.productCount} products available`);
 
       // Audit each product
       for (let i = 0; i < productsToAudit.length; i++) {
@@ -85,11 +101,10 @@ class ProductQAAgent {
         const result = await this.auditProduct(product);
         this.report.addProductAudit(result);
 
-        // Show remaining time estimate
+        // Show progress
         const remaining = productsToAudit.length - (i + 1);
         if (remaining > 0) {
-          const eta = this.cjClient.getEstimatedCompletion(remaining);
-          console.log(`\n   ${remaining} products remaining. ETA: ${eta.toLocaleTimeString()}`);
+          console.log(`\n   ${remaining} products remaining`);
         }
       }
 
@@ -125,30 +140,25 @@ class ProductQAAgent {
       status: 'PASS',
     };
 
-    // 1. Fetch fresh CJ data (unless offline mode)
+    // 1. Get CJ data from Loop Agent cache (no API calls)
     let cjProduct = null;
     let cjVariants = null;
 
-    if (!flags.offline && product.cjPid) {
-      try {
-        cjProduct = await this.cjClient.getProduct(product.cjPid);
-        cjVariants = await this.cjClient.getVariants(product.cjPid);
-      } catch (error) {
-        console.log(`   CJ API error: ${error.message}`);
+    if (product.cjPid) {
+      cjProduct = await this.cjClient.getProduct(product.cjPid);
+      cjVariants = await this.cjClient.getVariants(product.cjPid);
+
+      if (!cjProduct) {
         result.issues.push({
           severity: 'warning',
-          message: `Could not fetch CJ data: ${error.message}`,
+          message: 'Not in cache - run Loop Agent to sync this product',
         });
       }
-    } else if (flags.offline) {
-      // Use cached data
-      const cached = this.storeClient.getCachedCJData();
-      const cachedProduct = cached.products?.find(p => p.pid === product.cjPid);
-      if (cachedProduct) {
-        cjProduct = cachedProduct;
-        cjVariants = cachedProduct.variants;
-        console.log('   Using cached CJ data');
-      }
+    } else {
+      result.issues.push({
+        severity: 'warning',
+        message: 'No CJ PID configured for this product',
+      });
     }
 
     // 2. Audit variants

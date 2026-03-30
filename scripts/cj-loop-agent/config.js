@@ -14,6 +14,7 @@ module.exports = {
     CJ_PRODUCT_IDS: '../cj-fidget-product-ids.json',
     CANDIDATES_FILE: './data/product-candidates.json',
     UPDATES_LOG: './data/updates-log.json',
+    PRODUCT_CACHE: './data/product-cache.json', // Full CJ data for QA agent
     LIVE_REPORT: '../../reports/cj-loop-agent.md',
   },
 

@@ -70,6 +70,37 @@ class CJLoopAgent {
     fs.writeFileSync(filePath, JSON.stringify(this.updatesLog, null, 2));
   }
 
+  // ─────────────────────────────────────────────────────────────
+  // Product Cache (for QA Agent to consume)
+  // ─────────────────────────────────────────────────────────────
+
+  loadProductCache() {
+    const filePath = path.join(__dirname, config.PATHS.PRODUCT_CACHE);
+    if (fs.existsSync(filePath)) {
+      return JSON.parse(fs.readFileSync(filePath, 'utf8'));
+    }
+    return { products: {}, lastUpdated: null };
+  }
+
+  saveProductCache(cache) {
+    const filePath = path.join(__dirname, config.PATHS.PRODUCT_CACHE);
+    cache.lastUpdated = new Date().toISOString();
+    fs.writeFileSync(filePath, JSON.stringify(cache, null, 2));
+  }
+
+  cacheProductData(pid, slug, productData, variantData) {
+    const cache = this.loadProductCache();
+    cache.products[pid] = {
+      pid,
+      slug,
+      product: productData,
+      variants: variantData,
+      cachedAt: new Date().toISOString(),
+    };
+    this.saveProductCache(cache);
+    this.log(`   📦 Cached product data for QA agent`);
+  }
+
   loadExistingProducts() {
     const filePath = path.join(__dirname, config.PATHS.CJ_PRODUCT_IDS);
     if (fs.existsSync(filePath)) {
@@ -201,6 +232,11 @@ class CJLoopAgent {
       const cjData = await this.cj.product.getProduct({ pid: product.pid });
       const variants = await this.cj.product.getVariants({ pid: product.pid });
 
+      // Cache full product data for QA agent
+      const productData = cjData.data || cjData;
+      const variantList = variants.data || variants || [];
+      this.cacheProductData(product.pid, product.slug, productData, variantList);
+
       const update = {
         pid: product.pid,
         slug: product.slug,
@@ -209,8 +245,7 @@ class CJLoopAgent {
       };
 
       // Check for changes
-      const currentPrice = cjData.data?.sellPrice || cjData.sellPrice;
-      const variantList = variants.data || variants || [];
+      const currentPrice = productData.sellPrice;
 
       // Calculate total stock
       const totalStock = variantList.reduce((sum, v) => sum + (v.variantVolume || 0), 0);
