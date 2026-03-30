@@ -1,146 +1,181 @@
 /**
- * Firebase Admin SDK stub
- * TODO: Configure Firebase when ready
+ * Admin auth utilities — backed by Supabase
+ *
+ * This module replaces the Firebase Admin SDK stubs with real Supabase
+ * admin client calls. All admin API routes import from here.
  */
+
+import { getAdminClient } from '@/lib/supabase/admin';
 
 export type AdminRole = 'admin' | 'editor' | 'viewer' | 'team';
 
-// Stub types for Firebase Admin
-interface UserMetadata {
-  creationTime?: string;
-  lastSignInTime?: string;
-}
-
-interface ProviderData {
-  providerId?: string;
-}
-
-interface UserRecord {
-  uid: string;
-  email?: string;
-  displayName?: string;
-  photoURL?: string;
-  disabled: boolean;
-  emailVerified: boolean;
-  metadata: UserMetadata;
-  customClaims?: Record<string, unknown>;
-  providerData: ProviderData[];
-}
-
-interface ListUsersResult {
-  users: UserRecord[];
-  pageToken?: string;
-}
-
-// Mock Firestore that throws to trigger static fallback in products-db.ts
-interface QuerySnapshot {
-  empty: boolean;
-  docs: { id: string; data: () => Record<string, unknown> }[];
-  forEach: (callback: (doc: { id: string; data: () => Record<string, unknown> }) => void) => void;
-}
-
-interface DocumentSnapshot {
-  exists: boolean;
-  id: string;
-  data: () => Record<string, unknown> | undefined;
-}
-
-type QueryRef = {
-  get: () => Promise<QuerySnapshot>;
-  where: (field: string, op: string, value: unknown) => QueryRef;
-  orderBy: (field: string, direction?: string) => QueryRef;
-  limit: (n: number) => QueryRef;
-};
-
-type DocRef = {
-  get: () => Promise<DocumentSnapshot>;
-  set: (data: unknown, options?: unknown) => Promise<void>;
-  update: (data: unknown) => Promise<void>;
-  delete: () => Promise<void>;
-};
-
-type CollectionRef = QueryRef & {
-  doc: (id?: string) => DocRef;
-  add: (data: unknown) => Promise<{ id: string }>;
-};
-
-export function getAdminFirestore() {
-  const mockQuery: QueryRef = {
-    get: async (): Promise<QuerySnapshot> => {
-      throw new Error('Firebase not configured - using static data');
-    },
-    where: (_field: string, _op: string, _value: unknown) => mockQuery,
-    orderBy: (_field: string, _direction?: string) => mockQuery,
-    limit: (_n: number) => mockQuery,
-  };
-
-  const mockDocRef: DocRef = {
-    get: async (): Promise<DocumentSnapshot> => {
-      throw new Error('Firebase not configured - using static data');
-    },
-    set: async (_data: unknown, _options?: unknown): Promise<void> => {
-      throw new Error('Firebase not configured');
-    },
-    update: async (_data: unknown): Promise<void> => {
-      throw new Error('Firebase not configured');
-    },
-    delete: async (): Promise<void> => {
-      throw new Error('Firebase not configured');
-    },
-  };
-
-  const mockCollectionRef: CollectionRef = {
-    ...mockQuery,
-    doc: (_id?: string) => mockDocRef,
-    add: async (_data: unknown): Promise<{ id: string }> => {
-      throw new Error('Firebase not configured');
-    },
-  };
-
-  return {
-    collection: (_name: string) => mockCollectionRef,
-  };
-}
+/* ------------------------------------------------------------------ */
+/*  getAdminAuth() — drop-in for routes that call Firebase-style APIs  */
+/* ------------------------------------------------------------------ */
 
 export function getAdminAuth() {
+  const supabase = getAdminClient();
+
   return {
-    verifyIdToken: async (_token: string): Promise<{ uid: string; email?: string }> => {
-      throw new Error('Firebase Auth not configured');
+    /** Verify a Supabase access token and return uid + email. */
+    verifyIdToken: async (token: string): Promise<{ uid: string; email?: string }> => {
+      const { data, error } = await supabase.auth.getUser(token);
+      if (error || !data.user) throw new Error('Invalid token');
+      return { uid: data.user.id, email: data.user.email };
     },
-    getUser: async () => {
-      throw new Error('Firebase Auth not configured');
+
+    /** Get a user record by UID. */
+    getUser: async (uid: string) => {
+      const { data, error } = await supabase.auth.admin.getUserById(uid);
+      if (error || !data.user) throw new Error('User not found');
+      const u = data.user;
+      return {
+        uid: u.id,
+        email: u.email,
+        displayName: u.user_metadata?.full_name ?? u.user_metadata?.display_name ?? null,
+        photoURL: u.user_metadata?.avatar_url ?? null,
+        disabled: u.banned_until ? new Date(u.banned_until) > new Date() : false,
+        emailVerified: !!u.email_confirmed_at,
+        metadata: {
+          creationTime: u.created_at,
+          lastSignInTime: u.last_sign_in_at ?? undefined,
+        },
+        customClaims: u.app_metadata ?? {},
+        providerData: (u.app_metadata?.providers ?? []).map((p: string) => ({ providerId: p })),
+      };
     },
-    setCustomUserClaims: async (_uid: string, _claims: Record<string, unknown>) => {
-      throw new Error('Firebase Auth not configured');
+
+    /** Set custom claims (role) on a user via app_metadata. */
+    setCustomUserClaims: async (uid: string, claims: Record<string, unknown>) => {
+      const { error } = await supabase.auth.admin.updateUserById(uid, {
+        app_metadata: claims,
+      });
+      if (error) throw new Error(`Failed to set claims: ${error.message}`);
     },
-    listUsers: async (_maxResults?: number, _pageToken?: string): Promise<ListUsersResult> => ({ users: [], pageToken: undefined }),
+
+    /** List users with pagination. */
+    listUsers: async (maxResults = 1000, pageToken?: string) => {
+      const page = pageToken ? parseInt(pageToken, 10) : 1;
+      const perPage = Math.min(maxResults, 1000);
+      const { data, error } = await supabase.auth.admin.listUsers({ page, perPage });
+      if (error) throw new Error(`Failed to list users: ${error.message}`);
+
+      const users = (data.users ?? []).map((u) => ({
+        uid: u.id,
+        email: u.email,
+        displayName: u.user_metadata?.full_name ?? u.user_metadata?.display_name ?? null,
+        photoURL: u.user_metadata?.avatar_url ?? null,
+        disabled: u.banned_until ? new Date(u.banned_until) > new Date() : false,
+        emailVerified: !!u.email_confirmed_at,
+        metadata: {
+          creationTime: u.created_at,
+          lastSignInTime: u.last_sign_in_at ?? undefined,
+        },
+        customClaims: u.app_metadata ?? {},
+        providerData: (u.app_metadata?.providers ?? []).map((p: string) => ({ providerId: p })),
+      }));
+
+      // Supabase doesn't use pageToken; synthesise one if there are more pages
+      const nextPage = users.length === perPage ? String(page + 1) : undefined;
+      return { users, pageToken: nextPage };
+    },
   };
 }
 
-export function getAdminStorage() {
+/* ------------------------------------------------------------------ */
+/*  Standalone helpers used by individual routes                       */
+/* ------------------------------------------------------------------ */
+
+/** Verify a Supabase access token and return uid, email, and role. */
+export async function verifyIdToken(
+  token: string,
+): Promise<{ uid: string; email?: string; role?: string } | null> {
+  try {
+    const supabase = getAdminClient();
+    const { data, error } = await supabase.auth.getUser(token);
+    if (error || !data.user) return null;
+
+    const role = (data.user.app_metadata?.role as string) ?? undefined;
+    return { uid: data.user.id, email: data.user.email, role };
+  } catch {
+    return null;
+  }
+}
+
+/** Extract the Bearer token from an Authorization header. */
+export function extractBearerToken(header: string | null): string | null {
+  if (!header?.startsWith('Bearer ')) return null;
+  return header.slice(7);
+}
+
+/**
+ * Verify that the request comes from an authenticated user with the
+ * required admin/team role. Returns the caller info or null.
+ */
+export async function verifyAdminRequest(
+  authHeader: string | null,
+  requiredRole?: AdminRole,
+): Promise<{ uid: string; role: AdminRole; email?: string } | null> {
+  const token = extractBearerToken(authHeader);
+  if (!token) return null;
+
+  const decoded = await verifyIdToken(token);
+  if (!decoded) return null;
+
+  const role = decoded.role as AdminRole | undefined;
+  if (!role) return null;
+
+  // If a specific role is required, enforce it
+  if (requiredRole) {
+    // 'admin' satisfies any requirement; 'team' only satisfies 'team'
+    if (requiredRole === 'admin' && role !== 'admin') return null;
+  }
+
+  return { uid: decoded.uid, role, email: decoded.email };
+}
+
+/* ------------------------------------------------------------------ */
+/*  Firestore stub — kept so product-db.ts falls through to static    */
+/* ------------------------------------------------------------------ */
+
+export function getAdminFirestore() {
+  type QueryRef = {
+    get: () => Promise<{ empty: boolean; docs: never[]; forEach: () => void }>;
+    where: (_f: string, _o: string, _v: unknown) => QueryRef;
+    orderBy: (_f: string, _d?: string) => QueryRef;
+    limit: (_n: number) => QueryRef;
+  };
+
+  const mockQuery: QueryRef = {
+    get: async () => { throw new Error('Firestore not configured — using static data'); },
+    where: () => mockQuery,
+    orderBy: () => mockQuery,
+    limit: () => mockQuery,
+  };
+
   return {
-    bucket: () => ({
-      file: (_path: string) => ({
-        save: async () => {
-          throw new Error('Firebase Storage not configured');
-        },
-        getSignedUrl: async () => [''],
-        delete: async () => {
-          throw new Error('Firebase Storage not configured');
-        },
+    collection: () => ({
+      ...mockQuery,
+      doc: () => ({
+        get: async () => { throw new Error('Firestore not configured'); },
+        set: async () => { throw new Error('Firestore not configured'); },
+        update: async () => { throw new Error('Firestore not configured'); },
+        delete: async () => { throw new Error('Firestore not configured'); },
       }),
+      add: async () => { throw new Error('Firestore not configured'); },
     }),
   };
 }
 
-export async function verifyIdToken(_token: string): Promise<{ uid: string; email?: string; role?: string }> {
-  throw new Error('Firebase Auth not configured');
-}
-
-export function extractBearerToken(_header: string | null): string | null {
-  return null;
-}
-
-export async function verifyAdminRequest(_authHeader: string | null, _requiredRole?: AdminRole): Promise<{ uid: string; role: AdminRole; email?: string }> {
-  throw new Error('Firebase Auth not configured - admin access disabled');
+/** Storage stub */
+export function getAdminStorage() {
+  return {
+    bucket: () => ({
+      file: () => ({
+        save: async () => { throw new Error('Storage not configured'); },
+        getSignedUrl: async () => [''],
+        delete: async () => { throw new Error('Storage not configured'); },
+      }),
+    }),
+  };
 }
