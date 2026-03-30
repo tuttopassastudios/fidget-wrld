@@ -10,7 +10,7 @@
     "analyze": "ANALYZE=true next build",
     "test": "vitest",
     "test:run": "vitest run",
-    "prepare": "git config core.hooksPath .githooks"
+    "prepare": "git rev-parse --git-dir > /dev/null 2>&1 && git config core.hooksPath .githooks || true"
   },
   "dependencies": {
     "@react-three/drei": "^10.7.7",
