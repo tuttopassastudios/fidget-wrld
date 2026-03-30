@@ -52,7 +52,23 @@ async function main() {
     console.log('Bucket already exists.\n');
   }
 
-  // 2. Upload images
+  // 2. Remove backgrounds before uploading
+  console.log('Removing backgrounds from product images...\n');
+  const venvPython = path.join(__dirname, '../.venv/bin/python');
+  const removeBgScript = path.join(__dirname, 'remove-bg.py');
+  if (fs.existsSync(venvPython) && fs.existsSync(removeBgScript)) {
+    const { execSync } = await import('child_process');
+    try {
+      execSync(`"${venvPython}" "${removeBgScript}"`, { stdio: 'inherit' });
+      console.log('');
+    } catch {
+      console.warn('Warning: Background removal failed, uploading originals.\n');
+    }
+  } else {
+    console.warn('Warning: .venv or remove-bg.py not found, skipping background removal.\n');
+  }
+
+  // 3. Upload images
   console.log('Uploading images...\n');
   const files = fs.readdirSync(IMAGES_DIR).filter(f =>
     f.endsWith('.png') || f.endsWith('.jpg') || f.endsWith('.webp') || f.endsWith('.svg')
