@@ -184,7 +184,31 @@
       ],
       "variantCount": 24,
       "fetchedAt": "2026-03-30T04:34:16.429Z"
+    },
+    {
+      "pid": "1527233425990758400",
+      "sku": "CJYD1486282",
+      "name": "Colorful Alloy Fidget Spinner Electroplating Toy",
+      "description": "<body>\n <p><b>Product information:</b><br>Ability Training: Other ability training<br> Color: Alloy six axis (opp bag)<br> Applicable people: unlimited<br> Applicable age: Teenagers (7-14 years old)<br> Toy material: Alloy<br> SIZE: Approximately 6cm in diameter</p>\n <br>\n <b>Packing list: </b>\n <br>Fidget spinner *1\n <br>\n <p></p>\n <b>Product Image:</b>\n <br>\n <img src=\"https://cc-west-usa.oss-us-west-1.aliyuncs.com/quick/product/5a7316cd-3083-4135-9d22-30cf0d3bc4e3.jpg\">\n <img src=\"https://cc-west-usa.oss-us-west-1.aliyuncs.com/quick/product/1b96035d-afd5-4d43-aa5a-8fb26e30f3ae.jpg\">\n <img src=\"https://cc-west-usa.oss-us-west-1.aliyuncs.com/quick/product/d470f3ee-8d76-4138-9aed-7608dafe546d.jpg\">\n <img src=\"https://cc-west-usa.oss-us-west-1.aliyuncs.com/quick/product/287a753a-ac43-4c3d-8ae3-57516c7ccebe.jpg\">\n <img src=\"https://cf.cjdropshipping.com/ef124ec7-48df-48f3-8509-c962b7123448.jpg\">\n</body>",
+      "image": "[\"https://cf.cjdropshipping.com/quick/product/8dcda08d-587f-4ce2-8c2a-6c32ef805736.jpg\",\"https://cf.cjdropshipping.com/quick/product/8dcda08d-587f-4ce2-8c2a-6c32ef805736.jpg\",\"https://cf.cjdropshipping.com/quick/product/8dcda08d-587f-4ce2-8c2a-6c32ef805736.jpg\",\"https://cf.cjdropshipping.com/quick/product/8dcda08d-587f-4ce2-8c2a-6c32ef805736.jpg\",\"https://cf.cjdropshipping.com/quick/product/5a7316cd-3083-4135-9d22-30cf0d3bc4e3.jpg\",\"https://cf.cjdropshipping.com/quick/product/1b96035d-afd5-4d43-aa5a-8fb26e30f3ae.jpg\",\"https://cf.cjdropshipping.com/quick/product/d470f3ee-8d76-4138-9aed-7608dafe546d.jpg\",\"https://cf.cjdropshipping.com/quick/product/287a753a-ac43-4c3d-8ae3-57516c7ccebe.jpg\",\"https://cf.cjdropshipping.com/ef124ec7-48df-48f3-8509-c962b7123448.jpg\"]",
+      "costRange": "$1.18",
+      "avgCost": 1.18,
+      "suggestedRetail": 2.95,
+      "profit": 1.77,
+      "profitMargin": 60,
+      "weight": "80.00",
+      "variants": [
+        {
+          "vid": "1527233426057867264",
+          "name": "Colorful Alloy Fidget Spinner Electroplating Toy Alloy Six Axes Opp Bag",
+          "price": 1.18,
+          "image": "https://cf.cjdropshipping.com/quick/product/8dcda08d-587f-4ce2-8c2a-6c32ef805736.jpg",
+          "stock": 192000
+        }
+      ],
+      "variantCount": 1,
+      "fetchedAt": "2026-03-30T04:42:10.543Z"
     }
   ],
-  "lastUpdated": "2026-03-30T04:34:16.430Z"
+  "lastUpdated": "2026-03-30T04:42:10.544Z"
 }
