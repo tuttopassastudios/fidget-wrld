@@ -108,7 +108,8 @@ BEGIN
   NEW.updated_at = NOW();
   RETURN NEW;
 END;
-$$ language 'plpgsql';
+$$ language 'plpgsql'
+SET search_path = '';
 
 CREATE TRIGGER update_products_updated_at
   BEFORE UPDATE ON products
