@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import Stripe from 'stripe';
 import { stripe } from '@/lib/stripe';
 import { getAdminClient } from '@/lib/supabase/admin';
+import { createCJOrder, type OrderItem, type ShippingAddress } from '@/lib/cj-fulfillment';
 
 export async function POST(request: Request) {
   const body = await request.text();
@@ -71,14 +72,25 @@ async function handleCheckoutComplete(session: Stripe.Checkout.Session) {
     expand: ['data.price.product'],
   });
 
-  // Build order items array
+  // Parse SKUs from session metadata (added by checkout API)
+  let skuData: Array<{ sku: string; qty: number }> = [];
+  try {
+    if (session.metadata?.skus) {
+      skuData = JSON.parse(session.metadata.skus);
+    }
+  } catch (e) {
+    console.error('Failed to parse SKU metadata:', e);
+  }
+
+  // Build order items array with SKUs
   const items = lineItems.data
     .filter(item => item.description !== 'Shipping') // Exclude shipping line item
-    .map(item => ({
+    .map((item, index) => ({
       name: item.description || 'Unknown Product',
       quantity: item.quantity || 1,
       price: (item.amount_total || 0) / 100 / (item.quantity || 1),
       total: (item.amount_total || 0) / 100,
+      sku: skuData[index]?.sku || '',
     }));
 
   // Extract shipping info
@@ -107,10 +119,14 @@ async function handleCheckoutComplete(session: Stripe.Checkout.Session) {
   // Insert order into Supabase
   const supabase = getAdminClient();
 
+  // Get phone number from customer details (enabled via phone_number_collection)
+  const customerPhone = session.customer_details?.phone || '';
+
   const { data, error } = await supabase
     .from('orders')
     .insert({
       email: session.customer_details?.email || session.customer_email || '',
+      phone: customerPhone,
       status: 'paid',
       items: items,
       subtotal: subtotal,
@@ -132,9 +148,58 @@ async function handleCheckoutComplete(session: Stripe.Checkout.Session) {
 
   console.log('Order created:', data.id);
 
+  // Trigger CJ Dropshipping fulfillment asynchronously (don't block webhook response)
+  triggerCJFulfillment(
+    data.id,
+    items,
+    shippingAddress as ShippingAddress,
+    session.customer_details?.email || session.customer_email || '',
+    customerPhone
+  );
+
   // TODO: Send confirmation email
   // TODO: Update inventory
   // TODO: Notify admin
 
   return data;
+}
+
+/**
+ * Trigger CJ fulfillment in the background
+ * This runs async so we don't delay the webhook response to Stripe
+ */
+async function triggerCJFulfillment(
+  orderId: string,
+  items: Array<{ name: string; quantity: number; sku: string }>,
+  shippingAddress: ShippingAddress,
+  email: string,
+  phone: string
+) {
+  // Convert items to OrderItem format
+  const orderItems: OrderItem[] = items
+    .filter(item => item.sku) // Only items with SKUs
+    .map(item => ({
+      sku: item.sku,
+      quantity: item.quantity,
+    }));
+
+  if (orderItems.length === 0) {
+    console.log(`Order ${orderId}: No items with SKUs, skipping CJ fulfillment`);
+    return;
+  }
+
+  try {
+    const result = await createCJOrder(orderId, orderItems, shippingAddress, email, phone);
+
+    if (result.success) {
+      console.log(`Order ${orderId}: CJ fulfillment initiated (CJ ID: ${result.cjOrderId || 'pending'})`);
+      if (result.skippedItems.length > 0) {
+        console.log(`Order ${orderId}: Non-CJ items need manual fulfillment:`, result.skippedItems);
+      }
+    } else {
+      console.error(`Order ${orderId}: CJ fulfillment failed:`, result.error);
+    }
+  } catch (error) {
+    console.error(`Order ${orderId}: CJ fulfillment error:`, error);
+  }
 }

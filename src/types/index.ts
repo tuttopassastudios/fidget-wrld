@@ -24,6 +24,8 @@ export interface ProductVariant {
   compareAtPrice?: number;
   image: string;
   inventory?: number;
+  cjPid?: string;  // CJ Dropshipping Product ID
+  cjVid?: string;  // CJ Dropshipping Variant ID
 }
 
 export interface ProductPage {

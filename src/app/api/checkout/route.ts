@@ -68,6 +68,12 @@ export async function POST(request: Request) {
       });
     }
 
+    // Build SKU data for fulfillment (needed by webhook to create CJ orders)
+    const skuData = items.map(item => ({
+      sku: item.sku,
+      qty: item.quantity,
+    }));
+
     // Create Stripe checkout session
     const sessionConfig: Stripe.Checkout.SessionCreateParams = {
       payment_method_types: ['card'],
@@ -76,9 +82,13 @@ export async function POST(request: Request) {
       success_url: `${origin}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${origin}/checkout`,
       customer_email: customerEmail || undefined,
+      phone_number_collection: {
+        enabled: true, // Required for CJ Dropshipping fulfillment
+      },
       metadata: {
         promoDiscount: promoDiscount.toString(),
         itemCount: items.length.toString(),
+        skus: JSON.stringify(skuData), // Pass SKUs for fulfillment
       },
       shipping_address_collection: shippingAddress ? undefined : {
         allowed_countries: ['US', 'CA'],

@@ -162,6 +162,7 @@ export interface Database {
           id: string;
           user_id: string | null;
           email: string;
+          phone: string | null;
           status: 'pending' | 'paid' | 'shipped' | 'delivered' | 'cancelled';
           items: Json;
           subtotal: number;
@@ -174,6 +175,10 @@ export interface Database {
           promo_code: string | null;
           discount: number;
           notes: string | null;
+          cj_order_id: string | null;
+          cj_order_status: string | null;
+          cj_tracking_number: string | null;
+          fulfillment_error: string | null;
           created_at: string;
           updated_at: string;
         };
@@ -181,6 +186,7 @@ export interface Database {
           id?: string;
           user_id?: string | null;
           email: string;
+          phone?: string | null;
           status?: 'pending' | 'paid' | 'shipped' | 'delivered' | 'cancelled';
           items: Json;
           subtotal: number;
@@ -193,6 +199,10 @@ export interface Database {
           promo_code?: string | null;
           discount?: number;
           notes?: string | null;
+          cj_order_id?: string | null;
+          cj_order_status?: string | null;
+          cj_tracking_number?: string | null;
+          fulfillment_error?: string | null;
           created_at?: string;
           updated_at?: string;
         };
@@ -200,6 +210,7 @@ export interface Database {
           id?: string;
           user_id?: string | null;
           email?: string;
+          phone?: string | null;
           status?: 'pending' | 'paid' | 'shipped' | 'delivered' | 'cancelled';
           items?: Json;
           subtotal?: number;
@@ -212,6 +223,10 @@ export interface Database {
           promo_code?: string | null;
           discount?: number;
           notes?: string | null;
+          cj_order_id?: string | null;
+          cj_order_status?: string | null;
+          cj_tracking_number?: string | null;
+          fulfillment_error?: string | null;
           updated_at?: string;
         };
         Relationships: [];
