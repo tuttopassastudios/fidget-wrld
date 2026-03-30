@@ -91,9 +91,11 @@ export async function createCJOrder(
 
     // Create order via CJ API (uses the order module)
     // fromCountryCode: CN = China warehouse (default), US = US warehouse
+    // logisticName: CJ Packet Ordinary is economical standard shipping
     const response = await cj.order.createOrder({
       orderNumber: orderId,
       fromCountryCode: 'CN', // Ship from China warehouse (most products)
+      logisticName: 'CJ Packet Ordinary', // Standard economical shipping
       shippingCountryCode: countryCode,
       shippingCountry: cjAddress.country,
       shippingProvince: cjAddress.province,
