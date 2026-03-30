@@ -90,8 +90,10 @@ export async function createCJOrder(
                         shippingAddress.country;
 
     // Create order via CJ API (uses the order module)
+    // fromCountryCode: CN = China warehouse (default), US = US warehouse
     const response = await cj.order.createOrder({
       orderNumber: orderId,
+      fromCountryCode: 'CN', // Ship from China warehouse (most products)
       shippingCountryCode: countryCode,
       shippingCountry: cjAddress.country,
       shippingProvince: cjAddress.province,
