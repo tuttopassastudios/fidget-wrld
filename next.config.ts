@@ -40,7 +40,7 @@ const securityHeaders = [
       "default-src 'self'",
       `script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval'${process.env.NODE_ENV === "development" ? " 'unsafe-eval'" : ""} https://apis.google.com https://va.vercel-scripts.com`,
       "style-src 'self' 'unsafe-inline'",
-      "img-src 'self' data: blob: https://*.supabase.co",
+      "img-src 'self' data: blob: https://*.supabase.co https://cf.cjdropshipping.com https://oss-cf.cjdropshipping.com https://cc-west-usa.oss-us-west-1.aliyuncs.com",
       "font-src 'self'",
       "connect-src 'self' https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://firebasedataconnect.googleapis.com https://accounts.google.com https://*.firebaseio.com https://va.vercel-scripts.com",
       "frame-src https://accounts.google.com https://*.firebaseapp.com",
@@ -76,6 +76,18 @@ const nextConfig: NextConfig = {
       {
         protocol: "https",
         hostname: "*.supabase.co",
+      },
+      {
+        protocol: "https",
+        hostname: "cf.cjdropshipping.com",
+      },
+      {
+        protocol: "https",
+        hostname: "oss-cf.cjdropshipping.com",
+      },
+      {
+        protocol: "https",
+        hostname: "cc-west-usa.oss-us-west-1.aliyuncs.com",
       },
     ],
   },
