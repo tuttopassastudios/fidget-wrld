@@ -1293,7 +1293,7 @@
           "inventories": null
         }
       ],
-      "cachedAt": "2026-03-30T07:55:51.220Z"
+      "cachedAt": "2026-03-30T08:37:27.672Z"
     },
     "1527233425990758400": {
       "pid": "1527233425990758400",
@@ -1678,7 +1678,7 @@
             "variantSellPrice": 61.19,
             "createTime": 1698741262000,
             "variantStandard": "long=192,width=126,height=74",
-            "variantSugSellPrice": 417.93,
+            "variantSugSellPrice": 417.32,
             "combineNum": null,
             "inventoryNum": null,
             "combineVariants": null,
@@ -1702,7 +1702,7 @@
             "variantSellPrice": 61.19,
             "createTime": 1698741262000,
             "variantStandard": "long=192,width=126,height=74",
-            "variantSugSellPrice": 417.93,
+            "variantSugSellPrice": 417.32,
             "combineNum": null,
             "inventoryNum": null,
             "combineVariants": null,
@@ -1713,7 +1713,7 @@
         "createrTime": "2023-10-31T08:34:22+08:00",
         "productVideo": null,
         "status": "3",
-        "suggestSellPrice": "417.93",
+        "suggestSellPrice": "417.32",
         "listedNum": 652,
         "supplierName": null,
         "supplierId": null,
@@ -1774,7 +1774,7 @@
           "inventories": null
         }
       ],
-      "cachedAt": "2026-03-30T06:17:31.692Z"
+      "cachedAt": "2026-03-30T08:28:50.722Z"
     },
     "3D7BC0C9-CC09-4FAB-94A2-5775F0D11661": {
       "pid": "3D7BC0C9-CC09-4FAB-94A2-5775F0D11661",
@@ -5949,5 +5949,5 @@
       "cachedAt": "2026-03-30T06:34:01.603Z"
     }
   },
-  "lastUpdated": "2026-03-30T08:17:50.531Z"
+  "lastUpdated": "2026-03-30T08:37:27.672Z"
 }
