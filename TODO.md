@@ -155,19 +155,13 @@
 - [ ] **Links without names** — Some links missing discernible text
   - Add `aria-label` to icon-only links
 
-### ESLint Issues (49 errors, 54 warnings)
-
-#### Errors to Fix
-- [ ] `BallpitHero.tsx:15` — setState in useEffect (use initialization pattern)
-- [ ] `CheckoutPageClient.tsx:70` — `Math.random()` in render (move to state/useMemo)
-- [ ] `DashboardGuard.tsx:55` — Use `<Link>` instead of `<a>` for internal navigation
-- [ ] `DashboardSidebar.tsx:88` — setState in useEffect on route change
-- [ ] `LiveOrderFeed.tsx:79` — setState in useEffect for data fetching
-- [ ] `src/lib/supabase/types.ts` — Replace `{}` with `object` or `unknown`
-
-#### Warnings to Clean Up
-- [ ] Remove unused variables across 15+ files
-- [ ] Fix test setup file (`src/test/setup.tsx`) mock issues
+### ESLint Issues ✅ FIXED
+- [x] Converted CJ SDK from CommonJS to ES modules (19 require() errors)
+- [x] Removed unused imports and variables across 15+ files
+- [x] Fixed unused expressions in Ballpit.tsx and CardNav.tsx
+- [x] Fixed test setup.tsx mock
+- [x] Configured ESLint to allow underscore-prefixed unused params
+- Remaining: 4 `<img>` warnings (acceptable for dynamic product images)
 
 ---
 
@@ -195,4 +189,4 @@
 - 66 static pages generated
 - TypeScript compiles without errors
 - Turbopack build in ~3.6s
-- ESLint: 49 errors, 54 warnings (does not block build)
+- ESLint: 0 errors, 4 warnings (acceptable `<img>` warnings)
