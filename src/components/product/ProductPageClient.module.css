@@ -208,6 +208,12 @@
   text-align: center;
 }
 
+/* You May Also Like section */
+.youMayAlsoLike {
+  padding: var(--space-8) 0;
+  border-top: 1px solid var(--color-border);
+}
+
 /* Mobile: ensure touch targets for thumbnails */
 @media (max-width: 768px) {
   .thumbnail {
