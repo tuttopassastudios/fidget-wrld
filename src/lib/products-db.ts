@@ -37,6 +37,7 @@ function dbRowToProductPage(row: DbProduct): ProductPage {
     isNew: row.is_new,
     isBestseller: row.is_bestseller,
     isLimited: row.is_limited,
+    isOutOfStock: row.is_out_of_stock,
     relatedSlugs: row.related_slugs ?? undefined,
     about: row.about ?? undefined,
     careInstructions: row.care_instructions ?? undefined,
@@ -67,6 +68,7 @@ function productPageToDbRow(product: ProductPage): DbProductInsert {
     is_new: product.isNew ?? false,
     is_bestseller: product.isBestseller ?? false,
     is_limited: product.isLimited ?? false,
+    is_out_of_stock: product.isOutOfStock ?? false,
     related_slugs: product.relatedSlugs ?? null,
     about: product.about ?? null,
     care_instructions: product.careInstructions ?? null,
@@ -207,6 +209,7 @@ export async function updateProduct(
   if (clean.isNew !== undefined) updateData.is_new = clean.isNew;
   if (clean.isBestseller !== undefined) updateData.is_bestseller = clean.isBestseller;
   if (clean.isLimited !== undefined) updateData.is_limited = clean.isLimited;
+  if (clean.isOutOfStock !== undefined) updateData.is_out_of_stock = clean.isOutOfStock;
   if (clean.relatedSlugs !== undefined) updateData.related_slugs = clean.relatedSlugs;
   if (clean.about !== undefined) updateData.about = clean.about;
   if (clean.careInstructions !== undefined) updateData.care_instructions = clean.careInstructions;
