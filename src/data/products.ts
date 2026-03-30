@@ -822,6 +822,47 @@ export const cjDropshippingProducts: ProductPage[] = [
     metaTitle: 'Fidget Anxiety Ring | Fidget WRLD',
     metaDescription: 'Elegant spinner rings for discrete stress relief. Stylish fidget jewelry with smooth rotating bands.',
   },
+  // Product 7: Vintage Heart Rotating Ring (CJ PID: 1547121202051952640)
+  {
+    slug: 'cj-heart-spinner-ring',
+    name: 'Heart Spinner Ring',
+    tagline: 'Self-love meets stress relief',
+    category: 'Desk Toy',
+    variants: [
+      { sku: 'CJ-HEART-RING-5', name: 'Heart Spinner Ring', variant: 'Size 5', price: 4.99, image: 'https://cf.cjdropshipping.com/quick/product/b14f01c3-5fa9-4a92-a076-108edd15c9da.jpg' },
+      { sku: 'CJ-HEART-RING-6', name: 'Heart Spinner Ring', variant: 'Size 6', price: 4.99, image: 'https://cf.cjdropshipping.com/quick/product/b14f01c3-5fa9-4a92-a076-108edd15c9da.jpg' },
+      { sku: 'CJ-HEART-RING-7', name: 'Heart Spinner Ring', variant: 'Size 7', price: 4.99, image: 'https://cf.cjdropshipping.com/quick/product/b14f01c3-5fa9-4a92-a076-108edd15c9da.jpg' },
+      { sku: 'CJ-HEART-RING-8', name: 'Heart Spinner Ring', variant: 'Size 8', price: 4.99, image: 'https://cf.cjdropshipping.com/quick/product/b14f01c3-5fa9-4a92-a076-108edd15c9da.jpg' },
+      { sku: 'CJ-HEART-RING-9', name: 'Heart Spinner Ring', variant: 'Size 9', price: 4.99, image: 'https://cf.cjdropshipping.com/quick/product/b14f01c3-5fa9-4a92-a076-108edd15c9da.jpg' },
+      { sku: 'CJ-HEART-RING-10', name: 'Heart Spinner Ring', variant: 'Size 10', price: 4.99, image: 'https://cf.cjdropshipping.com/quick/product/b14f01c3-5fa9-4a92-a076-108edd15c9da.jpg' },
+      { sku: 'CJ-HEART-RING-11', name: 'Heart Spinner Ring', variant: 'Size 11', price: 4.99, image: 'https://cf.cjdropshipping.com/quick/product/b14f01c3-5fa9-4a92-a076-108edd15c9da.jpg' },
+    ],
+    defaultVariantIndex: 2,
+    description: `<p>A beautiful two-tone heart spinner ring with three rotatable circles. Turn them to relieve anxiety while wearing gorgeous jewelry that catches everyone's eye.</p>
+<p>The detachable spinning hearts can be manually repositioned for a custom look. Perfect as a self-love reminder or meditation aid. Makes a wonderful gift for girls and women of all ages.</p>`,
+    features: [
+      'Three rotatable heart circles',
+      'Two-tone vintage design',
+      'Detachable & repositionable hearts',
+      'Comfortable fit, no sharp edges',
+      'Available in sizes 5-11',
+    ],
+    specifications: {
+      'Material': 'Electroplated Metal',
+      'Style': 'Vintage Heart',
+      'Weight': '10-19g',
+      'Sizes': '5, 6, 7, 8, 9, 10, 11',
+    },
+    moods: ['calm', 'focus'],
+    audiences: ['adults', 'office'],
+    textures: ['smooth'],
+    ageRecommendation: '12+',
+    materials: ['Metal'],
+    isNew: true,
+    relatedSlugs: ['cj-fidget-ring', 'cj-spinner-keychain', 'fidget-cube'],
+    metaTitle: 'Heart Spinner Ring | Fidget WRLD',
+    metaDescription: 'Vintage two-tone heart spinner ring with rotatable hearts. Beautiful anxiety relief jewelry in sizes 5-11.',
+  },
 ];
 
 // Add CJ products to the main product list

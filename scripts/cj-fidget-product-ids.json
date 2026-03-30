@@ -8,18 +8,10 @@
     "C4880398-A6C6-48C2-AF37-7852296CD892",
     "1719271582901743616",
     "3D7BC0C9-CC09-4FAB-94A2-5775F0D11661",
-    "1463420820905922560"
+    "1463420820905922560",
+    "1547121202051952640"
   ],
-  "pendingToFetch": [
-    {
-      "pid": "1547121202051952640",
-      "name": "Vintage Heart Rotating Ring Fidget Rings",
-      "type": "Fidget Ring",
-      "description": "Heart-shaped rotating fidget ring, anti-stress spinner jewelry",
-      "sourceUrl": "https://cjdropshipping.com/product/vintage-heart-rotating-ring-fidget-rings-for-women-anti-stress-anxiety-ring-spinner-ring-anti-worry-stress-meditation-jewelry-gifts-for-girls-p-1547121202051952640.html",
-      "notes": "Decorative anxiety ring, gift for girls"
-    }
-  ],
+  "pendingToFetch": [],
   "productsAlreadyInStore": [
     {
       "pid": "1541333689475944448",
@@ -74,6 +66,15 @@
       "description": "Elegant spinner rings with various designs - butterfly, flower, star, heart, moon",
       "sourceUrl": "https://cjdropshipping.com/product/finger-spinner-rings-fidget-anxiety-ring-for-women-relieving-p-1463420820905922560.html",
       "notes": "Fashionable anxiety relief jewelry, 7 design variants"
+    },
+    {
+      "pid": "1547121202051952640",
+      "name": "Heart Spinner Ring",
+      "slug": "cj-heart-spinner-ring",
+      "type": "Fidget Ring/Jewelry",
+      "description": "Vintage two-tone heart spinner ring with three rotatable circles",
+      "sourceUrl": "https://cjdropshipping.com/product/vintage-heart-rotating-ring-fidget-rings-for-women-anti-stress-anxiety-ring-spinner-ring-anti-worry-stress-meditation-jewelry-gifts-for-girls-p-1547121202051952640.html",
+      "notes": "Self-love spinner ring, sizes 5-11"
     }
   ],
   "searchTermsToTryOnCJWebsite": [
