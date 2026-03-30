@@ -69,9 +69,11 @@ export async function POST(request: Request) {
     }
 
     // Build SKU data for fulfillment (needed by webhook to create CJ orders)
+    // Include name for reliable matching since Stripe may reorder line items
     const skuData = items.map(item => ({
       sku: item.sku,
       qty: item.quantity,
+      name: item.name,
     }));
 
     // Create Stripe checkout session

@@ -73,7 +73,7 @@ async function handleCheckoutComplete(session: Stripe.Checkout.Session) {
   });
 
   // Parse SKUs from session metadata (added by checkout API)
-  let skuData: Array<{ sku: string; qty: number }> = [];
+  let skuData: Array<{ sku: string; qty: number; name?: string }> = [];
   try {
     if (session.metadata?.skus) {
       skuData = JSON.parse(session.metadata.skus);
@@ -82,16 +82,34 @@ async function handleCheckoutComplete(session: Stripe.Checkout.Session) {
     console.error('Failed to parse SKU metadata:', e);
   }
 
+  // Build a lookup map from product name to SKU for reliable matching
+  const skuByName = new Map<string, string>();
+  for (const item of skuData) {
+    if (item.name && item.sku) {
+      skuByName.set(item.name, item.sku);
+    }
+  }
+
   // Build order items array with SKUs
+  // Match by product name (from skuData.name) rather than index for reliability
   const items = lineItems.data
     .filter(item => item.description !== 'Shipping') // Exclude shipping line item
-    .map((item, index) => ({
-      name: item.description || 'Unknown Product',
-      quantity: item.quantity || 1,
-      price: (item.amount_total || 0) / 100 / (item.quantity || 1),
-      total: (item.amount_total || 0) / 100,
-      sku: skuData[index]?.sku || '',
-    }));
+    .map((item, index) => {
+      // Get product name from Stripe (stored in price.product.name)
+      const product = item.price?.product as { name?: string } | undefined;
+      const productName = product?.name || item.description || 'Unknown Product';
+
+      // Try to find SKU by name first, fall back to index-based matching
+      const sku = skuByName.get(productName) || skuData[index]?.sku || '';
+
+      return {
+        name: productName,
+        quantity: item.quantity || 1,
+        price: (item.amount_total || 0) / 100 / (item.quantity || 1),
+        total: (item.amount_total || 0) / 100,
+        sku,
+      };
+    });
 
   // Extract shipping info
   const shippingDetails = session.shipping_details || session.customer_details;
@@ -148,8 +166,8 @@ async function handleCheckoutComplete(session: Stripe.Checkout.Session) {
 
   console.log('Order created:', data.id);
 
-  // Trigger CJ Dropshipping fulfillment asynchronously (don't block webhook response)
-  triggerCJFulfillment(
+  // Trigger CJ Dropshipping fulfillment - MUST await in serverless to prevent early termination
+  await triggerCJFulfillment(
     data.id,
     items,
     shippingAddress as ShippingAddress,
