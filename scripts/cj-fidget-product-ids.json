@@ -7,17 +7,10 @@
     "1527233425990758400",
     "C4880398-A6C6-48C2-AF37-7852296CD892",
     "1719271582901743616",
-    "3D7BC0C9-CC09-4FAB-94A2-5775F0D11661"
+    "3D7BC0C9-CC09-4FAB-94A2-5775F0D11661",
+    "1463420820905922560"
   ],
   "pendingToFetch": [
-    {
-      "pid": "1463420820905922560",
-      "name": "Finger Spinner Rings Fidget Anxiety Ring",
-      "type": "Fidget Ring",
-      "description": "Spinner rings for women, anxiety relief jewelry",
-      "sourceUrl": "https://cjdropshipping.com/product/finger-spinner-rings-fidget-anxiety-ring-for-women-relieving-p-1463420820905922560.html",
-      "notes": "Fashionable fidget jewelry for women"
-    },
     {
       "pid": "1547121202051952640",
       "name": "Vintage Heart Rotating Ring Fidget Rings",
@@ -72,6 +65,15 @@
       "description": "Sticky squash ball that sticks to walls, stress relief toy with LED options",
       "sourceUrl": "https://cjdropshipping.com/product/stick-wall-ball-stress-relief-toys-sticky-squash-ball-p-3D7BC0C9-CC09-4FAB-94A2-5775F0D11661.html",
       "notes": "Fun sticky wall ball, various colors and LED variants, 66 variants available"
+    },
+    {
+      "pid": "1463420820905922560",
+      "name": "Fidget Anxiety Ring",
+      "slug": "cj-fidget-ring",
+      "type": "Fidget Ring/Jewelry",
+      "description": "Elegant spinner rings with various designs - butterfly, flower, star, heart, moon",
+      "sourceUrl": "https://cjdropshipping.com/product/finger-spinner-rings-fidget-anxiety-ring-for-women-relieving-p-1463420820905922560.html",
+      "notes": "Fashionable anxiety relief jewelry, 7 design variants"
     }
   ],
   "searchTermsToTryOnCJWebsite": [

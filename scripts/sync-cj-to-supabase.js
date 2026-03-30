@@ -177,6 +177,37 @@ const newCjProducts = [
     meta_title: 'Sticky Wall Ball | Fidget WRLD',
     meta_description: 'Fun sticky stress balls that stick to walls. LED light-up options available. Perfect for stress relief and play.',
   },
+  // Product 6: Fidget Anxiety Ring (CJ PID: 1463420820905922560)
+  {
+    slug: 'cj-fidget-ring',
+    name: 'Fidget Anxiety Ring',
+    tagline: 'Stylish stress relief jewelry',
+    category: 'Desk Toy',
+    variants: [
+      { sku: 'CJ-RING-BUTTERFLY', name: 'Fidget Anxiety Ring', variant: 'Butterfly', color: 'Gold', colorHex: '#D4AF37', price: 6.99, image: 'https://cf.cjdropshipping.com/d84460a0-748b-46b1-ae82-3d9a5588ac24.jpg' },
+      { sku: 'CJ-RING-BAND', name: 'Fidget Anxiety Ring', variant: 'Simple Band', color: 'Silver', colorHex: '#C0C0C0', price: 4.99, image: 'https://cf.cjdropshipping.com/ff1d0b0f-be2a-44b6-9a3f-9f7c74958451.jpg' },
+      { sku: 'CJ-RING-FLOWER', name: 'Fidget Anxiety Ring', variant: 'Flower', color: 'Rose Gold', colorHex: '#B76E79', price: 4.99, image: 'https://cf.cjdropshipping.com/1783d3bb-70f4-4438-9fc4-d821593cc3b5.jpg' },
+      { sku: 'CJ-RING-STAR', name: 'Fidget Anxiety Ring', variant: 'Star', color: 'Gold', colorHex: '#FFD700', price: 6.99, image: 'https://cf.cjdropshipping.com/4c6225df-830c-4259-b8cc-cdb2ec298c78.jpg' },
+      { sku: 'CJ-RING-HEART', name: 'Fidget Anxiety Ring', variant: 'Heart', color: 'Silver', colorHex: '#C0C0C0', price: 4.99, image: 'https://cf.cjdropshipping.com/58ec2f49-0ad1-4c26-8ce2-d64e2c96e71d.jpg' },
+      { sku: 'CJ-RING-MOON', name: 'Fidget Anxiety Ring', variant: 'Moon & Stars', color: 'Gold', colorHex: '#D4AF37', price: 4.99, image: 'https://cf.cjdropshipping.com/31d2b043-00ce-4785-8b80-c10d8c06d408.jpg' },
+      { sku: 'CJ-RING-WAVE', name: 'Fidget Anxiety Ring', variant: 'Wave', color: 'Silver', colorHex: '#C0C0C0', price: 4.99, image: 'https://cf.cjdropshipping.com/ae0a37d6-214b-4d97-b4ed-245b6027bb83.jpg' },
+    ],
+    default_variant_index: 0,
+    description: '<p>Elegant spinner rings designed for discrete stress relief. The rotating band spins smoothly around your finger, providing a calming fidget experience that looks like stylish jewelry.</p><p>Made from copper with natural zircon accents and dripping oil treatment for a premium finish. Perfect for anxiety relief during meetings, classes, or any time you need to stay calm and focused.</p>',
+    features: ['Discrete fidget jewelry', 'Smooth spinning band', 'Multiple elegant designs', 'Natural zircon accents', 'Copper construction'],
+    specifications: { 'Material': 'Copper with Zircon', 'Style': 'Fashion Ring', 'Weight': '1-14g', 'Type': 'Spinner Ring' },
+    moods: ['calm', 'focus'],
+    audiences: ['adults', 'office'],
+    textures: ['smooth'],
+    age_recommendation: '12+',
+    materials: ['Copper', 'Zircon'],
+    is_new: true,
+    is_bestseller: false,
+    is_limited: false,
+    related_slugs: ['cj-spinner-keychain', 'fidget-cube', 'cj-alloy-spinner'],
+    meta_title: 'Fidget Anxiety Ring | Fidget WRLD',
+    meta_description: 'Elegant spinner rings for discrete stress relief. Stylish fidget jewelry with smooth rotating bands.',
+  },
 ];
 
 async function syncProducts() {
