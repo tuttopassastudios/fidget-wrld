@@ -1,6 +1,8 @@
 // CJ SDK - local copy for Vercel compatibility
+// Using require() for CommonJS compatibility, but need to extract .default from ES module
 // eslint-disable-next-line @typescript-eslint/no-require-imports
-const CJDropshipping = require('./cj-sdk/index.js');
+const CJDropshippingModule = require('./cj-sdk/index.js');
+const CJDropshipping = CJDropshippingModule.default || CJDropshippingModule;
 
 type CJClient = InstanceType<typeof CJDropshipping>;
 
