@@ -3,7 +3,7 @@
  * @module modules/product
  */
 
-const { validateRequired } = require('../utils/helpers');
+import { validateRequired } from '../utils/helpers.js';
 
 /**
  * @typedef {Object} SearchProductsParams
@@ -23,7 +23,7 @@ const { validateRequired } = require('../utils/helpers');
  */
 class ProductModule {
   /**
-   * @param {import('../client')} client - CJ API client
+   * @param {import('../client').default} client - CJ API client
    */
   constructor(client) {
     this.client = client;
@@ -210,4 +210,4 @@ class ProductModule {
   }
 }
 
-module.exports = ProductModule;
+export default ProductModule;

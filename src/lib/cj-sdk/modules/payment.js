@@ -3,14 +3,14 @@
  * @module modules/payment
  */
 
-const { validateRequired } = require('../utils/helpers');
+import { validateRequired } from '../utils/helpers.js';
 
 /**
  * Payment and balance management endpoints
  */
 class PaymentModule {
   /**
-   * @param {import('../client')} client - CJ API client
+   * @param {import('../client').default} client - CJ API client
    */
   constructor(client) {
     this.client = client;
@@ -56,4 +56,4 @@ class PaymentModule {
   }
 }
 
-module.exports = PaymentModule;
+export default PaymentModule;

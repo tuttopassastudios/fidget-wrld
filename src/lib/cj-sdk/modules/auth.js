@@ -8,7 +8,7 @@
  */
 class AuthModule {
   /**
-   * @param {import('../client')} client - CJ API client
+   * @param {import('../client').default} client - CJ API client
    */
   constructor(client) {
     this.client = client;
@@ -107,4 +107,4 @@ class AuthModule {
   }
 }
 
-module.exports = AuthModule;
+export default AuthModule;

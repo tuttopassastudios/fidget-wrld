@@ -85,7 +85,7 @@ class NetworkError extends CJApiError {
 /**
  * Common CJ API error codes and their meanings
  */
-const ERROR_CODES = {
+export const ERROR_CODES = {
   1600100: 'Invalid or expired access token',
   1600101: 'API key not found',
   1600102: 'API key disabled',
@@ -100,8 +100,8 @@ const ERROR_CODES = {
  * @param {Object} response - API response
  * @throws {CJApiError} Appropriate error based on response
  */
-function parseApiError(response) {
-  const { code, message, result } = response.data || {};
+export function parseApiError(response) {
+  const { code, message } = response.data || {};
 
   // Check for authentication errors
   if (code === 1600100 || code === 1600101 || code === 1600102) {
@@ -130,12 +130,10 @@ function parseApiError(response) {
   );
 }
 
-module.exports = {
+export {
   CJApiError,
   AuthenticationError,
   RateLimitError,
   ValidationError,
   NetworkError,
-  ERROR_CODES,
-  parseApiError,
 };

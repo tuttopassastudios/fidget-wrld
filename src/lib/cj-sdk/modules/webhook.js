@@ -3,13 +3,13 @@
  * @module modules/webhook
  */
 
-const { validateRequired } = require('../utils/helpers');
+import { validateRequired } from '../utils/helpers.js';
 
 /**
  * Webhook types supported by CJ Dropshipping
  * @enum {string}
  */
-const WebhookType = {
+export const WebhookType = {
   /** Order status changes */
   ORDER_STATUS: 'ORDER_STATUS',
   /** Package tracking updates */
@@ -23,7 +23,7 @@ const WebhookType = {
  */
 class WebhookModule {
   /**
-   * @param {import('../client')} client - CJ API client
+   * @param {import('../client').default} client - CJ API client
    */
   constructor(client) {
     this.client = client;
@@ -83,5 +83,4 @@ class WebhookModule {
   }
 }
 
-module.exports = WebhookModule;
-module.exports.WebhookType = WebhookType;
+export default WebhookModule;

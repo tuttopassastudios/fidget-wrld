@@ -3,7 +3,7 @@
  * @module config
  */
 
-require('dotenv').config();
+import 'dotenv/config';
 
 /**
  * @typedef {Object} CJConfig
@@ -14,10 +14,10 @@ require('dotenv').config();
  * @property {number} tokenRefreshBuffer - Seconds before expiry to refresh token
  */
 
-const DEFAULT_BASE_URL = 'https://developers.cjdropshipping.com/api2.0/v1';
-const DEFAULT_TIMEOUT = 30000;
-const DEFAULT_MAX_RETRIES = 3;
-const DEFAULT_TOKEN_REFRESH_BUFFER = 3600; // 1 hour before expiry
+export const DEFAULT_BASE_URL = 'https://developers.cjdropshipping.com/api2.0/v1';
+export const DEFAULT_TIMEOUT = 30000;
+export const DEFAULT_MAX_RETRIES = 3;
+export const DEFAULT_TOKEN_REFRESH_BUFFER = 3600; // 1 hour before expiry
 
 /**
  * Creates and validates configuration
@@ -25,7 +25,7 @@ const DEFAULT_TOKEN_REFRESH_BUFFER = 3600; // 1 hour before expiry
  * @returns {CJConfig} Validated configuration
  * @throws {Error} If required configuration is missing
  */
-function createConfig(options = {}) {
+export function createConfig(options = {}) {
   const config = {
     apiKey: options.apiKey || process.env.CJ_API_KEY,
     baseUrl: options.baseUrl || process.env.CJ_BASE_URL || DEFAULT_BASE_URL,
@@ -46,11 +46,3 @@ function createConfig(options = {}) {
 
   return config;
 }
-
-module.exports = {
-  createConfig,
-  DEFAULT_BASE_URL,
-  DEFAULT_TIMEOUT,
-  DEFAULT_MAX_RETRIES,
-  DEFAULT_TOKEN_REFRESH_BUFFER,
-};

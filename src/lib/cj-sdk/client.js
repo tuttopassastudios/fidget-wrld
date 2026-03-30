@@ -3,16 +3,15 @@
  * @module client
  */
 
-const axios = require('axios');
-const { createConfig } = require('./config');
-const {
-  CJApiError,
+import axios from 'axios';
+import { createConfig } from './config.js';
+import {
   AuthenticationError,
   NetworkError,
   RateLimitError,
   parseApiError,
-} = require('./utils/errors');
-const { sleep, calculateBackoff } = require('./utils/helpers');
+} from './utils/errors.js';
+import { sleep, calculateBackoff } from './utils/helpers.js';
 
 /**
  * @typedef {Object} TokenData
@@ -131,7 +130,7 @@ class CJClient {
     if (this.tokenData && this._isRefreshTokenValid()) {
       try {
         return await this._refreshToken();
-      } catch (error) {
+      } catch (_error) {
         // Fall through to get new token
         console.warn('Token refresh failed, getting new token');
       }
@@ -339,4 +338,4 @@ class CJClient {
   }
 }
 
-module.exports = CJClient;
+export default CJClient;

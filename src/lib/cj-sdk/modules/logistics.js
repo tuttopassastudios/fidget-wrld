@@ -3,7 +3,7 @@
  * @module modules/logistics
  */
 
-const { validateRequired } = require('../utils/helpers');
+import { validateRequired } from '../utils/helpers.js';
 
 /**
  * @typedef {Object} FreightCalculateParams
@@ -23,7 +23,7 @@ const { validateRequired } = require('../utils/helpers');
  */
 class LogisticsModule {
   /**
-   * @param {import('../client')} client - CJ API client
+   * @param {import('../client').default} client - CJ API client
    */
   constructor(client) {
     this.client = client;
@@ -96,4 +96,4 @@ class LogisticsModule {
   }
 }
 
-module.exports = LogisticsModule;
+export default LogisticsModule;

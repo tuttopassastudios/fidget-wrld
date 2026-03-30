@@ -8,7 +8,7 @@
  */
 class WarehouseModule {
   /**
-   * @param {import('../client')} client - CJ API client
+   * @param {import('../client').default} client - CJ API client
    */
   constructor(client) {
     this.client = client;
@@ -38,4 +38,4 @@ class WarehouseModule {
   }
 }
 
-module.exports = WarehouseModule;
+export default WarehouseModule;

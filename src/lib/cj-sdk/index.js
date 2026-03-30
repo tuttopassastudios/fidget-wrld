@@ -3,24 +3,30 @@
  * @module cj-dropshipping-sdk
  */
 
-const CJClient = require('./client');
-const AuthModule = require('./modules/auth');
-const ProductModule = require('./modules/product');
-const OrderModule = require('./modules/order');
-const PaymentModule = require('./modules/payment');
-const LogisticsModule = require('./modules/logistics');
-const WarehouseModule = require('./modules/warehouse');
-const WebhookModule = require('./modules/webhook');
+import CJClient from './client.js';
+import AuthModule from './modules/auth.js';
+import ProductModule from './modules/product.js';
+import OrderModule from './modules/order.js';
+import PaymentModule from './modules/payment.js';
+import LogisticsModule from './modules/logistics.js';
+import WarehouseModule from './modules/warehouse.js';
+import WebhookModule, { WebhookType } from './modules/webhook.js';
 
 // Export error classes for external use
-const errors = require('./utils/errors');
+import {
+  CJApiError,
+  AuthenticationError,
+  RateLimitError,
+  ValidationError,
+  NetworkError,
+} from './utils/errors.js';
 
 /**
  * Main CJ Dropshipping SDK class
  * Provides access to all API modules through a unified interface
  *
  * @example
- * const CJDropshipping = require('cj-dropshipping-sdk');
+ * import CJDropshipping from 'cj-dropshipping-sdk';
  *
  * const cj = new CJDropshipping({
  *   apiKey: process.env.CJ_API_KEY
@@ -154,22 +160,23 @@ class CJDropshipping {
 }
 
 // Export main class as default
-module.exports = CJDropshipping;
+export default CJDropshipping;
 
-// Export error classes and utilities
-module.exports.CJDropshipping = CJDropshipping;
-module.exports.CJClient = CJClient;
-module.exports.CJApiError = errors.CJApiError;
-module.exports.AuthenticationError = errors.AuthenticationError;
-module.exports.RateLimitError = errors.RateLimitError;
-module.exports.ValidationError = errors.ValidationError;
-module.exports.NetworkError = errors.NetworkError;
-
-// Export modules for direct use if needed
-module.exports.AuthModule = AuthModule;
-module.exports.ProductModule = ProductModule;
-module.exports.OrderModule = OrderModule;
-module.exports.PaymentModule = PaymentModule;
-module.exports.LogisticsModule = LogisticsModule;
-module.exports.WarehouseModule = WarehouseModule;
-module.exports.WebhookModule = WebhookModule;
+// Named exports for direct imports
+export {
+  CJDropshipping,
+  CJClient,
+  CJApiError,
+  AuthenticationError,
+  RateLimitError,
+  ValidationError,
+  NetworkError,
+  AuthModule,
+  ProductModule,
+  OrderModule,
+  PaymentModule,
+  LogisticsModule,
+  WarehouseModule,
+  WebhookModule,
+  WebhookType,
+};
