@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { verifyAdminRequest } from '@/lib/firebase-admin';
+import { verifyAdminRequest } from '@/lib/admin-auth';
 import {
   getProductBySlug,
   updateProduct,

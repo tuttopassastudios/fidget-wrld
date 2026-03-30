@@ -18,7 +18,7 @@ export function DashboardGuard({ children, requiredRole = ['admin', 'team'] }: D
   const [role, setRole] = useState<string | null>(null);
   const [checking, setChecking] = useState(true);
 
-  // Sync Firebase ID token to __session cookie for edge protection
+  // Sync Supabase access token to __session cookie for edge protection
   useDashboardSession();
 
   useEffect(() => {

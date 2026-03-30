@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getAdminFirestore } from '@/lib/firebase-admin';
+import { getAdminClient } from '@/lib/supabase/admin';
 import { rateLimit, getClientIp } from '@/lib/rate-limit';
 import { sanitizeEmail } from '@/lib/sanitize';
 
@@ -24,24 +24,37 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    const db = getAdminFirestore();
-    const subscribersRef = db.collection('newsletter_subscribers');
+    const supabase = getAdminClient();
 
     // Check if email already exists
-    const existing = await subscribersRef.where('email', '==', email).limit(1).get();
-    if (!existing.empty) {
+    const { data: existing } = await supabase
+      .from('newsletter_subscribers')
+      .select('id')
+      .eq('email', email)
+      .limit(1)
+      .single();
+
+    if (existing) {
       // Return success even if already subscribed (don't leak subscription status)
       return NextResponse.json({ success: true, message: 'Subscribed successfully' });
     }
 
     // Add new subscriber
-    await subscribersRef.add({
+    const { error } = await supabase.from('newsletter_subscribers').insert({
       email,
-      subscribedAt: new Date().toISOString(),
+      subscribed_at: new Date().toISOString(),
       source: 'homepage',
       status: 'active',
       ip: ip !== 'unknown' ? ip : null,
     });
+
+    if (error) {
+      // Handle unique constraint violation (race condition)
+      if (error.code === '23505') {
+        return NextResponse.json({ success: true, message: 'Subscribed successfully' });
+      }
+      throw error;
+    }
 
     return NextResponse.json({ success: true, message: 'Subscribed successfully' });
   } catch (error) {

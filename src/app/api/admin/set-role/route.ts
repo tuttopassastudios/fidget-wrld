@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getAdminAuth, verifyAdminRequest, type AdminRole } from '@/lib/firebase-admin';
+import { getAdminAuth, verifyAdminRequest, type AdminRole } from '@/lib/admin-auth';
 import { rateLimit, getClientIp } from '@/lib/rate-limit';
 import { checkOrigin } from '@/lib/origin-check';
 import { audit } from '@/lib/audit-log';

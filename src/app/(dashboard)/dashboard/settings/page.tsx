@@ -31,7 +31,7 @@ function SettingsContent() {
     try {
       const token = await user.getIdToken();
 
-      // First, find the user by email using Firebase Admin
+      // First, find the user by email using Supabase Admin
       // We'll look up the UID from the users API
       const usersRes = await fetch('/api/admin/users?limit=100', {
         headers: { Authorization: `Bearer ${token}` },

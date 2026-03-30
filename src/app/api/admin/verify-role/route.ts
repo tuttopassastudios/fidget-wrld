@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { verifyIdToken, extractBearerToken } from '@/lib/firebase-admin';
+import { verifyIdToken, extractBearerToken } from '@/lib/admin-auth';
 import { rateLimit, getClientIp } from '@/lib/rate-limit';
 
 export async function GET(request: NextRequest) {

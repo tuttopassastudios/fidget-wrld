@@ -4,7 +4,7 @@ import { useEffect, useCallback } from 'react';
 import { useAuth } from '@/context/AuthContext';
 
 /**
- * Syncs the Firebase ID token to a __session cookie for edge-level
+ * Syncs the Supabase access token to a __session cookie for edge-level
  * dashboard route protection. Call this in the DashboardGuard.
  */
 export function useDashboardSession() {

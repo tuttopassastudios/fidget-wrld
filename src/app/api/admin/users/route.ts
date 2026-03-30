@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getAdminAuth, verifyAdminRequest } from '@/lib/firebase-admin';
+import { getAdminAuth, verifyAdminRequest } from '@/lib/admin-auth';
 import { rateLimit, getClientIp } from '@/lib/rate-limit';
 
 /**
- * GET: List all Firebase Auth users with pagination
+ * GET: List all Supabase Auth users with pagination
  */
 export async function GET(request: NextRequest) {
   const limited = rateLimit(getClientIp(request.headers), { limit: 60, windowMs: 60_000 });

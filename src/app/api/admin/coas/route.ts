@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { verifyAdminRequest } from '@/lib/firebase-admin';
+import { verifyAdminRequest } from '@/lib/admin-auth';
 import { getAllCOAs, getCOAsByProduct, createCOA } from '@/lib/coas-db';
 import { rateLimit, getClientIp } from '@/lib/rate-limit';
 import { checkOrigin } from '@/lib/origin-check';
@@ -29,7 +29,7 @@ export async function GET(request: NextRequest) {
 
 /**
  * POST: Create a new COA record (admin only).
- * The PDF should already be uploaded to Firebase Storage by the client.
+ * The PDF should already be uploaded to Supabase Storage by the client.
  */
 export async function POST(request: NextRequest) {
   const ip = getClientIp(request.headers);

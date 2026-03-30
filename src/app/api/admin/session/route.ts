@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { verifyIdToken } from '@/lib/firebase-admin';
+import { verifyIdToken } from '@/lib/admin-auth';
 import { rateLimit, getClientIp } from '@/lib/rate-limit';
 import { checkOrigin } from '@/lib/origin-check';
 import { audit } from '@/lib/audit-log';
 
 /**
- * POST: Set the __session cookie with the Firebase ID token.
+ * POST: Set the __session cookie with the Supabase access token.
  * Called client-side after login when the user has a dashboard role.
  * The proxy reads this cookie to gate /dashboard routes at the edge.
  */
@@ -40,13 +40,13 @@ export async function POST(request: NextRequest) {
   const response = NextResponse.json({ success: true, role });
 
   // Set the session cookie — httpOnly, secure, sameSite strict
-  // Firebase ID tokens expire after 1 hour, so set max age accordingly
+  // Supabase access tokens expire after 1 hour, so set max age accordingly
   response.cookies.set('__session', idToken, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'strict',
     path: '/',
-    maxAge: 3600, // 1 hour — matches Firebase ID token expiry
+    maxAge: 3600, // 1 hour — matches Supabase access token expiry
   });
 
   audit({ action: 'session.create', actorUid: decoded.uid, actorEmail: decoded.email, ip });

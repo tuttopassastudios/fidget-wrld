@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { verifyAdminRequest, getAdminStorage } from '@/lib/firebase-admin';
+import { verifyAdminRequest } from '@/lib/admin-auth';
 import { deleteCOA } from '@/lib/coas-db';
+import { getAdminClient } from '@/lib/supabase/admin';
 import { rateLimit, getClientIp } from '@/lib/rate-limit';
 import { checkOrigin } from '@/lib/origin-check';
 import { audit } from '@/lib/audit-log';
@@ -30,14 +31,13 @@ export async function DELETE(
   try {
     const record = await deleteCOA(id);
 
-    // Delete the file from Firebase Storage
+    // Delete the file from Supabase Storage
     try {
-      const bucket = getAdminStorage().bucket();
-      const file = bucket.file(record.storagePath);
-      await file.delete();
+      const supabase = getAdminClient();
+      await supabase.storage.from('coas').remove([record.storagePath]);
     } catch (storageErr) {
       console.warn('[Admin COAs DELETE] Storage file deletion failed:', storageErr);
-      // Continue — the Firestore record is already deleted
+      // Continue — the database record is already deleted
     }
 
     audit({ action: 'coa.delete', actorUid: caller.uid, actorEmail: caller.email, targetId: id, ip });

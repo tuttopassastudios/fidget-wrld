@@ -4,21 +4,21 @@ import { useAuth } from '@/context/AuthContext';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { createClient } from '@/lib/supabase/client';
+
+interface OrderItem {
+  name: string;
+  variant?: string;
+  quantity: number;
+}
 
 interface Order {
   id: string;
-  orderId: string;
   status: string;
   total: number;
-  createdAt: string;
-  orderItems_on_order: Array<{
-    name: string;
-    variant?: string;
-    quantity: number;
-  }>;
+  created_at: string;
+  items: OrderItem[];
 }
-
-const DC_API = 'https://firebasedataconnect.googleapis.com/v1beta/projects/pepmax-ac025/locations/us-central1/services/pepmax-service/connectors/default';
 
 export default function OrdersPage() {
   const { user, loading: authLoading } = useAuth();
@@ -37,29 +37,28 @@ export default function OrdersPage() {
       if (!user) return;
 
       try {
-        // First get user's database ID
-        const userRes = await fetch(`${DC_API}:executeQuery`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            operationName: 'GetUserByUid',
-            variables: { uid: user.uid }
-          })
-        });
-        const userData = await userRes.json();
-        const dbUserId = userData.data?.users?.[0]?.id;
+        const supabase = createClient();
 
-        if (dbUserId) {
-          const ordersRes = await fetch(`${DC_API}:executeQuery`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              operationName: 'ListOrdersByUser',
-              variables: { userId: dbUserId, limit: 50 }
-            })
-          });
-          const ordersData = await ordersRes.json();
-          setOrders(ordersData.data?.orders || []);
+        // Fetch orders by user_id or email
+        const { data, error } = await supabase
+          .from('orders')
+          .select('id, status, total, created_at, items')
+          .or(`user_id.eq.${user.uid},email.eq.${user.email}`)
+          .order('created_at', { ascending: false })
+          .limit(50);
+
+        if (error) {
+          console.error('Failed to fetch orders:', error);
+        } else {
+          // Transform data to match Order interface
+          const transformed: Order[] = (data || []).map(o => ({
+            id: o.id,
+            status: o.status,
+            total: o.total,
+            created_at: o.created_at,
+            items: (o.items as unknown as OrderItem[]) || [],
+          }));
+          setOrders(transformed);
         }
       } catch (error) {
         console.error('Failed to fetch orders:', error);
@@ -103,10 +102,10 @@ export default function OrdersPage() {
   };
 
   const getStatusColor = (status: string) => {
-    switch (status) {
+    switch (status.toUpperCase()) {
       case 'DELIVERED': return 'var(--color-success)';
       case 'SHIPPED': return 'var(--color-accent-primary)';
-      case 'PROCESSING': return '#f59e0b';
+      case 'PAID': return '#f59e0b';
       case 'CANCELLED': return 'var(--color-error)';
       default: return 'var(--color-text-muted)';
     }
@@ -153,49 +152,52 @@ export default function OrdersPage() {
           </div>
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-            {orders.map((order) => (
-              <div key={order.id} style={{
-                background: 'var(--color-bg-card)',
-                border: '1px solid var(--color-border)',
-                borderRadius: 12,
-                padding: 20
-              }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 12 }}>
-                  <div>
-                    <h3 style={{ fontSize: 16, fontWeight: 600, marginBottom: 4 }}>Order #{order.orderId}</h3>
-                    <p style={{ fontSize: 13, color: 'var(--color-text-muted)' }}>{formatDate(order.createdAt)}</p>
-                  </div>
-                  <span style={{
-                    fontSize: 12,
-                    fontWeight: 600,
-                    padding: '4px 10px',
-                    borderRadius: 20,
-                    background: `${getStatusColor(order.status)}20`,
-                    color: getStatusColor(order.status)
-                  }}>
-                    {order.status}
-                  </span>
-                </div>
-                <div style={{ fontSize: 14, color: 'var(--color-text-secondary)', marginBottom: 12 }}>
-                  {order.orderItems_on_order.map((item, i) => (
-                    <span key={i}>
-                      {item.name} {item.variant && `(${item.variant})`} x{item.quantity}
-                      {i < order.orderItems_on_order.length - 1 && ', '}
+            {orders.map((order) => {
+              const items = (order.items as OrderItem[]) || [];
+              return (
+                <div key={order.id} style={{
+                  background: 'var(--color-bg-card)',
+                  border: '1px solid var(--color-border)',
+                  borderRadius: 12,
+                  padding: 20
+                }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 12 }}>
+                    <div>
+                      <h3 style={{ fontSize: 16, fontWeight: 600, marginBottom: 4 }}>Order #{order.id.slice(0, 8)}</h3>
+                      <p style={{ fontSize: 13, color: 'var(--color-text-muted)' }}>{formatDate(order.created_at)}</p>
+                    </div>
+                    <span style={{
+                      fontSize: 12,
+                      fontWeight: 600,
+                      padding: '4px 10px',
+                      borderRadius: 20,
+                      background: `${getStatusColor(order.status)}20`,
+                      color: getStatusColor(order.status)
+                    }}>
+                      {order.status.toUpperCase()}
                     </span>
-                  ))}
+                  </div>
+                  <div style={{ fontSize: 14, color: 'var(--color-text-secondary)', marginBottom: 12 }}>
+                    {items.map((item, i) => (
+                      <span key={i}>
+                        {item.name} {item.variant && `(${item.variant})`} x{item.quantity}
+                        {i < items.length - 1 && ', '}
+                      </span>
+                    ))}
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span style={{ fontWeight: 600 }}>${order.total.toFixed(2)}</span>
+                    <Link href={`/account/orders/${order.id}`} style={{
+                      fontSize: 14,
+                      color: 'var(--color-accent-primary)',
+                      fontWeight: 500
+                    }}>
+                      View Details →
+                    </Link>
+                  </div>
                 </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <span style={{ fontWeight: 600 }}>${order.total.toFixed(2)}</span>
-                  <Link href={`/account/orders/${order.orderId}`} style={{
-                    fontSize: 14,
-                    color: 'var(--color-accent-primary)',
-                    fontWeight: 500
-                  }}>
-                    View Details →
-                  </Link>
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
       </div>

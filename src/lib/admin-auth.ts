@@ -1,8 +1,8 @@
 /**
  * Admin auth utilities — backed by Supabase
  *
- * This module replaces the Firebase Admin SDK stubs with real Supabase
- * admin client calls. All admin API routes import from here.
+ * This module provides admin authentication and authorization for API routes.
+ * All admin API routes import from here.
  */
 
 import { getAdminClient } from '@/lib/supabase/admin';
@@ -10,7 +10,7 @@ import { getAdminClient } from '@/lib/supabase/admin';
 export type AdminRole = 'admin' | 'editor' | 'viewer' | 'team';
 
 /* ------------------------------------------------------------------ */
-/*  getAdminAuth() — drop-in for routes that call Firebase-style APIs  */
+/*  getAdminAuth() — helper for user management via Supabase Auth     */
 /* ------------------------------------------------------------------ */
 
 export function getAdminAuth() {
@@ -132,50 +132,4 @@ export async function verifyAdminRequest(
   }
 
   return { uid: decoded.uid, role, email: decoded.email };
-}
-
-/* ------------------------------------------------------------------ */
-/*  Firestore stub — kept so product-db.ts falls through to static    */
-/* ------------------------------------------------------------------ */
-
-export function getAdminFirestore() {
-  type QueryRef = {
-    get: () => Promise<{ empty: boolean; docs: never[]; forEach: () => void }>;
-    where: (_f: string, _o: string, _v: unknown) => QueryRef;
-    orderBy: (_f: string, _d?: string) => QueryRef;
-    limit: (_n: number) => QueryRef;
-  };
-
-  const mockQuery: QueryRef = {
-    get: async () => { throw new Error('Firestore not configured — using static data'); },
-    where: () => mockQuery,
-    orderBy: () => mockQuery,
-    limit: () => mockQuery,
-  };
-
-  return {
-    collection: (_name: string) => ({
-      ...mockQuery,
-      doc: (_id?: string) => ({
-        get: async () => { throw new Error('Firestore not configured'); },
-        set: async () => { throw new Error('Firestore not configured'); },
-        update: async () => { throw new Error('Firestore not configured'); },
-        delete: async () => { throw new Error('Firestore not configured'); },
-      }),
-      add: async (_data: Record<string, unknown>) => { throw new Error('Firestore not configured'); },
-    }),
-  };
-}
-
-/** Storage stub */
-export function getAdminStorage() {
-  return {
-    bucket: () => ({
-      file: (_path: string) => ({
-        save: async () => { throw new Error('Storage not configured'); },
-        getSignedUrl: async () => [''],
-        delete: async () => { throw new Error('Storage not configured'); },
-      }),
-    }),
-  };
 }

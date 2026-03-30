@@ -1,48 +1,76 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { verifyAdminRequest } from '@/lib/firebase-admin';
-import { dcQuery, dcMutation } from '@/lib/data-connect-admin';
+import { verifyAdminRequest } from '@/lib/admin-auth';
+import { getAdminClient } from '@/lib/supabase/admin';
 import { rateLimit, getClientIp } from '@/lib/rate-limit';
 import { checkOrigin } from '@/lib/origin-check';
 import { audit } from '@/lib/audit-log';
 import { sanitizeAlphanumeric, sanitizeText, stripProtoPollution } from '@/lib/sanitize';
+import type { Database } from '@/lib/supabase/types';
 
-interface OrderListData {
-  orders: Array<{
-    id: string;
-    orderId: string;
-    user: { id: string; uid: string; email: string } | null;
-    userEmail: string | null;
-    contactEmail: string;
-    status: string;
-    subtotal: number;
-    discount: number;
-    promoCode: string | null;
-    shipping: number;
-    shippingMethod: string;
-    total: number;
-    shipFirstName: string;
-    shipLastName: string;
-    shipPhone: string | null;
-    shipAddress1: string;
-    shipAddress2: string | null;
-    shipCity: string;
-    shipState: string;
-    shipZip: string;
-    shipCountry: string;
-    trackingNumber: string | null;
-    estDeliveryDisplay: string | null;
-    createdAt: string;
-    updatedAt: string;
-    orderItems_on_order: Array<{
-      id: string;
-      sku: string;
-      name: string;
-      variant: string | null;
-      price: number;
-      quantity: number;
-      image: string | null;
-    }>;
-  }>;
+type Order = Database['public']['Tables']['orders']['Row'];
+
+// Transform Supabase order to API response format
+function transformOrder(order: Order) {
+  const shippingAddress = order.shipping_address as {
+    firstName?: string;
+    lastName?: string;
+    phone?: string;
+    address1?: string;
+    address2?: string;
+    city?: string;
+    state?: string;
+    zip?: string;
+    country?: string;
+  };
+
+  const items = (order.items as Array<{
+    sku: string;
+    name: string;
+    variant?: string;
+    price: number;
+    quantity: number;
+    image?: string;
+  }>) || [];
+
+  return {
+    id: order.id,
+    orderId: order.id,
+    user: order.user_id ? { id: order.user_id, uid: order.user_id, email: order.email } : null,
+    userEmail: order.user_id ? order.email : null,
+    contactEmail: order.email,
+    status: order.status.toUpperCase(),
+    subtotal: order.subtotal,
+    discount: order.discount,
+    promoCode: order.promo_code,
+    shipping: order.shipping,
+    shippingMethod: 'standard',
+    total: order.total,
+    shipFirstName: shippingAddress?.firstName || '',
+    shipLastName: shippingAddress?.lastName || '',
+    shipPhone: order.phone || shippingAddress?.phone || null,
+    shipAddress1: shippingAddress?.address1 || '',
+    shipAddress2: shippingAddress?.address2 || null,
+    shipCity: shippingAddress?.city || '',
+    shipState: shippingAddress?.state || '',
+    shipZip: shippingAddress?.zip || '',
+    shipCountry: shippingAddress?.country || 'US',
+    trackingNumber: order.cj_tracking_number,
+    estDeliveryDisplay: null,
+    createdAt: order.created_at,
+    updatedAt: order.updated_at,
+    cjOrderId: order.cj_order_id,
+    cjOrderStatus: order.cj_order_status,
+    fulfillmentError: order.fulfillment_error,
+    orderItems_on_order: items.map((item, index) => ({
+      id: `${order.id}-${index}`,
+      sku: item.sku,
+      name: item.name,
+      variant: item.variant || null,
+      price: item.price,
+      quantity: item.quantity,
+      image: item.image || null,
+    })),
+  };
 }
 
 /**
@@ -63,45 +91,54 @@ export async function GET(request: NextRequest) {
   const orderId = searchParams.get('orderId') ? sanitizeAlphanumeric(searchParams.get('orderId')!, 128) : null;
 
   try {
+    const supabase = getAdminClient();
+
     // If fetching a single order
     if (orderId) {
-      try {
-        const result = await dcQuery<OrderListData>('GetOrderByOrderId', { orderId });
-        const order = result?.orders?.[0] || null;
-        return NextResponse.json({ order });
-      } catch {
+      const { data: order, error } = await supabase
+        .from('orders')
+        .select('*')
+        .eq('id', orderId)
+        .single();
+
+      if (error || !order) {
         return NextResponse.json({ order: null });
       }
+      return NextResponse.json({ order: transformOrder(order) });
     }
 
-    // Fetch all orders — gracefully handle missing query
-    let orders: OrderListData['orders'] = [];
-    try {
-      const result = await dcQuery<OrderListData>('ListAllOrders', {});
-      orders = result?.orders || [];
-    } catch {
-      // Query not deployed or Data Connect unavailable
-    }
+    // Fetch all orders
+    let query = supabase
+      .from('orders')
+      .select('*')
+      .order('created_at', { ascending: false });
 
     // Filter by status
     if (status && status !== 'all') {
-      orders = orders.filter(o => o.status === status.toUpperCase());
+      const validStatus = status.toLowerCase() as 'pending' | 'paid' | 'shipped' | 'delivered' | 'cancelled';
+      query = query.eq('status', validStatus);
     }
 
-    // Filter by search (order ID or email)
+    const { data: orders, error } = await query;
+
+    if (error) {
+      console.error('[Admin Orders] Supabase error:', error);
+      return NextResponse.json({ orders: [], total: 0 });
+    }
+
+    let transformedOrders = (orders || []).map(transformOrder);
+
+    // Filter by search (order ID or email or name)
     if (search) {
       const term = search.toLowerCase();
-      orders = orders.filter(o =>
+      transformedOrders = transformedOrders.filter(o =>
         o.orderId.toLowerCase().includes(term) ||
         o.contactEmail.toLowerCase().includes(term) ||
         `${o.shipFirstName} ${o.shipLastName}`.toLowerCase().includes(term)
       );
     }
 
-    // Sort by creation date (newest first)
-    orders.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-
-    return NextResponse.json({ orders, total: orders.length });
+    return NextResponse.json({ orders: transformedOrders, total: transformedOrders.length });
   } catch (error) {
     console.error('[Admin Orders]', error);
     return NextResponse.json({ error: 'Failed to fetch orders' }, { status: 500 });
@@ -136,17 +173,32 @@ export async function PATCH(request: NextRequest) {
     ? sanitizeAlphanumeric(String(body.trackingNumber), 100)
     : null;
 
-  const validStatuses = ['PENDING', 'PROCESSING', 'SHIPPED', 'DELIVERED', 'CANCELLED'];
-  if (!validStatuses.includes(body.status)) {
+  const validStatuses = ['pending', 'paid', 'shipped', 'delivered', 'cancelled'];
+  const statusLower = String(body.status).toLowerCase();
+  if (!validStatuses.includes(statusLower)) {
     return NextResponse.json({ error: 'Invalid status' }, { status: 400 });
   }
 
   try {
-    await dcMutation('UpdateOrderStatus', {
-      id: sanitizedId,
-      status: body.status,
-      trackingNumber: sanitizedTracking,
-    });
+    const supabase = getAdminClient();
+
+    const updateData: Record<string, unknown> = {
+      status: statusLower as 'pending' | 'paid' | 'shipped' | 'delivered' | 'cancelled',
+      updated_at: new Date().toISOString(),
+    };
+
+    if (sanitizedTracking) {
+      updateData.cj_tracking_number = sanitizedTracking;
+    }
+
+    const { error } = await supabase
+      .from('orders')
+      .update(updateData)
+      .eq('id', sanitizedId);
+
+    if (error) {
+      throw error;
+    }
 
     audit({ action: 'order.update', actorUid: caller.uid, actorEmail: caller.email, targetId: body.id, detail: body.status, ip });
     return NextResponse.json({ success: true });

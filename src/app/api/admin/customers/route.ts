@@ -1,30 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { verifyAdminRequest, getAdminAuth } from '@/lib/firebase-admin';
-import { dcQuery } from '@/lib/data-connect-admin';
+import { verifyAdminRequest, getAdminAuth } from '@/lib/admin-auth';
+import { getAdminClient } from '@/lib/supabase/admin';
 import { rateLimit, getClientIp } from '@/lib/rate-limit';
+import type { Database } from '@/lib/supabase/types';
+
+type Order = Database['public']['Tables']['orders']['Row'];
 
 interface OrderItem {
   sku: string;
   name: string;
   price: number;
   quantity: number;
-}
-
-interface Order {
-  id: string;
-  orderId: string;
-  status: string;
-  total: number;
-  discount: number;
-  promoCode: string | null;
-  contactEmail: string;
-  createdAt: string;
-  user: { id: string; uid: string; email: string } | null;
-  orderItems_on_order: OrderItem[];
-}
-
-interface OrderData {
-  orders: Order[];
 }
 
 function toMonthKey(dateStr: string): string {
@@ -47,16 +33,20 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    // Fetch all orders
-    let orders: Order[] = [];
-    try {
-      const result = await dcQuery<OrderData>('ListAllOrders', {});
-      orders = result?.orders || [];
-    } catch {
-      // Data Connect unavailable
+    // Fetch all orders from Supabase
+    const supabase = getAdminClient();
+    const { data: orderData, error } = await supabase
+      .from('orders')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      console.error('[Admin Customers] Supabase error:', error);
     }
 
-    // ---- Customer analysis (group by contactEmail) ----
+    const orders = orderData || [];
+
+    // ---- Customer analysis (group by email) ----
     const customerMap = new Map<string, {
       email: string;
       orders: Order[];
@@ -66,20 +56,20 @@ export async function GET(request: NextRequest) {
     }>();
 
     for (const o of orders) {
-      const email = o.contactEmail.toLowerCase();
+      const email = o.email.toLowerCase();
       const existing = customerMap.get(email);
       if (existing) {
         existing.orders.push(o);
         existing.totalSpent += o.total || 0;
-        if (o.createdAt < existing.firstOrderDate) existing.firstOrderDate = o.createdAt;
-        if (o.createdAt > existing.lastOrderDate) existing.lastOrderDate = o.createdAt;
+        if (o.created_at < existing.firstOrderDate) existing.firstOrderDate = o.created_at;
+        if (o.created_at > existing.lastOrderDate) existing.lastOrderDate = o.created_at;
       } else {
         customerMap.set(email, {
           email,
           orders: [o],
           totalSpent: o.total || 0,
-          firstOrderDate: o.createdAt,
-          lastOrderDate: o.createdAt,
+          firstOrderDate: o.created_at,
+          lastOrderDate: o.created_at,
         });
       }
     }
@@ -104,7 +94,7 @@ export async function GET(request: NextRequest) {
         lastOrder: c.lastOrderDate,
       }));
 
-    // ---- Customer acquisition over time (Firebase Auth signup dates) ----
+    // ---- Customer acquisition over time (Supabase Auth signup dates) ----
     const acquisitionMap = new Map<string, number>();
     // Pre-fill last 30 days
     const now = new Date();
@@ -154,7 +144,7 @@ export async function GET(request: NextRequest) {
 
       // Track which months this customer placed orders
       for (const o of c.orders) {
-        const orderMonth = toMonthKey(o.createdAt);
+        const orderMonth = toMonthKey(o.created_at);
         if (!cohort.months.has(orderMonth)) {
           cohort.months.set(orderMonth, new Set());
         }
@@ -164,7 +154,7 @@ export async function GET(request: NextRequest) {
 
     // Build sorted list of all months
     const allMonths = Array.from(new Set(
-      orders.map(o => toMonthKey(o.createdAt))
+      orders.map(o => toMonthKey(o.created_at))
     )).sort();
 
     const cohorts = Array.from(cohortMap.entries())
@@ -196,8 +186,8 @@ export async function GET(request: NextRequest) {
     }>();
 
     for (const o of orders) {
-      if (o.promoCode) {
-        const code = o.promoCode.toUpperCase();
+      if (o.promo_code) {
+        const code = o.promo_code.toUpperCase();
         const existing = promoMap.get(code) || {
           code,
           usageCount: 0,
@@ -224,7 +214,7 @@ export async function GET(request: NextRequest) {
       }));
 
     // ---- Guest vs registered breakdown ----
-    const registeredOrders = orders.filter(o => o.user !== null).length;
+    const registeredOrders = orders.filter(o => o.user_id !== null).length;
     const guestOrders = orders.length - registeredOrders;
 
     return NextResponse.json({

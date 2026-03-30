@@ -5,15 +5,13 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { sanitizeText, sanitizePhone } from '@/lib/sanitize';
-
-const DC_API = 'https://firebasedataconnect.googleapis.com/v1beta/projects/pepmax-ac025/locations/us-central1/services/pepmax-service/connectors/default';
+import { createClient } from '@/lib/supabase/client';
 
 export default function ProfilePage() {
   const { user, loading: authLoading } = useAuth();
   const router = useRouter();
   const [displayName, setDisplayName] = useState('');
   const [phone, setPhone] = useState('');
-  const [dbUserId, setDbUserId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
@@ -29,21 +27,12 @@ export default function ProfilePage() {
       if (!user) return;
 
       try {
-        const res = await fetch(`${DC_API}:executeQuery`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            operationName: 'GetUserByUid',
-            variables: { uid: user.uid }
-          })
-        });
-        const data = await res.json();
-        const profile = data.data?.users?.[0];
+        const supabase = createClient();
+        const { data: { user: supabaseUser } } = await supabase.auth.getUser();
 
-        if (profile) {
-          setDbUserId(profile.id);
-          setDisplayName(profile.displayName || '');
-          setPhone(profile.phone || '');
+        if (supabaseUser?.user_metadata) {
+          setDisplayName(supabaseUser.user_metadata.full_name || supabaseUser.user_metadata.display_name || '');
+          setPhone(supabaseUser.user_metadata.phone || '');
         }
       } catch (error) {
         console.error('Failed to fetch profile:', error);
@@ -66,66 +55,20 @@ export default function ProfilePage() {
     setMessage(null);
 
     try {
-      let currentDbUserId = dbUserId;
-
       const cleanName = sanitizeText(displayName, 100);
       const cleanPhone = sanitizePhone(phone);
 
-      // If no db user exists, create one first
-      if (!currentDbUserId) {
-        const createRes = await fetch(`${DC_API}:executeMutation`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            operationName: 'CreateUser',
-            variables: {
-              uid: user.uid,
-              email: user.email,
-              displayName: cleanName || user.displayName || null,
-              photoURL: user.photoURL || null,
-              phone: cleanPhone || null,
-              authProvider: 'EMAIL'
-            }
-          })
-        });
-
-        const createData = await createRes.json();
-
-        // Fetch the user's ID
-        const res = await fetch(`${DC_API}:executeQuery`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            operationName: 'GetUserByUid',
-            variables: { uid: user.uid }
-          })
-        });
-        const data = await res.json();
-
-        currentDbUserId = data.data?.users?.[0]?.id;
-        setDbUserId(currentDbUserId);
-      }
-
-      if (!currentDbUserId) {
-        throw new Error('Could not find or create user profile. Check browser console for details.');
-      }
-
-      const updateRes = await fetch(`${DC_API}:executeMutation`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          operationName: 'UpdateUserProfile',
-          variables: {
-            id: currentDbUserId,
-            displayName: cleanName || null,
-            phone: cleanPhone || null
-          }
-        })
+      const supabase = createClient();
+      const { error } = await supabase.auth.updateUser({
+        data: {
+          full_name: cleanName || null,
+          display_name: cleanName || null,
+          phone: cleanPhone || null,
+        },
       });
 
-      const updateData = await updateRes.json();
-      if (updateData.error) {
-        throw new Error(updateData.error.message || 'Update failed');
+      if (error) {
+        throw error;
       }
 
       setMessage({ type: 'success', text: 'Profile updated successfully!' });

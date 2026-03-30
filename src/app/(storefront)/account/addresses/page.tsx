@@ -4,10 +4,10 @@ import { useAuth } from '@/context/AuthContext';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { createClient } from '@/lib/supabase/client';
 
 interface Address {
   id: string;
-  label: string;
   firstName: string;
   lastName: string;
   address1: string;
@@ -16,10 +16,7 @@ interface Address {
   state: string;
   zip: string;
   country: string;
-  isDefault: boolean;
 }
-
-const DC_API = 'https://firebasedataconnect.googleapis.com/v1beta/projects/pepmax-ac025/locations/us-central1/services/pepmax-service/connectors/default';
 
 export default function AddressesPage() {
   const { user, loading: authLoading } = useAuth();
@@ -38,30 +35,57 @@ export default function AddressesPage() {
       if (!user) return;
 
       try {
-        // First get user's database ID
-        const userRes = await fetch(`${DC_API}:executeQuery`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            operationName: 'GetUserByUid',
-            variables: { uid: user.uid }
-          })
-        });
-        const userData = await userRes.json();
-        const dbUserId = userData.data?.users?.[0]?.id;
+        const supabase = createClient();
 
-        if (dbUserId) {
-          const addrRes = await fetch(`${DC_API}:executeQuery`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              operationName: 'ListAddresses',
-              variables: { userId: dbUserId }
-            })
-          });
-          const addrData = await addrRes.json();
-          setAddresses(addrData.data?.addresses || []);
+        // Fetch unique addresses from user's orders
+        const { data: orders, error } = await supabase
+          .from('orders')
+          .select('id, shipping_address')
+          .or(`user_id.eq.${user.uid},email.eq.${user.email}`)
+          .order('created_at', { ascending: false })
+          .limit(10);
+
+        if (error) {
+          console.error('Failed to fetch addresses:', error);
+          return;
         }
+
+        // Extract unique addresses from orders
+        const addressMap = new Map<string, Address>();
+
+        for (const order of orders || []) {
+          const addr = order.shipping_address as {
+            firstName?: string;
+            lastName?: string;
+            address1?: string;
+            address2?: string;
+            city?: string;
+            state?: string;
+            zip?: string;
+            country?: string;
+          };
+
+          if (addr && addr.address1) {
+            // Create a unique key based on address components
+            const key = `${addr.address1}-${addr.city}-${addr.zip}`.toLowerCase();
+
+            if (!addressMap.has(key)) {
+              addressMap.set(key, {
+                id: order.id,
+                firstName: addr.firstName || '',
+                lastName: addr.lastName || '',
+                address1: addr.address1 || '',
+                address2: addr.address2 || undefined,
+                city: addr.city || '',
+                state: addr.state || '',
+                zip: addr.zip || '',
+                country: addr.country || 'US',
+              });
+            }
+          }
+        }
+
+        setAddresses(Array.from(addressMap.values()));
       } catch (error) {
         console.error('Failed to fetch addresses:', error);
       } finally {
@@ -123,25 +147,38 @@ export default function AddressesPage() {
             </svg>
             <h3 style={{ marginBottom: 8, color: 'var(--color-text-secondary)' }}>No addresses saved</h3>
             <p style={{ color: 'var(--color-text-muted)', marginBottom: 24 }}>
-              Add a shipping address for faster checkout.
+              Your shipping addresses from previous orders will appear here.
             </p>
-            <p style={{ color: 'var(--color-text-muted)', fontSize: 14 }}>
-              Addresses will be saved during checkout.
-            </p>
+            <Link href="/products" style={{
+              display: 'inline-block',
+              padding: '12px 24px',
+              background: 'var(--color-accent-primary)',
+              borderRadius: 8,
+              color: 'var(--color-bg-dark)',
+              fontWeight: 600,
+              textDecoration: 'none'
+            }}>
+              Browse Products
+            </Link>
           </div>
         ) : (
           <div style={{ display: 'grid', gap: 16 }}>
-            {addresses.map((address) => (
+            <p style={{ color: 'var(--color-text-muted)', fontSize: 14, marginBottom: 8 }}>
+              Addresses from your recent orders:
+            </p>
+            {addresses.map((address, index) => (
               <div key={address.id} style={{
                 background: 'var(--color-bg-card)',
-                border: address.isDefault ? '2px solid var(--color-accent-primary)' : '1px solid var(--color-border)',
+                border: index === 0 ? '2px solid var(--color-accent-primary)' : '1px solid var(--color-border)',
                 borderRadius: 12,
                 padding: 20
               }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 8 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                    <h3 style={{ fontSize: 16, fontWeight: 600 }}>{address.label}</h3>
-                    {address.isDefault && (
+                    <h3 style={{ fontSize: 16, fontWeight: 600 }}>
+                      {address.firstName} {address.lastName}
+                    </h3>
+                    {index === 0 && (
                       <span style={{
                         fontSize: 11,
                         fontWeight: 600,
@@ -150,13 +187,12 @@ export default function AddressesPage() {
                         background: 'var(--color-accent-primary)',
                         color: 'var(--color-bg-dark)'
                       }}>
-                        Default
+                        Most Recent
                       </span>
                     )}
                   </div>
                 </div>
                 <div style={{ fontSize: 14, color: 'var(--color-text-secondary)', lineHeight: 1.6 }}>
-                  <p>{address.firstName} {address.lastName}</p>
                   <p>{address.address1}</p>
                   {address.address2 && <p>{address.address2}</p>}
                   <p>{address.city}, {address.state} {address.zip}</p>

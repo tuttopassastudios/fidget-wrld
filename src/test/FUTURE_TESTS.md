@@ -5,13 +5,13 @@ These tests should be implemented once a payment provider (e.g., Stripe) is adde
 ## Payment Integration Tests
 - Payment intent creation returns correct amount matching `calculateOrderPricing()` total
 - Failed payment does NOT clear cart
-- Successful payment clears cart and persists order to Firebase
+- Successful payment clears cart and persists order to Supabase
 - Idempotency key from `useSubmissionGuard()` prevents duplicate charges on retry
 - Network timeout during payment shows appropriate error and allows retry
 - Payment amount is validated server-side (never trust client-calculated totals)
 
 ## Order Persistence Tests
-- Order is created in Firebase Data Connect with correct line items
+- Order is created in Supabase with correct line items
 - Order total matches server-recalculated total (not client-sent total)
 - Order includes idempotency key for dedup
 - Duplicate order submissions with same idempotency key return existing order (not new charge)

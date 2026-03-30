@@ -78,7 +78,7 @@ export function sanitizePhone(input: string, maxLength = 20): string {
 
 /**
  * Sanitize to alphanumeric + hyphens + underscores only.
- * For promo codes, SKUs, order IDs, Firebase UIDs, tracking numbers.
+ * For promo codes, SKUs, order IDs, user UIDs, tracking numbers.
  */
 export function sanitizeAlphanumeric(input: string, maxLength = 128): string {
   if (!input || typeof input !== 'string') return '';

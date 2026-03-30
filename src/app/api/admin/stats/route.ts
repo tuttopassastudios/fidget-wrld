@@ -1,36 +1,31 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { verifyAdminRequest, getAdminAuth } from '@/lib/firebase-admin';
-import { dcQuery } from '@/lib/data-connect-admin';
+import { verifyAdminRequest, getAdminAuth } from '@/lib/admin-auth';
+import { getAdminClient } from '@/lib/supabase/admin';
 import { rateLimit, getClientIp } from '@/lib/rate-limit';
+import type { Database } from '@/lib/supabase/types';
+
+type Order = Database['public']['Tables']['orders']['Row'];
 
 interface OrderItem {
-  id: string;
   sku: string;
   name: string;
-  variant: string;
+  variant?: string;
   price: number;
   quantity: number;
-  image: string;
-}
-
-interface OrderData {
-  orders: Array<{
-    id: string;
-    orderId: string;
-    status: string;
-    total: number;
-    contactEmail: string;
-    createdAt: string;
-    updatedAt: string;
-    shipFirstName: string;
-    shipLastName: string;
-    orderItems_on_order: OrderItem[];
-  }>;
+  image?: string;
 }
 
 function toDateKey(dateStr: string): string {
   const d = new Date(dateStr);
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+}
+
+function getShippingName(order: Order): { firstName: string; lastName: string } {
+  const addr = order.shipping_address as { firstName?: string; lastName?: string } | null;
+  return {
+    firstName: addr?.firstName || '',
+    lastName: addr?.lastName || '',
+  };
 }
 
 export async function GET(request: NextRequest) {
@@ -51,28 +46,31 @@ export async function GET(request: NextRequest) {
       ? new Date(0)
       : new Date(now.getTime() - Number(range) * 24 * 60 * 60 * 1000);
 
-    // Fetch all orders via Data Connect
-    // ListAllOrders may not be deployed yet — gracefully handle missing/empty data
-    let allOrders: OrderData['orders'] = [];
-    try {
-      const result = await dcQuery<OrderData>('ListAllOrders', {});
-      allOrders = result?.orders || [];
-    } catch {
-      // Query not deployed or Data Connect unavailable — show empty stats
+    // Fetch all orders from Supabase
+    const supabase = getAdminClient();
+    const { data: allOrders, error } = await supabase
+      .from('orders')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      console.error('[Admin Stats] Supabase error:', error);
     }
 
+    const orderList = allOrders || [];
+
     // Filter orders by date range
-    const orders = allOrders.filter(o => new Date(o.createdAt) >= cutoff);
+    const orders = orderList.filter(o => new Date(o.created_at) >= cutoff);
 
     // Calculate stats
     const totalOrders = orders.length;
     const totalRevenue = orders.reduce((sum, o) => sum + (o.total || 0), 0);
     const aov = totalOrders > 0 ? totalRevenue / totalOrders : 0;
-    const pendingOrders = orders.filter(o => o.status === 'PENDING').length;
-    const processingOrders = orders.filter(o => o.status === 'PROCESSING').length;
-    const shippedOrders = orders.filter(o => o.status === 'SHIPPED').length;
-    const deliveredOrders = orders.filter(o => o.status === 'DELIVERED').length;
-    const cancelledOrders = orders.filter(o => o.status === 'CANCELLED').length;
+    const pendingOrders = orders.filter(o => o.status === 'pending').length;
+    const paidOrders = orders.filter(o => o.status === 'paid').length;
+    const shippedOrders = orders.filter(o => o.status === 'shipped').length;
+    const deliveredOrders = orders.filter(o => o.status === 'delivered').length;
+    const cancelledOrders = orders.filter(o => o.status === 'cancelled').length;
 
     // Daily aggregation for charts
     const dailyMap = new Map<string, { revenue: number; orders: number }>();
@@ -86,7 +84,7 @@ export async function GET(request: NextRequest) {
     }
 
     for (const o of orders) {
-      const key = toDateKey(o.createdAt);
+      const key = toDateKey(o.created_at);
       const existing = dailyMap.get(key) || { revenue: 0, orders: 0 };
       existing.revenue += o.total || 0;
       existing.orders += 1;
@@ -104,7 +102,8 @@ export async function GET(request: NextRequest) {
     // Top products by revenue
     const productMap = new Map<string, { name: string; revenue: number; unitsSold: number }>();
     for (const o of orders) {
-      for (const item of o.orderItems_on_order || []) {
+      const items = (o.items as unknown as OrderItem[]) || [];
+      for (const item of items) {
         const key = item.name;
         const existing = productMap.get(key) || { name: item.name, revenue: 0, unitsSold: 0 };
         existing.revenue += item.price * item.quantity;
@@ -125,7 +124,7 @@ export async function GET(request: NextRequest) {
     // Order funnel — cumulative counts through the pipeline
     const funnel = [
       { stage: 'Placed', count: totalOrders },
-      { stage: 'Processing', count: processingOrders + shippedOrders + deliveredOrders },
+      { stage: 'Paid', count: paidOrders + shippedOrders + deliveredOrders },
       { stage: 'Shipped', count: shippedOrders + deliveredOrders },
       { stage: 'Delivered', count: deliveredOrders },
     ];
@@ -133,27 +132,26 @@ export async function GET(request: NextRequest) {
     // Daily orders by status for stacked chart
     const statusDailyMap = new Map<string, Record<string, number>>();
     for (const [key] of dailyMap) {
-      statusDailyMap.set(key, { pending: 0, processing: 0, shipped: 0, delivered: 0, cancelled: 0 });
+      statusDailyMap.set(key, { pending: 0, paid: 0, shipped: 0, delivered: 0, cancelled: 0 });
     }
     for (const o of orders) {
-      const key = toDateKey(o.createdAt);
+      const key = toDateKey(o.created_at);
       const entry = statusDailyMap.get(key);
-      if (entry) {
-        const s = o.status.toLowerCase();
-        if (s in entry) entry[s] += 1;
+      if (entry && o.status in entry) {
+        entry[o.status] += 1;
       }
     }
     const dailyByStatus = Array.from(statusDailyMap.entries())
       .sort(([a], [b]) => a.localeCompare(b))
       .map(([date, counts]) => ({ date, ...counts }));
 
-    // Average fulfillment time (delivered orders: createdAt → updatedAt)
-    const deliveredList = orders.filter(o => o.status === 'DELIVERED');
+    // Average fulfillment time (delivered orders: created_at → updated_at)
+    const deliveredList = orders.filter(o => o.status === 'delivered');
     let avgFulfillmentHours = 0;
     if (deliveredList.length > 0) {
       const totalHours = deliveredList.reduce((sum, o) => {
-        const created = new Date(o.createdAt).getTime();
-        const updated = new Date(o.updatedAt).getTime();
+        const created = new Date(o.created_at).getTime();
+        const updated = new Date(o.updated_at).getTime();
         return sum + (updated - created) / (1000 * 60 * 60);
       }, 0);
       avgFulfillmentHours = Math.round((totalHours / deliveredList.length) * 10) / 10;
@@ -173,8 +171,8 @@ export async function GET(request: NextRequest) {
     if (range !== 'all') {
       const rangeDays = Number(range);
       const prevCutoff = new Date(cutoff.getTime() - rangeDays * 24 * 60 * 60 * 1000);
-      const prevOrders = allOrders.filter(o => {
-        const d = new Date(o.createdAt);
+      const prevOrders = orderList.filter(o => {
+        const d = new Date(o.created_at);
         return d >= prevCutoff && d < cutoff;
       });
       const prevTotal = prevOrders.length;
@@ -186,17 +184,13 @@ export async function GET(request: NextRequest) {
       };
     }
 
-    // Recent orders (last 10, always from full set)
-    const recentOrders = allOrders
-      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
-      .slice(0, 10);
+    // Recent orders (last 10)
+    const recentOrders = orderList.slice(0, 10);
 
-    // Get user count from Firebase Auth
+    // Get user count from Supabase Auth
     let userCount = 0;
     try {
       const listResult = await getAdminAuth().listUsers(1);
-      // Firebase doesn't expose total count directly,
-      // so we iterate through pages
       userCount = listResult.users.length;
       let pageToken = listResult.pageToken;
       while (pageToken) {
@@ -215,7 +209,7 @@ export async function GET(request: NextRequest) {
       userCount,
       ordersByStatus: {
         pending: pendingOrders,
-        processing: processingOrders,
+        paid: paidOrders,
         shipped: shippedOrders,
         delivered: deliveredOrders,
         cancelled: cancelledOrders,
@@ -227,15 +221,18 @@ export async function GET(request: NextRequest) {
       funnel,
       avgFulfillmentHours,
       prevPeriod,
-      recentOrders: recentOrders.map(o => ({
-        id: o.id,
-        orderId: o.orderId,
-        status: o.status,
-        total: o.total,
-        email: o.contactEmail,
-        customer: `${o.shipFirstName} ${o.shipLastName}`,
-        createdAt: o.createdAt,
-      })),
+      recentOrders: recentOrders.map(o => {
+        const names = getShippingName(o);
+        return {
+          id: o.id,
+          orderId: o.id,
+          status: o.status.toUpperCase(),
+          total: o.total,
+          email: o.email,
+          customer: `${names.firstName} ${names.lastName}`.trim() || o.email,
+          createdAt: o.created_at,
+        };
+      }),
     });
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Unknown error';

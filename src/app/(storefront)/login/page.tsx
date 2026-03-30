@@ -19,10 +19,9 @@ function getSafeRedirect(param: string | null): string {
 /**
  * If the redirect target requires a __session cookie (dashboard routes),
  * sync it before navigating so the proxy doesn't bounce us back.
- * TODO: Implement when Firebase is configured
  */
 async function syncSessionIfNeeded(_redirectTo: string): Promise<void> {
-  // Firebase not configured - skip session sync
+  // Session sync is handled by useDashboardSession hook
   return;
 }
 
