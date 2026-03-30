@@ -60,6 +60,7 @@ export async function POST(request: Request) {
           product_data: {
             name: 'Shipping',
             description: getShippingLabel(shippingPrice),
+            images: undefined,
           },
           unit_amount: Math.round(shippingPrice * 100),
         },
