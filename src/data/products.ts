@@ -44,6 +44,7 @@ export const productPages: ProductPage[] = [
     dimensions: 'Tin: 60mm x 60mm x 30mm',
     weight: '216pc: 185g',
     isBestseller: true,
+    isOutOfStock: true,
     relatedSlugs: ['fidget-cube', 'cj-ferrofluid-speaker'],
     metaTitle: 'Magnet Balls | Premium Desk Toy',
     metaDescription: 'Ultra-strong N52 neodymium magnet balls for creative desk sculptures. Available in silver, gold, black, red, and rainbow.',
@@ -79,6 +80,7 @@ export const productPages: ProductPage[] = [
     ageRecommendation: '3+',
     materials: ['TPR'],
     isBestseller: true,
+    isOutOfStock: true,
     relatedSlugs: ['cj-popcorn-squishy', 'cj-sticky-wall-ball'],
     metaTitle: 'Ice Cube Stress Ball | Squeeze Toys',
     metaDescription: 'Unique ice cube shaped stress balls. Perfect for stress relief, focus, and hand exercises.',
@@ -117,6 +119,7 @@ export const productPages: ProductPage[] = [
     ageRecommendation: '6+',
     materials: ['ABS', 'Silicone', 'Metal'],
     isBestseller: true,
+    isOutOfStock: true,
     relatedSlugs: ['cj-spinner-keychain', 'magnet-balls', 'cj-alloy-spinner'],
     metaTitle: 'Fidget Cube | 6-Sided Desk Toy',
     metaDescription: 'Premium fidget cube with 6 unique tactile sides. Click, glide, flip, and spin your stress away.',
@@ -156,7 +159,7 @@ export function getProductsByCategory(category: ProductCategory): ProductPage[] 
 }
 
 export function getBestsellers(): ProductPage[] {
-  return productPages.filter(p => p.isBestseller);
+  return productPages.filter(p => p.isBestseller && !p.isOutOfStock);
 }
 
 export function getNewArrivals(): ProductPage[] {
@@ -245,6 +248,7 @@ export const cjDropshippingProducts: ProductPage[] = [
     ageRecommendation: '6+',
     materials: ['Zinc Alloy', 'Plastic'],
     isNew: true,
+    isBestseller: true,
     relatedSlugs: ['fidget-cube', 'cj-alloy-spinner', 'cj-popcorn-squishy'],
     metaTitle: 'Fidget Spinner Keychain | Fidget WRLD',
     metaDescription: 'Multi-functional fidget spinner keychain with bottle opener. Glow-in-the-dark options available for on-the-go stress relief.',
@@ -314,6 +318,7 @@ export const cjDropshippingProducts: ProductPage[] = [
     ageRecommendation: '3+',
     materials: ['TPR', 'Foam'],
     isNew: true,
+    isBestseller: true,
     relatedSlugs: ['stress-ball-set', 'squishy-animals', 'cj-spinner-keychain'],
     metaTitle: 'Popcorn Cup Squishy | Fidget WRLD',
     metaDescription: 'Cute simulation popcorn cup squeeze toy. Satisfying stress relief for kids and adults.',
@@ -392,6 +397,7 @@ export const cjDropshippingProducts: ProductPage[] = [
     ageRecommendation: '3+',
     materials: ['TPR', 'Soft Rubber'],
     isNew: true,
+    isBestseller: true,
     relatedSlugs: ['stress-ball-set', 'cj-popcorn-squishy', 'squishy-animals'],
     metaTitle: 'Sticky Wall Ball | Fidget WRLD',
     metaDescription: 'Fun sticky stress balls that stick to walls. LED light-up options available. Perfect for stress relief and play.',

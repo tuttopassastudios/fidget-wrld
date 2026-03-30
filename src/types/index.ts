@@ -51,6 +51,7 @@ export interface ProductPage {
   isNew?: boolean;
   isBestseller?: boolean;
   isLimited?: boolean;
+  isOutOfStock?: boolean;
 
   // Related products
   relatedSlugs?: string[];
