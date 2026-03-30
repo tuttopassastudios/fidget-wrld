@@ -154,15 +154,15 @@ export function getAdminFirestore() {
   };
 
   return {
-    collection: () => ({
+    collection: (_name: string) => ({
       ...mockQuery,
-      doc: () => ({
+      doc: (_id?: string) => ({
         get: async () => { throw new Error('Firestore not configured'); },
         set: async () => { throw new Error('Firestore not configured'); },
         update: async () => { throw new Error('Firestore not configured'); },
         delete: async () => { throw new Error('Firestore not configured'); },
       }),
-      add: async () => { throw new Error('Firestore not configured'); },
+      add: async (_data: Record<string, unknown>) => { throw new Error('Firestore not configured'); },
     }),
   };
 }
@@ -171,7 +171,7 @@ export function getAdminFirestore() {
 export function getAdminStorage() {
   return {
     bucket: () => ({
-      file: () => ({
+      file: (_path: string) => ({
         save: async () => { throw new Error('Storage not configured'); },
         getSignedUrl: async () => [''],
         delete: async () => { throw new Error('Storage not configured'); },

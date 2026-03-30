@@ -33,7 +33,8 @@ export async function DELETE(
     // Delete the file from Firebase Storage
     try {
       const bucket = getAdminStorage().bucket();
-      await bucket.file(record.storagePath).delete();
+      const file = bucket.file(record.storagePath);
+      await file.delete();
     } catch (storageErr) {
       console.warn('[Admin COAs DELETE] Storage file deletion failed:', storageErr);
       // Continue — the Firestore record is already deleted
