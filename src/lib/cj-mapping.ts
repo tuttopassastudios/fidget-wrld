@@ -5,6 +5,7 @@ export interface CJMapping {
   cjVid: string;
   productName: string;
   variantName: string;
+  warehouse: 'US' | 'CN';
 }
 
 // Build a lookup map from store SKU to CJ IDs
@@ -22,6 +23,7 @@ function initializeMap() {
           cjVid: variant.cjVid,
           productName: product.name,
           variantName: variant.variant,
+          warehouse: variant.cjWarehouse ?? 'CN',
         });
       }
     }

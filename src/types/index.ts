@@ -24,8 +24,9 @@ export interface ProductVariant {
   compareAtPrice?: number;
   image: string;
   inventory?: number;
-  cjPid?: string;  // CJ Dropshipping Product ID
-  cjVid?: string;  // CJ Dropshipping Variant ID
+  cjPid?: string;      // CJ Dropshipping Product ID
+  cjVid?: string;      // CJ Dropshipping Variant ID
+  cjWarehouse?: 'US' | 'CN';  // Fulfillment warehouse — defaults to CN
 }
 
 export interface ProductPage {

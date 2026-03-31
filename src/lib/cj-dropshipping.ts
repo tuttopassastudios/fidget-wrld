@@ -34,6 +34,7 @@ export interface CJShippingAddress {
 export interface CJOrderItem {
   vid: string;
   quantity: number;
+  warehouse?: 'US' | 'CN';
 }
 
 export interface CJOrderRequest {

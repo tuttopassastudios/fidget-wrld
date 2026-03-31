@@ -52,6 +52,7 @@ export async function createCJOrder(
         cjItems.push({
           vid: mapping.cjVid,
           quantity: item.quantity,
+          warehouse: mapping.warehouse,
         });
       }
     } else {
@@ -89,73 +90,71 @@ export async function createCJOrder(
                         shippingAddress.country === 'Canada' || shippingAddress.country === 'CA' ? 'CA' :
                         shippingAddress.country;
 
-    // Create order via CJ API (uses the order module)
-    // fromCountryCode: CN = China warehouse (default), US = US warehouse
-    // logisticName: CJ Packet Ordinary is economical standard shipping
-    const response = await cj.order.createOrder({
-      orderNumber: orderId,
-      fromCountryCode: 'CN', // Ship from China warehouse (most products)
-      logisticName: 'CJ Packet Ordinary', // Standard economical shipping
-      shippingCountryCode: countryCode,
-      shippingCountry: cjAddress.country,
-      shippingProvince: cjAddress.province,
-      shippingCity: cjAddress.city,
-      shippingAddress: cjAddress.address,
-      shippingAddress2: cjAddress.address2 || '',
-      shippingZip: cjAddress.zip,
-      shippingCustomerName: cjAddress.name,
-      shippingPhone: cjAddress.phone,
-      email: cjAddress.email,
-      products: cjItems.map(item => ({
-        vid: item.vid,
-        quantity: item.quantity,
-      })),
-    });
-
-    // Check if CJ accepted the order
-    if (response.result && response.data?.orderId) {
-      const cjOrderId = response.data.orderId;
-
-      // Update order in Supabase with CJ order ID
-      const { error: updateError } = await supabase
-        .from('orders')
-        .update({
-          cj_order_id: cjOrderId,
-          cj_order_status: 'pending',
-          fulfillment_error: null,
-        })
-        .eq('id', orderId);
-
-      if (updateError) {
-        console.error(`Failed to update order ${orderId} with CJ ID:`, updateError);
-      }
-
-      console.log(`Order ${orderId}: CJ order created successfully (CJ ID: ${cjOrderId})`);
-
-      return {
-        success: true,
-        cjOrderId,
-        skippedItems,
-      };
-    } else {
-      // CJ API returned an error
-      const errorMessage = response.message || 'Unknown CJ API error';
-      console.error(`Order ${orderId}: CJ order creation failed:`, errorMessage);
-
-      // Store the error in Supabase
-      await supabase
-        .from('orders')
-        .update({
-          fulfillment_error: errorMessage,
-        })
-        .eq('id', orderId);
-
-      return {
-        success: false,
-        error: errorMessage,
-        skippedItems,
-      };
+    // Group items by warehouse — each warehouse requires a separate CJ order
+    const byWarehouse = new Map<'US' | 'CN', typeof cjItems>();
+    for (const item of cjItems) {
+      const wh = item.warehouse ?? 'CN';
+      if (!byWarehouse.has(wh)) byWarehouse.set(wh, []);
+      byWarehouse.get(wh)!.push(item);
     }
+
+    const cjOrderIds: string[] = [];
+
+    for (const [warehouse, warehouseItems] of byWarehouse) {
+      const suffix = byWarehouse.size > 1 ? `-${warehouse}` : '';
+      const response = await cj.order.createOrder({
+        orderNumber: `${orderId}${suffix}`,
+        fromCountryCode: warehouse,
+        // CN warehouse uses CJ Packet Ordinary; US warehouse uses CJ's default domestic carrier
+        ...(warehouse === 'CN' && { logisticName: 'CJ Packet Ordinary' }),
+        shippingCountryCode: countryCode,
+        shippingCountry: cjAddress.country,
+        shippingProvince: cjAddress.province,
+        shippingCity: cjAddress.city,
+        shippingAddress: cjAddress.address,
+        shippingAddress2: cjAddress.address2 || '',
+        shippingZip: cjAddress.zip,
+        shippingCustomerName: cjAddress.name,
+        shippingPhone: cjAddress.phone,
+        email: cjAddress.email,
+        products: warehouseItems.map(item => ({
+          vid: item.vid,
+          quantity: item.quantity,
+        })),
+      });
+
+      if (response.result && response.data?.orderId) {
+        cjOrderIds.push(response.data.orderId);
+        console.log(`Order ${orderId}: CJ ${warehouse} warehouse order created (CJ ID: ${response.data.orderId})`);
+      } else {
+        const errorMessage = response.message || `Unknown CJ API error (${warehouse} warehouse)`;
+        console.error(`Order ${orderId}: CJ ${warehouse} order failed:`, errorMessage);
+
+        await supabase
+          .from('orders')
+          .update({ fulfillment_error: errorMessage })
+          .eq('id', orderId);
+
+        return { success: false, error: errorMessage, skippedItems };
+      }
+    }
+
+    // All warehouse orders succeeded — store comma-separated CJ order IDs
+    const cjOrderId = cjOrderIds.join(',');
+    const { error: updateError } = await supabase
+      .from('orders')
+      .update({
+        cj_order_id: cjOrderId,
+        cj_order_status: 'pending',
+        fulfillment_error: null,
+      })
+      .eq('id', orderId);
+
+    if (updateError) {
+      console.error(`Failed to update order ${orderId} with CJ ID:`, updateError);
+    }
+
+    return { success: true, cjOrderId, skippedItems };
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
     console.error(`Order ${orderId}: CJ fulfillment error:`, errorMessage);
