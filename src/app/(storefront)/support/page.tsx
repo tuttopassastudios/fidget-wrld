@@ -30,7 +30,7 @@ const faqItems = [
   // ── Returns & Support ──
   { question: 'What is your return policy?', answer: 'We offer hassle-free returns within 30 days of delivery. Items must be in original condition with packaging. Contact us to start a return and we will provide a prepaid shipping label.', category: 'Returns & Support' },
   { question: 'What if my order arrives damaged?', answer: 'If your order arrives damaged, contact us within 48 hours with photos of the damage. We will arrange a replacement or full refund at no additional cost to you.', category: 'Returns & Support' },
-  { question: 'How can I contact support?', answer: 'You can reach us via the Contact page or email hello@fidgetwrld.com. We respond to all inquiries within 24 hours during business days (Monday-Friday, 9AM-5PM EST).', category: 'Returns & Support' },
+  { question: 'How can I contact support?', answer: 'You can reach us via the Contact page or email support@fidgetwrld.com. We respond to all inquiries within 24 hours during business days (Monday-Friday, 9AM-5PM EST).', category: 'Returns & Support' },
   { question: 'Do you have a satisfaction guarantee?', answer: 'Yes! If you are not completely satisfied with your purchase, contact us within 30 days for a full refund or exchange. We want you to love your fidgets!', category: 'Returns & Support' },
 ];
 

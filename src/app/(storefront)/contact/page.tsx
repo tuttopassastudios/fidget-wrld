@@ -102,7 +102,7 @@ export default function ContactPage() {
                 </svg>
                 <span className={styles.infoCardLabel}>Email</span>
               </div>
-              <p className={styles.infoCardText}>hello@fidgetwrld.com</p>
+              <p className={styles.infoCardText}>support@fidgetwrld.com</p>
             </div>
             <div className={styles.infoCard}>
               <div className={styles.infoCardHeader}>

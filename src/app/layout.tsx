@@ -74,7 +74,7 @@ export default function RootLayout({
               description: 'Premium fidget toys and sensory tools for kids, adults, and collectors.',
               contactPoint: {
                 '@type': 'ContactPoint',
-                email: 'hello@fidgetwrld.com',
+                email: 'support@fidgetwrld.com',
                 contactType: 'customer service',
               },
             }),

@@ -144,6 +144,31 @@ export default async function HomePage() {
           </div>
         </section>
       </FadeIn>
+
+      {/* 5. Support Banner */}
+      <FadeIn>
+        <section className={styles.supportBanner}>
+          <div className="container">
+            <div className={styles.supportBannerInner}>
+              <div className={styles.supportBannerIcon} aria-hidden="true">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                </svg>
+              </div>
+              <div className={styles.supportBannerContent}>
+                <h2 className={styles.supportBannerTitle}>Need Help? We&apos;re Here for You</h2>
+                <p className={styles.supportBannerText}>Our friendly support team responds within 24 hours</p>
+              </div>
+              <Link href="/contact" className={styles.supportBannerLink}>
+                Contact Us
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M5 12h14M12 5l7 7-7 7" />
+                </svg>
+              </Link>
+            </div>
+          </div>
+        </section>
+      </FadeIn>
     </PageReveal>
   );
 }
