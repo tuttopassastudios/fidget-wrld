@@ -216,11 +216,11 @@ export const cjDropshippingProducts: ProductPage[] = [
     tagline: 'Spin anywhere you go',
     category: 'Desk Toy',
     variants: [
-      { sku: 'CJ-SPIN-KEY-BLK', name: 'Fidget Spinner Keychain', variant: 'Black', color: 'Black', colorHex: '#2a2a2a', price: 5.99, image: 'https://cf.cjdropshipping.com/5ba37cad-57a1-4705-b527-b868eee90280.jpg', cjPid: '1541333689475944448', cjVid: '1541333689765351424' },
-      { sku: 'CJ-SPIN-KEY-RED', name: 'Fidget Spinner Keychain', variant: 'Red', color: 'Red', colorHex: '#DC143C', price: 5.99, image: 'https://cf.cjdropshipping.com/f2d24da0-b5ea-43e7-a729-c9c87911a666.jpg', cjPid: '1541333689475944448', cjVid: '1541333689765351425' },
-      { sku: 'CJ-SPIN-KEY-WHT', name: 'Fidget Spinner Keychain', variant: 'White', color: 'White', colorHex: '#FFFFFF', price: 5.99, image: 'https://cf.cjdropshipping.com/44c7f08a-3f87-4686-8db8-1bb8a8627e11.jpg', cjPid: '1541333689475944448', cjVid: '1640924001965330433' },
-      { sku: 'CJ-SPIN-KEY-GRN', name: 'Fidget Spinner Keychain', variant: 'Glow Green', color: 'Green', colorHex: '#32CD32', price: 6.99, image: 'https://cf.cjdropshipping.com/d174c68a-f724-43d6-a451-965d13ea4e4e.jpg', cjPid: '1541333689475944448', cjVid: '1562686756393734144' },
-      { sku: 'CJ-SPIN-KEY-BLU', name: 'Fidget Spinner Keychain', variant: 'Glow Blue', color: 'Blue', colorHex: '#1E90FF', price: 6.99, image: 'https://cf.cjdropshipping.com/291de2f2-5387-4df8-b862-c1e593aeba4b.jpg', cjPid: '1541333689475944448', cjVid: '1567359122214375424' },
+      { sku: 'CJ-SPIN-KEY-BLK', name: 'Fidget Spinner Keychain', variant: 'Black', color: 'Black', colorHex: '#2a2a2a', price: 5.99, inventory: 0, image: 'https://cf.cjdropshipping.com/5ba37cad-57a1-4705-b527-b868eee90280.jpg', cjPid: '1541333689475944448', cjVid: '1541333689765351424' },
+      { sku: 'CJ-SPIN-KEY-RED', name: 'Fidget Spinner Keychain', variant: 'Red', color: 'Red', colorHex: '#DC143C', price: 5.99, inventory: 0, image: 'https://cf.cjdropshipping.com/f2d24da0-b5ea-43e7-a729-c9c87911a666.jpg', cjPid: '1541333689475944448', cjVid: '1541333689765351425' },
+      { sku: 'CJ-SPIN-KEY-WHT', name: 'Fidget Spinner Keychain', variant: 'White', color: 'White', colorHex: '#FFFFFF', price: 5.99, inventory: 0, image: 'https://cf.cjdropshipping.com/44c7f08a-3f87-4686-8db8-1bb8a8627e11.jpg', cjPid: '1541333689475944448', cjVid: '1640924001965330433' },
+      { sku: 'CJ-SPIN-KEY-GRN', name: 'Fidget Spinner Keychain', variant: 'Glow Green', color: 'Green', colorHex: '#32CD32', price: 6.99, inventory: 0, image: 'https://cf.cjdropshipping.com/d174c68a-f724-43d6-a451-965d13ea4e4e.jpg', cjPid: '1541333689475944448', cjVid: '1562686756393734144' },
+      { sku: 'CJ-SPIN-KEY-BLU', name: 'Fidget Spinner Keychain', variant: 'Glow Blue', color: 'Blue', colorHex: '#1E90FF', price: 6.99, inventory: 0, image: 'https://cf.cjdropshipping.com/291de2f2-5387-4df8-b862-c1e593aeba4b.jpg', cjPid: '1541333689475944448', cjVid: '1567359122214375424' },
     ],
     defaultVariantIndex: 0,
     description: `<p>A creative multi-functional fidget toy that combines a finger spinner with a keychain and bottle opener. Perfect for on-the-go fidgeting!</p>
@@ -256,7 +256,7 @@ export const cjDropshippingProducts: ProductPage[] = [
     tagline: 'Premium metal spinning',
     category: 'Desk Toy',
     variants: [
-      { sku: 'CJ-ALLOY-SPIN-RBW', name: 'Rainbow Alloy Fidget Spinner', variant: 'Rainbow 6-Axis', color: 'Rainbow', colorHex: '#ff6b6b', price: 4.99, image: 'https://cf.cjdropshipping.com/quick/product/8dcda08d-587f-4ce2-8c2a-6c32ef805736.jpg', cjPid: '1527233425990758400', cjVid: '1527233426057867264' },
+      { sku: 'CJ-ALLOY-SPIN-RBW', name: 'Rainbow Alloy Fidget Spinner', variant: 'Rainbow 6-Axis', color: 'Rainbow', colorHex: '#ff6b6b', price: 4.99, inventory: 0, image: 'https://cf.cjdropshipping.com/quick/product/8dcda08d-587f-4ce2-8c2a-6c32ef805736.jpg', cjPid: '1527233425990758400', cjVid: '1527233426057867264' },
     ],
     defaultVariantIndex: 0,
     description: `<p>Premium colorful alloy fidget spinner with stunning electroplated rainbow finish. The six-axis design provides excellent balance for long, smooth spins.</p>
@@ -291,7 +291,7 @@ export const cjDropshippingProducts: ProductPage[] = [
     tagline: 'Squeeze the stress away',
     category: 'Squishy',
     variants: [
-      { sku: 'CJ-POPCORN-SQU', name: 'Popcorn Cup Squishy', variant: 'Classic', price: 9.99, image: 'https://cf.cjdropshipping.com/15204672/1093995935640.png', cjPid: 'C4880398-A6C6-48C2-AF37-7852296CD892', cjVid: '7F972F58-59AE-4921-AB7F-F19D923D9F47' },
+      { sku: 'CJ-POPCORN-SQU', name: 'Popcorn Cup Squishy', variant: 'Classic', price: 9.99, inventory: 0, image: 'https://cf.cjdropshipping.com/15204672/1093995935640.png', cjPid: 'C4880398-A6C6-48C2-AF37-7852296CD892', cjVid: '7F972F58-59AE-4921-AB7F-F19D923D9F47' },
     ],
     defaultVariantIndex: 0,
     description: `<p>Adorable simulation popcorn cup squeeze toy that provides satisfying stress relief. This unique fidget toy looks just like a real popcorn cup!</p>
@@ -326,8 +326,8 @@ export const cjDropshippingProducts: ProductPage[] = [
     tagline: 'Music meets magnetism',
     category: 'Desk Toy',
     variants: [
-      { sku: 'CJ-FERRO-YLW', name: 'Dancing Ferrofluid Speaker', variant: 'Yellow', color: 'Yellow', colorHex: '#FFD700', price: 149.99, image: 'https://cf.cjdropshipping.com/quick/product/816355c6-0da3-43e7-89e0-09f28b925818.jpg', cjPid: '1719271582901743616', cjVid: '1719271582981435392' },
-      { sku: 'CJ-FERRO-GRY', name: 'Dancing Ferrofluid Speaker', variant: 'Gray', color: 'Gray', colorHex: '#808080', price: 149.99, image: 'https://cf.cjdropshipping.com/quick/product/f466ca43-21d0-4430-8f66-81703ca29e5e.jpg', cjPid: '1719271582901743616', cjVid: '1719271583048544256' },
+      { sku: 'CJ-FERRO-YLW', name: 'Dancing Ferrofluid Speaker', variant: 'Yellow', color: 'Yellow', colorHex: '#FFD700', price: 149.99, inventory: 0, image: 'https://cf.cjdropshipping.com/quick/product/816355c6-0da3-43e7-89e0-09f28b925818.jpg', cjPid: '1719271582901743616', cjVid: '1719271582981435392' },
+      { sku: 'CJ-FERRO-GRY', name: 'Dancing Ferrofluid Speaker', variant: 'Gray', color: 'Gray', colorHex: '#808080', price: 149.99, inventory: 0, image: 'https://cf.cjdropshipping.com/quick/product/f466ca43-21d0-4430-8f66-81703ca29e5e.jpg', cjPid: '1719271582901743616', cjVid: '1719271583048544256' },
     ],
     defaultVariantIndex: 0,
     description: `<p>Transform your music into a visual masterpiece with this mesmerizing dancing ferrofluid speaker. The magnetic fluid dances to the beat, creating captivating shapes that respond to different rhythms.</p>
@@ -364,12 +364,12 @@ export const cjDropshippingProducts: ProductPage[] = [
     tagline: 'Throw, stick, squeeze, repeat',
     category: 'Squishy',
     variants: [
-      { sku: 'CJ-WALL-BALL-4PK', name: 'Sticky Wall Ball', variant: '4-Pack Rainbow', price: 5.99, image: 'https://cf.cjdropshipping.com/2044/18607719711932.png', cjPid: '3D7BC0C9-CC09-4FAB-94A2-5775F0D11661', cjVid: '0C468BCE-95D2-49FB-B125-111E227F7CB5' },
-      { sku: 'CJ-WALL-BALL-GLOW4', name: 'Sticky Wall Ball', variant: '4-Pack Glow', price: 6.99, image: 'https://cf.cjdropshipping.com/2054/4786525385188.png', cjPid: '3D7BC0C9-CC09-4FAB-94A2-5775F0D11661', cjVid: '82B5C037-92D6-439C-AE87-418B1E283371' },
-      { sku: 'CJ-WALL-BALL-BLU', name: 'Sticky Wall Ball', variant: 'Blue LED', color: 'Blue', colorHex: '#1E90FF', price: 2.99, image: 'https://cf.cjdropshipping.com/203104/1350329882.jpg', cjPid: '3D7BC0C9-CC09-4FAB-94A2-5775F0D11661', cjVid: '9434DFAA-1F07-4E9B-BF23-44A34348A6C2' },
-      { sku: 'CJ-WALL-BALL-GRN', name: 'Sticky Wall Ball', variant: 'Green LED', color: 'Green', colorHex: '#32CD32', price: 2.99, image: 'https://cf.cjdropshipping.com/203104/2589223855002.jpg', cjPid: '3D7BC0C9-CC09-4FAB-94A2-5775F0D11661', cjVid: 'D36E8507-9141-425C-A5E6-A1FA2868C3E9' },
-      { sku: 'CJ-WALL-BALL-RED', name: 'Sticky Wall Ball', variant: 'Red LED', color: 'Red', colorHex: '#DC143C', price: 2.99, image: 'https://cf.cjdropshipping.com/203104/488402365204.jpg', cjPid: '3D7BC0C9-CC09-4FAB-94A2-5775F0D11661', cjVid: 'FD042B76-A243-436E-9B97-7014407AB987' },
-      { sku: 'CJ-WALL-BALL-8PK', name: 'Sticky Wall Ball', variant: '8-Pack LED', price: 9.99, image: 'https://cf.cjdropshipping.com/2054/5811979488440.jpg', cjPid: '3D7BC0C9-CC09-4FAB-94A2-5775F0D11661', cjVid: 'F021E2C4-FBD1-4022-9236-B59DAB3CBA58' },
+      { sku: 'CJ-WALL-BALL-4PK', name: 'Sticky Wall Ball', variant: '4-Pack Rainbow', price: 5.99, inventory: 0, image: 'https://cf.cjdropshipping.com/2044/18607719711932.png', cjPid: '3D7BC0C9-CC09-4FAB-94A2-5775F0D11661', cjVid: '0C468BCE-95D2-49FB-B125-111E227F7CB5' },
+      { sku: 'CJ-WALL-BALL-GLOW4', name: 'Sticky Wall Ball', variant: '4-Pack Glow', price: 6.99, inventory: 0, image: 'https://cf.cjdropshipping.com/2054/4786525385188.png', cjPid: '3D7BC0C9-CC09-4FAB-94A2-5775F0D11661', cjVid: '82B5C037-92D6-439C-AE87-418B1E283371' },
+      { sku: 'CJ-WALL-BALL-BLU', name: 'Sticky Wall Ball', variant: 'Blue LED', color: 'Blue', colorHex: '#1E90FF', price: 2.99, inventory: 0, image: 'https://cf.cjdropshipping.com/203104/1350329882.jpg', cjPid: '3D7BC0C9-CC09-4FAB-94A2-5775F0D11661', cjVid: '9434DFAA-1F07-4E9B-BF23-44A34348A6C2' },
+      { sku: 'CJ-WALL-BALL-GRN', name: 'Sticky Wall Ball', variant: 'Green LED', color: 'Green', colorHex: '#32CD32', price: 2.99, inventory: 0, image: 'https://cf.cjdropshipping.com/203104/2589223855002.jpg', cjPid: '3D7BC0C9-CC09-4FAB-94A2-5775F0D11661', cjVid: 'D36E8507-9141-425C-A5E6-A1FA2868C3E9' },
+      { sku: 'CJ-WALL-BALL-RED', name: 'Sticky Wall Ball', variant: 'Red LED', color: 'Red', colorHex: '#DC143C', price: 2.99, inventory: 0, image: 'https://cf.cjdropshipping.com/203104/488402365204.jpg', cjPid: '3D7BC0C9-CC09-4FAB-94A2-5775F0D11661', cjVid: 'FD042B76-A243-436E-9B97-7014407AB987' },
+      { sku: 'CJ-WALL-BALL-8PK', name: 'Sticky Wall Ball', variant: '8-Pack LED', price: 9.99, inventory: 0, image: 'https://cf.cjdropshipping.com/2054/5811979488440.jpg', cjPid: '3D7BC0C9-CC09-4FAB-94A2-5775F0D11661', cjVid: 'F021E2C4-FBD1-4022-9236-B59DAB3CBA58' },
     ],
     defaultVariantIndex: 0,
     description: `<p>Fun and satisfying sticky wall balls that stick to walls, ceilings, and smooth surfaces! Throw them against the wall and watch them stick, then slowly peel off. Perfect stress relief for all ages.</p>
@@ -405,13 +405,13 @@ export const cjDropshippingProducts: ProductPage[] = [
     tagline: 'Stylish stress relief jewelry',
     category: 'Desk Toy',
     variants: [
-      { sku: 'CJ-RING-BUTTERFLY', name: 'Fidget Anxiety Ring', variant: 'Butterfly', color: 'Gold', colorHex: '#D4AF37', price: 6.99, image: 'https://cf.cjdropshipping.com/d84460a0-748b-46b1-ae82-3d9a5588ac24.jpg', cjPid: '1463420820905922560', cjVid: '1463420820985614336' },
-      { sku: 'CJ-RING-BAND', name: 'Fidget Anxiety Ring', variant: 'Simple Band', color: 'Silver', colorHex: '#C0C0C0', price: 4.99, image: 'https://cf.cjdropshipping.com/ff1d0b0f-be2a-44b6-9a3f-9f7c74958451.jpg', cjPid: '1463420820905922560', cjVid: '1463420820989808640' },
-      { sku: 'CJ-RING-FLOWER', name: 'Fidget Anxiety Ring', variant: 'Flower', color: 'Rose Gold', colorHex: '#B76E79', price: 4.99, image: 'https://cf.cjdropshipping.com/1783d3bb-70f4-4438-9fc4-d821593cc3b5.jpg', cjPid: '1463420820905922560', cjVid: '1463420820989808641' },
-      { sku: 'CJ-RING-STAR', name: 'Fidget Anxiety Ring', variant: 'Star', color: 'Gold', colorHex: '#FFD700', price: 6.99, image: 'https://cf.cjdropshipping.com/4c6225df-830c-4259-b8cc-cdb2ec298c78.jpg', cjPid: '1463420820905922560', cjVid: '1463420820994002944' },
-      { sku: 'CJ-RING-HEART', name: 'Fidget Anxiety Ring', variant: 'Heart', color: 'Silver', colorHex: '#C0C0C0', price: 4.99, image: 'https://cf.cjdropshipping.com/58ec2f49-0ad1-4c26-8ce2-d64e2c96e71d.jpg', cjPid: '1463420820905922560', cjVid: '1463420820994002945' },
-      { sku: 'CJ-RING-MOON', name: 'Fidget Anxiety Ring', variant: 'Moon & Stars', color: 'Gold', colorHex: '#D4AF37', price: 4.99, image: 'https://cf.cjdropshipping.com/31d2b043-00ce-4785-8b80-c10d8c06d408.jpg', cjPid: '1463420820905922560', cjVid: '1463420820998197248' },
-      { sku: 'CJ-RING-WAVE', name: 'Fidget Anxiety Ring', variant: 'Wave', color: 'Silver', colorHex: '#C0C0C0', price: 4.99, image: 'https://cf.cjdropshipping.com/ae0a37d6-214b-4d97-b4ed-245b6027bb83.jpg', cjPid: '1463420820905922560', cjVid: '1463420820998197249' },
+      { sku: 'CJ-RING-BUTTERFLY', name: 'Fidget Anxiety Ring', variant: 'Butterfly', color: 'Gold', colorHex: '#D4AF37', price: 6.99, inventory: 0, image: 'https://cf.cjdropshipping.com/d84460a0-748b-46b1-ae82-3d9a5588ac24.jpg', cjPid: '1463420820905922560', cjVid: '1463420820985614336' },
+      { sku: 'CJ-RING-BAND', name: 'Fidget Anxiety Ring', variant: 'Simple Band', color: 'Silver', colorHex: '#C0C0C0', price: 4.99, inventory: 0, image: 'https://cf.cjdropshipping.com/ff1d0b0f-be2a-44b6-9a3f-9f7c74958451.jpg', cjPid: '1463420820905922560', cjVid: '1463420820989808640' },
+      { sku: 'CJ-RING-FLOWER', name: 'Fidget Anxiety Ring', variant: 'Flower', color: 'Rose Gold', colorHex: '#B76E79', price: 4.99, inventory: 0, image: 'https://cf.cjdropshipping.com/1783d3bb-70f4-4438-9fc4-d821593cc3b5.jpg', cjPid: '1463420820905922560', cjVid: '1463420820989808641' },
+      { sku: 'CJ-RING-STAR', name: 'Fidget Anxiety Ring', variant: 'Star', color: 'Gold', colorHex: '#FFD700', price: 6.99, inventory: 0, image: 'https://cf.cjdropshipping.com/4c6225df-830c-4259-b8cc-cdb2ec298c78.jpg', cjPid: '1463420820905922560', cjVid: '1463420820994002944' },
+      { sku: 'CJ-RING-HEART', name: 'Fidget Anxiety Ring', variant: 'Heart', color: 'Silver', colorHex: '#C0C0C0', price: 4.99, inventory: 0, image: 'https://cf.cjdropshipping.com/58ec2f49-0ad1-4c26-8ce2-d64e2c96e71d.jpg', cjPid: '1463420820905922560', cjVid: '1463420820994002945' },
+      { sku: 'CJ-RING-MOON', name: 'Fidget Anxiety Ring', variant: 'Moon & Stars', color: 'Gold', colorHex: '#D4AF37', price: 4.99, inventory: 0, image: 'https://cf.cjdropshipping.com/31d2b043-00ce-4785-8b80-c10d8c06d408.jpg', cjPid: '1463420820905922560', cjVid: '1463420820998197248' },
+      { sku: 'CJ-RING-WAVE', name: 'Fidget Anxiety Ring', variant: 'Wave', color: 'Silver', colorHex: '#C0C0C0', price: 4.99, inventory: 0, image: 'https://cf.cjdropshipping.com/ae0a37d6-214b-4d97-b4ed-245b6027bb83.jpg', cjPid: '1463420820905922560', cjVid: '1463420820998197249' },
     ],
     defaultVariantIndex: 0,
     description: `<p>Elegant spinner rings designed for discrete stress relief. The rotating band spins smoothly around your finger, providing a calming fidget experience that looks like stylish jewelry.</p>
@@ -446,13 +446,13 @@ export const cjDropshippingProducts: ProductPage[] = [
     tagline: 'Self-love meets stress relief',
     category: 'Desk Toy',
     variants: [
-      { sku: 'CJ-HEART-RING-5', name: 'Heart Spinner Ring', variant: 'Size 5', price: 4.99, image: 'https://cf.cjdropshipping.com/quick/product/b14f01c3-5fa9-4a92-a076-108edd15c9da.jpg', cjPid: '1547121202051952640', cjVid: '1547121202454605824' },
-      { sku: 'CJ-HEART-RING-6', name: 'Heart Spinner Ring', variant: 'Size 6', price: 4.99, image: 'https://cf.cjdropshipping.com/quick/product/b14f01c3-5fa9-4a92-a076-108edd15c9da.jpg', cjPid: '1547121202051952640', cjVid: '1547121202437828608' },
-      { sku: 'CJ-HEART-RING-7', name: 'Heart Spinner Ring', variant: 'Size 7', price: 4.99, image: 'https://cf.cjdropshipping.com/quick/product/b14f01c3-5fa9-4a92-a076-108edd15c9da.jpg', cjPid: '1547121202051952640', cjVid: '1547121202442022912' },
-      { sku: 'CJ-HEART-RING-8', name: 'Heart Spinner Ring', variant: 'Size 8', price: 4.99, image: 'https://cf.cjdropshipping.com/quick/product/b14f01c3-5fa9-4a92-a076-108edd15c9da.jpg', cjPid: '1547121202051952640', cjVid: '1547121202446217216' },
-      { sku: 'CJ-HEART-RING-9', name: 'Heart Spinner Ring', variant: 'Size 9', price: 4.99, image: 'https://cf.cjdropshipping.com/quick/product/b14f01c3-5fa9-4a92-a076-108edd15c9da.jpg', cjPid: '1547121202051952640', cjVid: '1547121202446217217' },
-      { sku: 'CJ-HEART-RING-10', name: 'Heart Spinner Ring', variant: 'Size 10', price: 4.99, image: 'https://cf.cjdropshipping.com/quick/product/b14f01c3-5fa9-4a92-a076-108edd15c9da.jpg', cjPid: '1547121202051952640', cjVid: '1547121202450411520' },
-      { sku: 'CJ-HEART-RING-11', name: 'Heart Spinner Ring', variant: 'Size 11', price: 4.99, image: 'https://cf.cjdropshipping.com/quick/product/b14f01c3-5fa9-4a92-a076-108edd15c9da.jpg', cjPid: '1547121202051952640', cjVid: '1547121202450411521' },
+      { sku: 'CJ-HEART-RING-5', name: 'Heart Spinner Ring', variant: 'Size 5', price: 4.99, inventory: 0, image: 'https://cf.cjdropshipping.com/quick/product/b14f01c3-5fa9-4a92-a076-108edd15c9da.jpg', cjPid: '1547121202051952640', cjVid: '1547121202454605824' },
+      { sku: 'CJ-HEART-RING-6', name: 'Heart Spinner Ring', variant: 'Size 6', price: 4.99, inventory: 0, image: 'https://cf.cjdropshipping.com/quick/product/b14f01c3-5fa9-4a92-a076-108edd15c9da.jpg', cjPid: '1547121202051952640', cjVid: '1547121202437828608' },
+      { sku: 'CJ-HEART-RING-7', name: 'Heart Spinner Ring', variant: 'Size 7', price: 4.99, inventory: 0, image: 'https://cf.cjdropshipping.com/quick/product/b14f01c3-5fa9-4a92-a076-108edd15c9da.jpg', cjPid: '1547121202051952640', cjVid: '1547121202442022912' },
+      { sku: 'CJ-HEART-RING-8', name: 'Heart Spinner Ring', variant: 'Size 8', price: 4.99, inventory: 0, image: 'https://cf.cjdropshipping.com/quick/product/b14f01c3-5fa9-4a92-a076-108edd15c9da.jpg', cjPid: '1547121202051952640', cjVid: '1547121202446217216' },
+      { sku: 'CJ-HEART-RING-9', name: 'Heart Spinner Ring', variant: 'Size 9', price: 4.99, inventory: 0, image: 'https://cf.cjdropshipping.com/quick/product/b14f01c3-5fa9-4a92-a076-108edd15c9da.jpg', cjPid: '1547121202051952640', cjVid: '1547121202446217217' },
+      { sku: 'CJ-HEART-RING-10', name: 'Heart Spinner Ring', variant: 'Size 10', price: 4.99, inventory: 0, image: 'https://cf.cjdropshipping.com/quick/product/b14f01c3-5fa9-4a92-a076-108edd15c9da.jpg', cjPid: '1547121202051952640', cjVid: '1547121202450411520' },
+      { sku: 'CJ-HEART-RING-11', name: 'Heart Spinner Ring', variant: 'Size 11', price: 4.99, inventory: 0, image: 'https://cf.cjdropshipping.com/quick/product/b14f01c3-5fa9-4a92-a076-108edd15c9da.jpg', cjPid: '1547121202051952640', cjVid: '1547121202450411521' },
     ],
     defaultVariantIndex: 2,
     description: `<p>A beautiful two-tone heart spinner ring with three rotatable circles. Turn them to relieve anxiety while wearing gorgeous jewelry that catches everyone's eye.</p>
@@ -489,11 +489,11 @@ export const cjDropshippingProducts: ProductPage[] = [
     variants: [
       { sku: 'CJ-SAND-PINK', name: 'Magic Sand', variant: 'Pink', color: 'Pink', colorHex: '#FF69B4', price: 2.99, image: 'https://cf.cjdropshipping.com/20190803/2446172977195.jpg', cjPid: 'FC3E917A-0094-45D1-B80E-053F7EFFDBE5', cjVid: 'A5ABB0BD-7FCC-4ECF-9D0D-6CD7DD0D42FC', cjWarehouse: 'US' },
       { sku: 'CJ-SAND-PURPLE', name: 'Magic Sand', variant: 'Purple', color: 'Purple', colorHex: '#8A2BE2', price: 2.99, image: 'https://cf.cjdropshipping.com/20190803/38729033035632.jpg', cjPid: 'FC3E917A-0094-45D1-B80E-053F7EFFDBE5', cjVid: 'FD9C9C1E-E612-4034-93C7-78939D29B074', cjWarehouse: 'US' },
-      { sku: 'CJ-SAND-BLUE', name: 'Magic Sand', variant: 'Blue', color: 'Blue', colorHex: '#1E90FF', price: 2.99, image: 'https://cf.cjdropshipping.com/20190803/196979096855.jpg', cjPid: 'FC3E917A-0094-45D1-B80E-053F7EFFDBE5', cjVid: 'D7940AE6-F68E-49C7-8D22-7A2BA68E5FE8', cjWarehouse: 'CN' },
+      { sku: 'CJ-SAND-BLUE', name: 'Magic Sand', variant: 'Blue', color: 'Blue', colorHex: '#1E90FF', price: 2.99, inventory: 0, image: 'https://cf.cjdropshipping.com/20190803/196979096855.jpg', cjPid: 'FC3E917A-0094-45D1-B80E-053F7EFFDBE5', cjVid: 'D7940AE6-F68E-49C7-8D22-7A2BA68E5FE8', cjWarehouse: 'CN' },
       { sku: 'CJ-SAND-RED', name: 'Magic Sand', variant: 'Red', color: 'Red', colorHex: '#DC143C', price: 2.99, image: 'https://cf.cjdropshipping.com/20190803/1572400752072.jpg', cjPid: 'FC3E917A-0094-45D1-B80E-053F7EFFDBE5', cjVid: '5BF25D63-320E-4C9B-8027-4073BD296D6A', cjWarehouse: 'US' },
       { sku: 'CJ-SAND-ORANGE', name: 'Magic Sand', variant: 'Orange', color: 'Orange', colorHex: '#FF8C00', price: 2.99, image: 'https://cf.cjdropshipping.com/15647616/1567367686041.jpg', cjPid: 'FC3E917A-0094-45D1-B80E-053F7EFFDBE5', cjVid: 'A411EC20-8A02-403A-8A6B-FDC97A8219DD', cjWarehouse: 'US' },
       { sku: 'CJ-SAND-YELLOW', name: 'Magic Sand', variant: 'Yellow', color: 'Yellow', colorHex: '#FFD700', price: 2.99, image: 'https://cf.cjdropshipping.com/20190803/810830999777.jpg', cjPid: 'FC3E917A-0094-45D1-B80E-053F7EFFDBE5', cjVid: '1E13C8E1-76A1-42C4-8B6B-393603B48FFD', cjWarehouse: 'US' },
-      { sku: 'CJ-SAND-4PACK', name: 'Magic Sand', variant: '4-Pack', price: 9.99, image: 'https://cf.cjdropshipping.com/4386ae6c-5fd4-4052-b37a-0c228b9dea3a.jpg', cjPid: 'FC3E917A-0094-45D1-B80E-053F7EFFDBE5', cjVid: '1549323625495539712', cjWarehouse: 'CN' },
+      { sku: 'CJ-SAND-4PACK', name: 'Magic Sand', variant: '4-Pack', price: 9.99, inventory: 0, image: 'https://cf.cjdropshipping.com/4386ae6c-5fd4-4052-b37a-0c228b9dea3a.jpg', cjPid: 'FC3E917A-0094-45D1-B80E-053F7EFFDBE5', cjVid: '1549323625495539712', cjWarehouse: 'CN' },
     ],
     defaultVariantIndex: 0,
     description: `<p>Experience the magic of hydrophobic sand that never gets wet! This amazing Mars Space Sand can be molded, sculpted, and shaped into endless creations, then breaks apart with a satisfying texture.</p>
