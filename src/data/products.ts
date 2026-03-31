@@ -480,6 +480,47 @@ export const cjDropshippingProducts: ProductPage[] = [
     metaTitle: 'Heart Spinner Ring | Fidget WRLD',
     metaDescription: 'Vintage two-tone heart spinner ring with rotatable hearts. Beautiful anxiety relief jewelry in sizes 5-11.',
   },
+  // Product 8: Magic Sand (CJ PID: FC3E917A-0094-45D1-B80E-053F7EFFDBE5)
+  {
+    slug: 'cj-magic-sand',
+    name: 'Magic Sand',
+    tagline: 'Sculpt, mold, and play',
+    category: 'Squishy',
+    variants: [
+      { sku: 'CJ-SAND-PINK', name: 'Magic Sand', variant: 'Pink', color: 'Pink', colorHex: '#FF69B4', price: 2.99, image: 'https://cf.cjdropshipping.com/20190803/2446172977195.jpg', cjPid: 'FC3E917A-0094-45D1-B80E-053F7EFFDBE5', cjVid: 'A5ABB0BD-7FCC-4ECF-9D0D-6CD7DD0D42FC' },
+      { sku: 'CJ-SAND-PURPLE', name: 'Magic Sand', variant: 'Purple', color: 'Purple', colorHex: '#8A2BE2', price: 2.99, image: 'https://cf.cjdropshipping.com/20190803/38729033035632.jpg', cjPid: 'FC3E917A-0094-45D1-B80E-053F7EFFDBE5', cjVid: 'FD9C9C1E-E612-4034-93C7-78939D29B074' },
+      { sku: 'CJ-SAND-BLUE', name: 'Magic Sand', variant: 'Blue', color: 'Blue', colorHex: '#1E90FF', price: 2.99, image: 'https://cf.cjdropshipping.com/20190803/196979096855.jpg', cjPid: 'FC3E917A-0094-45D1-B80E-053F7EFFDBE5', cjVid: 'D7940AE6-F68E-49C7-8D22-7A2BA68E5FE8' },
+      { sku: 'CJ-SAND-RED', name: 'Magic Sand', variant: 'Red', color: 'Red', colorHex: '#DC143C', price: 2.99, image: 'https://cf.cjdropshipping.com/20190803/1572400752072.jpg', cjPid: 'FC3E917A-0094-45D1-B80E-053F7EFFDBE5', cjVid: '5BF25D63-320E-4C9B-8027-4073BD296D6A' },
+      { sku: 'CJ-SAND-ORANGE', name: 'Magic Sand', variant: 'Orange', color: 'Orange', colorHex: '#FF8C00', price: 2.99, image: 'https://cf.cjdropshipping.com/15647616/1567367686041.jpg', cjPid: 'FC3E917A-0094-45D1-B80E-053F7EFFDBE5', cjVid: 'A411EC20-8A02-403A-8A6B-FDC97A8219DD' },
+      { sku: 'CJ-SAND-YELLOW', name: 'Magic Sand', variant: 'Yellow', color: 'Yellow', colorHex: '#FFD700', price: 2.99, image: 'https://cf.cjdropshipping.com/20190803/810830999777.jpg', cjPid: 'FC3E917A-0094-45D1-B80E-053F7EFFDBE5', cjVid: '1E13C8E1-76A1-42C4-8B6B-393603B48FFD' },
+      { sku: 'CJ-SAND-4PACK', name: 'Magic Sand', variant: '4-Pack', price: 9.99, image: 'https://cf.cjdropshipping.com/4386ae6c-5fd4-4052-b37a-0c228b9dea3a.jpg', cjPid: 'FC3E917A-0094-45D1-B80E-053F7EFFDBE5', cjVid: '1549323625495539712' },
+    ],
+    defaultVariantIndex: 0,
+    description: `<p>Experience the magic of hydrophobic sand that never gets wet! This amazing Mars Space Sand can be molded, sculpted, and shaped into endless creations, then breaks apart with a satisfying texture.</p>
+<p>Non-toxic and safe for kids, this educational toy promotes creativity, fine motor skills, and sensory play. Unlike regular sand, it stays dry even underwater and cleans up easily without mess.</p>`,
+    features: [
+      'Hydrophobic - stays dry underwater',
+      'Non-toxic and safe for kids',
+      'Moldable and sculptable',
+      'Easy cleanup - no mess',
+      'Promotes creativity and fine motor skills',
+    ],
+    specifications: {
+      'Material': 'Hydrophobic Sand',
+      'Weight': '200g per pack',
+      'Type': 'Sensory / Educational Toy',
+      'Safety': 'Non-toxic',
+    },
+    moods: ['play', 'calm', 'focus'],
+    audiences: ['kids', 'all'],
+    textures: ['soft', 'mixed'],
+    ageRecommendation: '3+',
+    materials: ['Hydrophobic Sand'],
+    isNew: true,
+    relatedSlugs: ['cj-popcorn-squishy', 'stress-ball-set', 'cj-sticky-wall-ball'],
+    metaTitle: 'Magic Sand | Fidget WRLD',
+    metaDescription: 'Hydrophobic magic sand that never gets wet. Non-toxic, moldable sensory toy for creative play. Available in 6 colors.',
+  },
 ];
 
 // Add CJ products to the main product list
