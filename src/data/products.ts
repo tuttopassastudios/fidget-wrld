@@ -534,7 +534,7 @@ export const cjDropshippingProducts: ProductPage[] = [
       { sku: 'CJ-MAGPUTTY-GRN', name: 'Magnetic Putty', variant: 'Green', color: 'Green', colorHex: '#32CD32', price: 3.99, image: 'https://cf.cjdropshipping.com/15144192/577122354972.png', cjPid: '97C637BB-DB86-49D1-9B55-E94F6A46D2A6', cjVid: '2B9FE862-9735-4273-8DA2-8D8519127ECE' },
       { sku: 'CJ-MAGPUTTY-PNK', name: 'Magnetic Putty', variant: 'Pink', color: 'Pink', colorHex: '#FF69B4', price: 3.99, image: 'https://cf.cjdropshipping.com/15144192/1488641220192.png', cjPid: '97C637BB-DB86-49D1-9B55-E94F6A46D2A6', cjVid: '032B016D-2656-4C3F-A7A6-6ABADB1B5694' },
       { sku: 'CJ-MAGPUTTY-SLV', name: 'Magnetic Putty', variant: 'Silver', color: 'Silver', colorHex: '#C0C0C0', price: 3.99, image: 'https://cf.cjdropshipping.com/15144192/765565698135.png', cjPid: '97C637BB-DB86-49D1-9B55-E94F6A46D2A6', cjVid: 'DA889DF1-BADD-4851-B2C2-C500DE219C5D' },
-      { sku: 'CJ-MAGPUTTY-6PK', name: 'Magnetic Putty', variant: '6-Pack', price: 14.99, image: 'https://cf.cjdropshipping.com/15144192/2977873394650.png', cjPid: '97C637BB-DB86-49D1-9B55-E94F6A46D2A6', cjVid: '27A9BB5A-4B5B-43C1-B756-B1BB158CC67C' },
+      { sku: 'CJ-MAGPUTTY-6PK', name: 'Magnetic Putty', variant: '6-Pack', price: 14.99, image: 'https://cf.cjdropshipping.com/15144192/2977873394650.png', inventory: 0, cjPid: '97C637BB-DB86-49D1-9B55-E94F6A46D2A6', cjVid: '27A9BB5A-4B5B-43C1-B756-B1BB158CC67C' },
     ],
     defaultVariantIndex: 2,
     description: `<p>Watch in amazement as this incredible magnetic putty comes alive! Place a magnet nearby and watch the putty slowly engulf it, creating mesmerizing tendrils and shapes as it responds to the magnetic field.</p>
