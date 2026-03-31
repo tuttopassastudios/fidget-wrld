@@ -521,6 +521,47 @@ export const cjDropshippingProducts: ProductPage[] = [
     metaTitle: 'Magic Sand | Fidget WRLD',
     metaDescription: 'Hydrophobic magic sand that never gets wet. Non-toxic, moldable sensory toy for creative play. Available in 6 colors.',
   },
+  // Product 9: Magnetic Putty (CJ PID: 97C637BB-DB86-49D1-9B55-E94F6A46D2A6)
+  {
+    slug: 'cj-magnetic-putty',
+    name: 'Magnetic Putty',
+    tagline: 'Mesmerizing magnetic magic',
+    category: 'Magnetic',
+    variants: [
+      { sku: 'CJ-MAGPUTTY-BLK', name: 'Magnetic Putty', variant: 'Black', color: 'Black', colorHex: '#2a2a2a', price: 3.99, image: 'https://cf.cjdropshipping.com/15144192/1945421527452.png', inventory: 0, cjPid: '97C637BB-DB86-49D1-9B55-E94F6A46D2A6', cjVid: '7F085E6B-3BB8-4F73-9779-6E08AE34E93F' },
+      { sku: 'CJ-MAGPUTTY-BLU', name: 'Magnetic Putty', variant: 'Blue', color: 'Blue', colorHex: '#1E90FF', price: 3.99, image: 'https://cf.cjdropshipping.com/15144192/550769235177.png', inventory: 0, cjPid: '97C637BB-DB86-49D1-9B55-E94F6A46D2A6', cjVid: 'F9EAF989-836D-49F0-BBA6-8465BCD07079' },
+      { sku: 'CJ-MAGPUTTY-ORG', name: 'Magnetic Putty', variant: 'Orange', color: 'Orange', colorHex: '#FF8C00', price: 3.99, image: 'https://cf.cjdropshipping.com/15144192/11754451409688.png', cjPid: '97C637BB-DB86-49D1-9B55-E94F6A46D2A6', cjVid: 'EE24B741-6B0E-49BD-9250-DF96275CFA65' },
+      { sku: 'CJ-MAGPUTTY-GRN', name: 'Magnetic Putty', variant: 'Green', color: 'Green', colorHex: '#32CD32', price: 3.99, image: 'https://cf.cjdropshipping.com/15144192/577122354972.png', cjPid: '97C637BB-DB86-49D1-9B55-E94F6A46D2A6', cjVid: '2B9FE862-9735-4273-8DA2-8D8519127ECE' },
+      { sku: 'CJ-MAGPUTTY-PNK', name: 'Magnetic Putty', variant: 'Pink', color: 'Pink', colorHex: '#FF69B4', price: 3.99, image: 'https://cf.cjdropshipping.com/15144192/1488641220192.png', cjPid: '97C637BB-DB86-49D1-9B55-E94F6A46D2A6', cjVid: '032B016D-2656-4C3F-A7A6-6ABADB1B5694' },
+      { sku: 'CJ-MAGPUTTY-SLV', name: 'Magnetic Putty', variant: 'Silver', color: 'Silver', colorHex: '#C0C0C0', price: 3.99, image: 'https://cf.cjdropshipping.com/15144192/765565698135.png', cjPid: '97C637BB-DB86-49D1-9B55-E94F6A46D2A6', cjVid: 'DA889DF1-BADD-4851-B2C2-C500DE219C5D' },
+      { sku: 'CJ-MAGPUTTY-6PK', name: 'Magnetic Putty', variant: '6-Pack', price: 14.99, image: 'https://cf.cjdropshipping.com/15144192/2977873394650.png', cjPid: '97C637BB-DB86-49D1-9B55-E94F6A46D2A6', cjVid: '27A9BB5A-4B5B-43C1-B756-B1BB158CC67C' },
+    ],
+    defaultVariantIndex: 2,
+    description: `<p>Watch in amazement as this incredible magnetic putty comes alive! Place a magnet nearby and watch the putty slowly engulf it, creating mesmerizing tendrils and shapes as it responds to the magnetic field.</p>
+<p>Perfect for stress relief and ASMR-style relaxation. The putty is soft, pliable, and endlessly entertaining. Great for desk fidgeting, science demonstrations, or just mesmerizing fun.</p>`,
+    features: [
+      'Responds to magnetic fields',
+      'Soft and pliable texture',
+      'Mesmerizing ASMR-style movement',
+      'Great for stress relief',
+      'Includes strong magnet',
+    ],
+    specifications: {
+      'Material': 'Magnetic Putty Compound',
+      'Weight': '50g per tin',
+      'Includes': 'Putty + Magnet',
+      'Type': 'Magnetic Fidget Toy',
+    },
+    moods: ['calm', 'focus', 'play'],
+    audiences: ['adults', 'kids', 'office'],
+    textures: ['soft', 'smooth'],
+    ageRecommendation: '8+',
+    materials: ['Magnetic Putty', 'Iron Particles'],
+    isNew: true,
+    relatedSlugs: ['magnet-balls', 'cj-ferrofluid-speaker', 'cj-magic-sand'],
+    metaTitle: 'Magnetic Putty | Fidget WRLD',
+    metaDescription: 'Mesmerizing magnetic putty that swallows magnets. Watch it come alive with incredible magnetic effects. Perfect stress relief fidget toy.',
+  },
 ];
 
 // Add CJ products to the main product list
