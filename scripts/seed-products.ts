@@ -51,6 +51,7 @@ async function seedProducts() {
       is_new: product.isNew ?? false,
       is_bestseller: product.isBestseller ?? false,
       is_limited: product.isLimited ?? false,
+      is_out_of_stock: product.isOutOfStock ?? false,
       related_slugs: product.relatedSlugs ?? null,
       about: product.about ?? null,
       care_instructions: product.careInstructions ?? null,
