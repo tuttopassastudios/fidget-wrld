@@ -48,15 +48,16 @@ export function VariantSelector({ variants, selectedIndex, onSelect }: VariantSe
       <label id="variant-label">{hasColorSwatches ? 'Color:' : 'Size:'}</label>
       <div className="variant-options" role="radiogroup" aria-labelledby="variant-label" onKeyDown={handleKeyDown}>
         {variants.map((v, i) => {
+          const isOutOfStock = v.inventory === 0;
           if (hasColorSwatches && v.colorHex) {
             return (
               <button
                 key={v.sku}
                 role="radio"
                 aria-checked={i === selectedIndex}
-                aria-label={v.variant}
+                aria-label={`${v.variant}${isOutOfStock ? ' (Out of Stock)' : ''}`}
                 tabIndex={i === selectedIndex ? 0 : -1}
-                className={`variant-option${i === selectedIndex ? ' active' : ''}`}
+                className={`variant-option${i === selectedIndex ? ' active' : ''}${isOutOfStock ? ' out-of-stock' : ''}`}
                 onClick={() => { trigger('select'); onSelect(i); }}
                 style={{
                   display: 'inline-flex',
@@ -67,6 +68,7 @@ export function VariantSelector({ variants, selectedIndex, onSelect }: VariantSe
                   background: 'none',
                   border: 'none',
                   cursor: 'pointer',
+                  opacity: isOutOfStock ? 0.5 : 1,
                 }}
               >
                 <span
@@ -79,6 +81,7 @@ export function VariantSelector({ variants, selectedIndex, onSelect }: VariantSe
                     outline: i === selectedIndex ? '2px solid var(--color-accent-primary)' : '1px solid var(--color-border)',
                     outlineOffset: 2,
                     transition: 'outline 0.15s',
+                    position: 'relative',
                   }}
                   aria-hidden="true"
                 />
@@ -87,6 +90,7 @@ export function VariantSelector({ variants, selectedIndex, onSelect }: VariantSe
                   color: i === selectedIndex ? 'var(--color-text-primary)' : 'var(--color-text-muted)',
                   fontWeight: i === selectedIndex ? 600 : 400,
                   whiteSpace: 'nowrap',
+                  textDecoration: isOutOfStock ? 'line-through' : 'none',
                 }}>
                   {v.variant}
                 </span>
@@ -99,10 +103,11 @@ export function VariantSelector({ variants, selectedIndex, onSelect }: VariantSe
               key={v.sku}
               role="radio"
               aria-checked={i === selectedIndex}
-              aria-label={`Size ${v.variant}`}
+              aria-label={`Size ${v.variant}${isOutOfStock ? ' (Out of Stock)' : ''}`}
               tabIndex={i === selectedIndex ? 0 : -1}
-              className={`variant-option${i === selectedIndex ? ' active' : ''}`}
+              className={`variant-option${i === selectedIndex ? ' active' : ''}${isOutOfStock ? ' out-of-stock' : ''}`}
               onClick={() => { trigger('select'); onSelect(i); }}
+              style={{ opacity: isOutOfStock ? 0.5 : 1, textDecoration: isOutOfStock ? 'line-through' : 'none' }}
             >
               {v.variant}
             </button>

@@ -133,9 +133,9 @@ export function ProductPageClient({ product }: { product: ProductPage }) {
           <div className={styles.meta}>
             <span>SKU: {variant.sku}</span>
             <span>Category: {product.category}</span>
-            <span className={styles.availability}>
+            <span className={`${styles.availability}${variant.inventory === 0 ? ` ${styles.outOfStock}` : ''}`}>
               <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="12" cy="12" r="6" /></svg>
-              In Stock
+              {variant.inventory === 0 ? 'Out of Stock' : 'In Stock'}
             </span>
           </div>
 
@@ -194,7 +194,13 @@ export function ProductPageClient({ product }: { product: ProductPage }) {
           )}
 
           <div className={styles.actions}>
-            <button className="btn btn-primary btn-lg" onClick={handleAddToCart}>Add to Cart</button>
+            <button
+              className="btn btn-primary btn-lg"
+              onClick={handleAddToCart}
+              disabled={variant.inventory === 0}
+            >
+              {variant.inventory === 0 ? 'Out of Stock' : 'Add to Cart'}
+            </button>
             <button
               className={`btn-wishlist${wishlisted ? ' active' : ''}`}
               onClick={handleWishlist}

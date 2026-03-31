@@ -94,6 +94,10 @@
   color: var(--color-success, #22c55e);
 }
 
+.outOfStock {
+  color: var(--color-error, #ef4444);
+}
+
 .price {
   font-size: var(--text-3xl);
   font-weight: var(--font-bold);
