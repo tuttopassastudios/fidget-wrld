@@ -106,7 +106,7 @@ export interface WishlistItem {
 }
 
 export interface PromoCode {
-  type: 'percent' | 'fixed' | 'freeship';
+  type: 'percent' | 'fixed' | 'freeship' | 'percent_freeship';
   value: number;
   min: number;
   label: string;

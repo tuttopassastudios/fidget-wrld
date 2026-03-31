@@ -45,6 +45,9 @@ export function PromoProvider({ children }: { children: ReactNode }) {
     if (activePromo.type === 'freeship') {
       return { discount: 0, freeShipping: true, label: `${activePromo.label} (${activePromo.code})` };
     }
+    if (activePromo.type === 'percent_freeship') {
+      return { discount: subtotal * (activePromo.value / 100), freeShipping: true, label: `${activePromo.label} (${activePromo.code})` };
+    }
     return { discount: 0, freeShipping: false, label: '' };
   }, [activePromo]);
 
