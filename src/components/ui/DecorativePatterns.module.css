@@ -11,12 +11,12 @@
   position: absolute;
   inset: 0;
   background-image:
-    radial-gradient(circle at 5% 15%, rgba(255, 107, 157, 0.15) 0, rgba(255, 107, 157, 0.15) var(--dot-radius, 8px), transparent var(--dot-radius, 8px)),
-    radial-gradient(circle at 95% 25%, rgba(255, 217, 61, 0.12) 0, rgba(255, 217, 61, 0.12) var(--dot-radius, 6px), transparent var(--dot-radius, 6px)),
-    radial-gradient(circle at 15% 85%, rgba(0, 180, 216, 0.12) 0, rgba(0, 180, 216, 0.12) var(--dot-radius, 10px), transparent var(--dot-radius, 10px)),
-    radial-gradient(circle at 85% 75%, rgba(255, 139, 106, 0.1) 0, rgba(255, 139, 106, 0.1) var(--dot-radius, 7px), transparent var(--dot-radius, 7px)),
-    radial-gradient(circle at 45% 5%, rgba(183, 148, 246, 0.1) 0, rgba(183, 148, 246, 0.1) var(--dot-radius, 5px), transparent var(--dot-radius, 5px)),
-    radial-gradient(circle at 55% 95%, rgba(255, 71, 87, 0.08) 0, rgba(255, 71, 87, 0.08) var(--dot-radius, 9px), transparent var(--dot-radius, 9px));
+    radial-gradient(circle at 5% 15%, rgba(59, 130, 246, 0.15) 0, rgba(59, 130, 246, 0.15) var(--dot-radius, 8px), transparent var(--dot-radius, 8px)),
+    radial-gradient(circle at 95% 25%, rgba(34, 197, 94, 0.12) 0, rgba(34, 197, 94, 0.12) var(--dot-radius, 6px), transparent var(--dot-radius, 6px)),
+    radial-gradient(circle at 15% 85%, rgba(6, 182, 212, 0.12) 0, rgba(6, 182, 212, 0.12) var(--dot-radius, 10px), transparent var(--dot-radius, 10px)),
+    radial-gradient(circle at 85% 75%, rgba(139, 92, 246, 0.1) 0, rgba(139, 92, 246, 0.1) var(--dot-radius, 7px), transparent var(--dot-radius, 7px)),
+    radial-gradient(circle at 45% 5%, rgba(59, 130, 246, 0.1) 0, rgba(59, 130, 246, 0.1) var(--dot-radius, 5px), transparent var(--dot-radius, 5px)),
+    radial-gradient(circle at 55% 95%, rgba(6, 182, 212, 0.08) 0, rgba(6, 182, 212, 0.08) var(--dot-radius, 9px), transparent var(--dot-radius, 9px));
 }
 
 .sparse::before {
@@ -45,32 +45,32 @@
     /* Top edge */
     repeating-linear-gradient(
       90deg,
-      var(--dot-border-color, var(--color-dot-pink, #FF6B9D)) 0,
-      var(--dot-border-color, var(--color-dot-pink, #FF6B9D)) calc(var(--dot-radius, 8px) * 2),
+      var(--dot-border-color, var(--color-dot-blue, #3B82F6)) 0,
+      var(--dot-border-color, var(--color-dot-blue, #3B82F6)) calc(var(--dot-radius, 8px) * 2),
       transparent calc(var(--dot-radius, 8px) * 2),
       transparent calc(var(--dot-radius, 8px) * 6)
     ),
     /* Bottom edge */
     repeating-linear-gradient(
       90deg,
-      var(--dot-border-color, var(--color-dot-pink, #FF6B9D)) 0,
-      var(--dot-border-color, var(--color-dot-pink, #FF6B9D)) calc(var(--dot-radius, 8px) * 2),
+      var(--dot-border-color, var(--color-dot-blue, #3B82F6)) 0,
+      var(--dot-border-color, var(--color-dot-blue, #3B82F6)) calc(var(--dot-radius, 8px) * 2),
       transparent calc(var(--dot-radius, 8px) * 2),
       transparent calc(var(--dot-radius, 8px) * 6)
     ),
     /* Left edge */
     repeating-linear-gradient(
       180deg,
-      var(--dot-border-color, var(--color-dot-pink, #FF6B9D)) 0,
-      var(--dot-border-color, var(--color-dot-pink, #FF6B9D)) calc(var(--dot-radius, 8px) * 2),
+      var(--dot-border-color, var(--color-dot-blue, #3B82F6)) 0,
+      var(--dot-border-color, var(--color-dot-blue, #3B82F6)) calc(var(--dot-radius, 8px) * 2),
       transparent calc(var(--dot-radius, 8px) * 2),
       transparent calc(var(--dot-radius, 8px) * 6)
     ),
     /* Right edge */
     repeating-linear-gradient(
       180deg,
-      var(--dot-border-color, var(--color-dot-pink, #FF6B9D)) 0,
-      var(--dot-border-color, var(--color-dot-pink, #FF6B9D)) calc(var(--dot-radius, 8px) * 2),
+      var(--dot-border-color, var(--color-dot-blue, #3B82F6)) 0,
+      var(--dot-border-color, var(--color-dot-blue, #3B82F6)) calc(var(--dot-radius, 8px) * 2),
       transparent calc(var(--dot-radius, 8px) * 2),
       transparent calc(var(--dot-radius, 8px) * 6)
     );
@@ -92,11 +92,11 @@
 /* Corner pattern — cluster of dots in a single corner */
 .corner::before {
   background-image:
-    radial-gradient(circle, var(--color-dot-pink, #FF6B9D) var(--dot-radius, 8px), transparent var(--dot-radius, 8px)),
-    radial-gradient(circle, var(--color-dot-yellow, #FFD93D) calc(var(--dot-radius, 8px) * 0.7), transparent calc(var(--dot-radius, 8px) * 0.7)),
-    radial-gradient(circle, var(--color-dot-cyan, #00B4D8) calc(var(--dot-radius, 8px) * 0.5), transparent calc(var(--dot-radius, 8px) * 0.5)),
-    radial-gradient(circle, var(--color-dot-coral, #FF8B6A) calc(var(--dot-radius, 8px) * 0.8), transparent calc(var(--dot-radius, 8px) * 0.8)),
-    radial-gradient(circle, var(--color-dot-violet, #B794F6) calc(var(--dot-radius, 8px) * 0.6), transparent calc(var(--dot-radius, 8px) * 0.6));
+    radial-gradient(circle, var(--color-dot-blue, #3B82F6) var(--dot-radius, 8px), transparent var(--dot-radius, 8px)),
+    radial-gradient(circle, var(--color-dot-green, #22C55E) calc(var(--dot-radius, 8px) * 0.7), transparent calc(var(--dot-radius, 8px) * 0.7)),
+    radial-gradient(circle, var(--color-dot-cyan, #06B6D4) calc(var(--dot-radius, 8px) * 0.5), transparent calc(var(--dot-radius, 8px) * 0.5)),
+    radial-gradient(circle, var(--color-dot-purple, #8B5CF6) calc(var(--dot-radius, 8px) * 0.8), transparent calc(var(--dot-radius, 8px) * 0.8)),
+    radial-gradient(circle, var(--color-dot-blue, #3B82F6) calc(var(--dot-radius, 8px) * 0.6), transparent calc(var(--dot-radius, 8px) * 0.6));
   background-repeat: no-repeat;
   opacity: 0.2;
 }
@@ -163,7 +163,7 @@
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  background: var(--shape-color, #FF6B9D);
+  background: var(--shape-color, #3B82F6);
   opacity: 0.15;
   left: var(--x, 50%);
   top: var(--y, 50%);
@@ -194,8 +194,8 @@
   border-radius: 50%;
   background: radial-gradient(
     circle,
-    rgba(255, 107, 157, 0.15) 0%,
-    rgba(255, 217, 61, 0.1) 40%,
+    rgba(59, 130, 246, 0.15) 0%,
+    rgba(34, 197, 94, 0.1) 40%,
     transparent 70%
   );
   filter: blur(40px);

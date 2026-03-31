@@ -29,11 +29,10 @@ export function PolkaDots({
   cornerPosition = 'top-right',
 }: PolkaDotsProps) {
   const defaultColors = [
-    'var(--color-dot-pink, #FF6B9D)',
-    'var(--color-dot-yellow, #FFD93D)',
-    'var(--color-dot-cyan, #00B4D8)',
-    'var(--color-dot-coral, #FF8B6A)',
-    'var(--color-dot-violet, #B794F6)',
+    'var(--color-dot-blue, #3B82F6)',
+    'var(--color-dot-green, #22C55E)',
+    'var(--color-dot-cyan, #06B6D4)',
+    'var(--color-dot-purple, #8B5CF6)',
   ];
   const dotColors = colors || defaultColors;
   const ref = useRef<HTMLDivElement>(null);
@@ -139,7 +138,7 @@ export function PolkaDots({
   }
 
   if (pattern === 'border') {
-    cssVars['--dot-border-color'] = dotColors[0] || 'var(--color-dot-pink, #FF6B9D)';
+    cssVars['--dot-border-color'] = dotColors[0] || 'var(--color-dot-blue, #3B82F6)';
   }
 
   const animStyle = animated
@@ -167,11 +166,11 @@ interface FloatingShapesProps {
 export function FloatingShapes({ className = '' }: FloatingShapesProps) {
   return (
     <div className={`${styles.floatingShapes} ${className}`} aria-hidden="true">
-      <div className={styles.shape} style={{ '--shape-color': '#FF6B9D', '--delay': '0s', '--x': '10%', '--y': '20%' } as React.CSSProperties} />
-      <div className={styles.shape} style={{ '--shape-color': '#FFD93D', '--delay': '1s', '--x': '80%', '--y': '15%' } as React.CSSProperties} />
-      <div className={styles.shape} style={{ '--shape-color': '#00B4D8', '--delay': '2s', '--x': '25%', '--y': '70%' } as React.CSSProperties} />
-      <div className={styles.shape} style={{ '--shape-color': '#FF8B6A', '--delay': '3s', '--x': '70%', '--y': '60%' } as React.CSSProperties} />
-      <div className={styles.shape} style={{ '--shape-color': '#B794F6', '--delay': '4s', '--x': '50%', '--y': '85%' } as React.CSSProperties} />
+      <div className={styles.shape} style={{ '--shape-color': '#3B82F6', '--delay': '0s', '--x': '10%', '--y': '20%' } as React.CSSProperties} />
+      <div className={styles.shape} style={{ '--shape-color': '#22C55E', '--delay': '1s', '--x': '80%', '--y': '15%' } as React.CSSProperties} />
+      <div className={styles.shape} style={{ '--shape-color': '#06B6D4', '--delay': '2s', '--x': '25%', '--y': '70%' } as React.CSSProperties} />
+      <div className={styles.shape} style={{ '--shape-color': '#8B5CF6', '--delay': '3s', '--x': '70%', '--y': '60%' } as React.CSSProperties} />
+      <div className={styles.shape} style={{ '--shape-color': '#3B82F6', '--delay': '4s', '--x': '50%', '--y': '85%' } as React.CSSProperties} />
     </div>
   );
 }

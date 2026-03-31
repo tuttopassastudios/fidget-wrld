@@ -18,7 +18,7 @@ export default async function OGImage() {
           alignItems: "center",
           justifyContent: "center",
           background:
-            "linear-gradient(135deg, #FFF9FB 0%, #FFE8F0 50%, #FFD6E6 100%)",
+            "linear-gradient(135deg, #F8FAFC 0%, #E0F2FE 50%, #DBEAFE 100%)",
           fontFamily: "system-ui, sans-serif",
           position: "relative",
           overflow: "hidden",
@@ -33,7 +33,7 @@ export default async function OGImage() {
             width: "20px",
             height: "20px",
             borderRadius: "50%",
-            background: "#FF6B9D",
+            background: "#3B82F6",
             opacity: 0.3,
             display: "flex",
           }}
@@ -46,7 +46,7 @@ export default async function OGImage() {
             width: "30px",
             height: "30px",
             borderRadius: "50%",
-            background: "#FFD93D",
+            background: "#22C55E",
             opacity: 0.4,
             display: "flex",
           }}
@@ -59,7 +59,7 @@ export default async function OGImage() {
             width: "25px",
             height: "25px",
             borderRadius: "50%",
-            background: "#00B4D8",
+            background: "#06B6D4",
             opacity: 0.3,
             display: "flex",
           }}
@@ -72,7 +72,7 @@ export default async function OGImage() {
             width: "15px",
             height: "15px",
             borderRadius: "50%",
-            background: "#FF8B6A",
+            background: "#8B5CF6",
             opacity: 0.4,
             display: "flex",
           }}
@@ -87,7 +87,7 @@ export default async function OGImage() {
             right: 0,
             height: "6px",
             background:
-              "linear-gradient(90deg, #FF6B9D 0%, #FF8B6A 50%, #FFD93D 100%)",
+              "linear-gradient(90deg, #3B82F6 0%, #06B6D4 50%, #22C55E 100%)",
             display: "flex",
           }}
         />
@@ -97,7 +97,7 @@ export default async function OGImage() {
           style={{
             fontSize: "72px",
             fontWeight: 800,
-            background: "linear-gradient(135deg, #FF6B9D 0%, #FF8B6A 50%, #FFD93D 100%)",
+            background: "linear-gradient(135deg, #3B82F6 0%, #06B6D4 50%, #22C55E 100%)",
             backgroundClip: "text",
             color: "transparent",
             marginBottom: "16px",
@@ -128,7 +128,7 @@ export default async function OGImage() {
             display: "flex",
             alignItems: "center",
             gap: "32px",
-            color: "#FF6B9D",
+            color: "#3B82F6",
             fontSize: "16px",
             letterSpacing: "1px",
             textTransform: "uppercase",
@@ -136,9 +136,9 @@ export default async function OGImage() {
           }}
         >
           <span>Free Shipping $50+</span>
-          <span style={{ color: "#FFD93D" }}>*</span>
+          <span style={{ color: "#06B6D4" }}>*</span>
           <span>Quality Tested</span>
-          <span style={{ color: "#FFD93D" }}>*</span>
+          <span style={{ color: "#06B6D4" }}>*</span>
           <span>Fast Delivery</span>
         </div>
       </div>

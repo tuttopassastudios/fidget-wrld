@@ -18,7 +18,7 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
-  themeColor: "#FF6B9D",
+  themeColor: "#3B82F6",
 };
 
 export const metadata: Metadata = {
@@ -32,7 +32,7 @@ export const metadata: Metadata = {
   description:
     "Premium fidget toys, magnetic desk toys, and sensory tools for kids and adults. Shop stress relief, focus aids, and collectible fidgets.",
   icons: {
-    icon: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23FF6B9D'/%3E%3Ctext x='16' y='21' text-anchor='middle' font-family='system-ui' font-weight='700' font-size='14' fill='%23FFFFFF'%3EF%3C/text%3E%3C/svg%3E",
+    icon: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%233B82F6'/%3E%3Ctext x='16' y='21' text-anchor='middle' font-family='system-ui' font-weight='700' font-size='14' fill='%23FFFFFF'%3EF%3C/text%3E%3C/svg%3E",
   },
   openGraph: {
     type: "website",
@@ -100,7 +100,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body style={{ background: '#FFF9FB', color: '#1F2937' }}>
+      <body style={{ background: '#F8FAFC', color: '#1E293B' }}>
         <ClickSpark>
           <Providers>
             {children}

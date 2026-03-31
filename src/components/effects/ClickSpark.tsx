@@ -25,7 +25,7 @@ const reducedMotion =
   window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 export default function ClickSpark({
-  sparkColor = '#FF6B9D',
+  sparkColor = '#3B82F6',
   sparkSize = 10,
   sparkRadius = 15,
   sparkCount = 8,

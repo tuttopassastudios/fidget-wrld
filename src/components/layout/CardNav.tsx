@@ -26,7 +26,7 @@ interface NavCardItem {
 const NAV_ITEMS: NavCardItem[] = [
   {
     label: 'Best Sellers',
-    bgColor: '#00B4D8',
+    bgColor: '#3B82F6',
     textColor: '#fff',
     links: [
       { label: 'Top Picks', href: '/products' },
@@ -36,7 +36,7 @@ const NAV_ITEMS: NavCardItem[] = [
   },
   {
     label: 'Fidget Toys',
-    bgColor: '#FF6B9D',
+    bgColor: '#8B5CF6',
     textColor: '#fff',
     links: [
       { label: 'Fidget Cubes', href: '/products?category=Clicky' },
@@ -46,8 +46,8 @@ const NAV_ITEMS: NavCardItem[] = [
   },
   {
     label: 'Stress-Relief Toys',
-    bgColor: '#4ADE80',
-    textColor: '#1F2937',
+    bgColor: '#22C55E',
+    textColor: '#fff',
     links: [
       { label: 'Stress Balls', href: '/products?category=Squishy' },
       { label: 'Squishy Toys', href: '/products?category=Squishy' },

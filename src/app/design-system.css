@@ -6,53 +6,52 @@
 /* CSS Custom Properties (Design Tokens) */
 :root {
   /* Colors - Primary Background (Light/Playful) */
-  --color-bg-dark: #FFF9FB;
+  --color-bg-dark: #F8FAFC;
   --color-bg-card: #FFFFFF;
-  --color-bg-elevated: #FFF0F5;
+  --color-bg-elevated: #F1F5F9;
   --color-bg-input: #FFFFFF;
   --color-bg-header: #FFFFFF;
-  --color-bg-gradient: linear-gradient(180deg, #FFF9FB 0%, #FFE8F0 50%, #FFD6E6 100%);
+  --color-bg-gradient: linear-gradient(180deg, #F8FAFC 0%, #E0F2FE 50%, #DBEAFE 100%);
 
-  /* Colors - Accent (POPMART-inspired Playful Pink) */
-  --color-accent-primary: #FF6B9D;
-  --color-accent-primary-hover: #FF85AD;
-  --color-accent-primary-active: #E5527F;
-  --color-accent-secondary: #00B4D8;
-  --color-accent-tertiary: #FFD93D;
-  --color-accent-coral: #FF8B6A;
-  --color-accent-gradient: linear-gradient(135deg, #FF6B9D 0%, #FF8B6A 100%);
+  /* Colors - Accent (Ballpit-inspired Blue/Green/Cyan/Purple) */
+  --color-accent-primary: #3B82F6;
+  --color-accent-primary-hover: #2563EB;
+  --color-accent-primary-active: #1D4ED8;
+  --color-accent-secondary: #22C55E;
+  --color-accent-tertiary: #06B6D4;
+  --color-accent-purple: #8B5CF6;
+  --color-accent-gradient: linear-gradient(135deg, #3B82F6 0%, #06B6D4 50%, #22C55E 100%);
 
   /* Colors - Text (Dark for light backgrounds) */
-  --color-text-primary: #1F2937;
-  --color-text-secondary: #4B5563;
-  --color-text-muted: #9CA3AF;
+  --color-text-primary: #1E293B;
+  --color-text-secondary: #475569;
+  --color-text-muted: #94A3B8;
   --color-text-on-accent: #FFFFFF;
 
   /* Colors - Semantic */
-  --color-success: #10B981;
+  --color-success: #22C55E;
   --color-warning: #F59E0B;
   --color-error: #EF4444;
   --color-info: #3B82F6;
 
-  /* Colors - Category Accents (Brighter POPMART-inspired) */
-  --color-magnetic: #B794F6;
-  --color-squishy: #FF6B9D;
-  --color-clicky: #00D4AA;
-  --color-stretchy: #FFD93D;
-  --color-desk: #FF8B6A;
-  --color-collectible: #FF4757;
+  /* Colors - Category Accents (Ballpit-inspired) */
+  --color-magnetic: #8B5CF6;
+  --color-squishy: #EC4899;
+  --color-clicky: #06B6D4;
+  --color-stretchy: #22C55E;
+  --color-desk: #F59E0B;
+  --color-collectible: #3B82F6;
 
-  /* Polka-dot color palette */
-  --color-dot-pink: #FF6B9D;
-  --color-dot-yellow: #FFD93D;
-  --color-dot-cyan: #00B4D8;
-  --color-dot-coral: #FF8B6A;
-  --color-dot-violet: #B794F6;
+  /* Polka-dot color palette (Ballpit colors) */
+  --color-dot-blue: #3B82F6;
+  --color-dot-green: #22C55E;
+  --color-dot-cyan: #06B6D4;
+  --color-dot-purple: #8B5CF6;
 
   /* Colors - Borders */
-  --color-border: #E5E7EB;
-  --color-border-hover: #D1D5DB;
-  --color-border-accent: rgba(0, 180, 216, 0.3);
+  --color-border: #E2E8F0;
+  --color-border-hover: #CBD5E1;
+  --color-border-accent: rgba(59, 130, 246, 0.3);
 
   /* Colors - Warning/Info */
   --color-warning-bg: rgba(245, 158, 11, 0.08);
@@ -122,17 +121,17 @@
   /* Playful radius */
   --radius-3xl: 36px;
 
-  /* Shadows - Softer for light theme with pink glow */
+  /* Shadows - Softer for light theme with blue glow */
   --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
   --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
   --shadow-lg: 0 8px 30px rgba(0, 0, 0, 0.12);
   --shadow-xl: 0 20px 50px rgba(0, 0, 0, 0.15);
-  --shadow-glow: 0 0 30px rgba(255, 107, 157, 0.2);
-  --shadow-glow-strong: 0 0 50px rgba(255, 107, 157, 0.3);
+  --shadow-glow: 0 0 30px rgba(59, 130, 246, 0.2);
+  --shadow-glow-strong: 0 0 50px rgba(59, 130, 246, 0.3);
   --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.06), 0 0 1px rgba(0, 0, 0, 0.1);
 
   /* Playful shadow */
-  --shadow-playful: 0 8px 40px rgba(255, 107, 157, 0.15), 0 2px 8px rgba(0, 0, 0, 0.06);
+  --shadow-playful: 0 8px 40px rgba(59, 130, 246, 0.15), 0 2px 8px rgba(0, 0, 0, 0.06);
 
   /* Transitions */
   --transition-fast: 150ms ease;
@@ -300,13 +299,13 @@ img {
 .btn-primary {
   background: var(--color-accent-primary);
   color: var(--color-text-on-accent);
-  box-shadow: 0 4px 15px rgba(255, 107, 157, 0.3);
+  box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
 }
 
 .btn-primary:hover {
   background: var(--color-accent-primary-hover);
   color: var(--color-text-on-accent);
-  box-shadow: 0 6px 20px rgba(255, 107, 157, 0.4);
+  box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
   transform: translateY(-1px);
 }
 
@@ -317,7 +316,7 @@ img {
 }
 
 .btn-secondary:hover {
-  background: rgba(255, 107, 157, 0.1);
+  background: rgba(59, 130, 246, 0.1);
   color: var(--color-accent-primary);
 }
 
@@ -372,32 +371,32 @@ img {
 }
 
 .badge-primary {
-  background: rgba(255, 107, 157, 0.15);
+  background: rgba(59, 130, 246, 0.15);
   color: var(--color-accent-primary);
-  border: 1px solid rgba(255, 107, 157, 0.3);
+  border: 1px solid rgba(59, 130, 246, 0.3);
 }
 
 .badge-new {
-  background: linear-gradient(135deg, #FF6B9D, #FF8B6A);
+  background: linear-gradient(135deg, #3B82F6, #06B6D4);
   color: #FFFFFF;
   border: none;
-  box-shadow: 0 2px 8px rgba(255, 107, 157, 0.3);
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
   font-weight: 800;
 }
 
 .badge-bestseller {
-  background: linear-gradient(135deg, #FFD93D, #FF8B6A);
-  color: #1F2937;
+  background: linear-gradient(135deg, #22C55E, #06B6D4);
+  color: #FFFFFF;
   border: none;
-  box-shadow: 0 2px 8px rgba(255, 217, 61, 0.3);
+  box-shadow: 0 2px 8px rgba(34, 197, 94, 0.3);
   font-weight: 800;
 }
 
 .badge-hot {
-  background: linear-gradient(135deg, #FF4757, #FF6B9D);
+  background: linear-gradient(135deg, #8B5CF6, #3B82F6);
   color: #FFFFFF;
   border: none;
-  box-shadow: 0 2px 8px rgba(255, 71, 87, 0.3);
+  box-shadow: 0 2px 8px rgba(139, 92, 246, 0.3);
   font-weight: 800;
 }
 
@@ -408,7 +407,7 @@ img {
 }
 
 .badge-sale {
-  background: linear-gradient(135deg, var(--color-error), #FF8A8A);
+  background: linear-gradient(135deg, var(--color-error), #F87171);
   color: #FFFFFF;
   border: none;
   box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
@@ -416,18 +415,18 @@ img {
 }
 
 .badge-exclusive {
-  background: linear-gradient(135deg, var(--color-dot-violet), var(--color-accent-secondary));
+  background: linear-gradient(135deg, var(--color-dot-purple), var(--color-accent-tertiary));
   color: #FFFFFF;
   border: none;
-  box-shadow: 0 2px 8px rgba(183, 148, 246, 0.3);
+  box-shadow: 0 2px 8px rgba(139, 92, 246, 0.3);
   font-weight: 800;
 }
 
 .badge-collectible {
-  background: linear-gradient(135deg, var(--color-dot-coral), var(--color-dot-yellow));
+  background: linear-gradient(135deg, var(--color-dot-cyan), var(--color-dot-green));
   color: #FFFFFF;
   border: none;
-  box-shadow: 0 2px 8px rgba(255, 139, 106, 0.3);
+  box-shadow: 0 2px 8px rgba(6, 182, 212, 0.3);
   font-weight: 800;
 }
 
@@ -449,8 +448,8 @@ img {
   align-items: center;
   gap: var(--space-2);
   padding: var(--space-2) var(--space-3);
-  background: rgba(255, 107, 157, 0.08);
-  border: 1px solid rgba(255, 107, 157, 0.2);
+  background: rgba(59, 130, 246, 0.08);
+  border: 1px solid rgba(59, 130, 246, 0.2);
   border-radius: var(--radius-md);
   font-size: var(--text-xs);
   font-weight: var(--font-bold);
@@ -491,7 +490,7 @@ img {
 .form-input:focus {
   outline: none;
   border-color: var(--color-accent-primary);
-  box-shadow: 0 0 0 3px rgba(255, 107, 157, 0.15);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
 }
 
 .form-input::placeholder {
@@ -741,7 +740,7 @@ img {
 
 .header-search:focus-within {
   border-color: var(--color-accent-primary);
-  box-shadow: 0 0 0 3px rgba(255, 107, 157, 0.15);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
   width: clamp(200px, 22vw, 340px);
 }
 
@@ -874,7 +873,7 @@ img {
 .product-card-dot-overlay {
   position: absolute;
   inset: 0;
-  background-image: radial-gradient(circle, var(--color-dot-pink) 1.5px, transparent 1.5px);
+  background-image: radial-gradient(circle, var(--color-dot-blue) 1.5px, transparent 1.5px);
   background-size: 20px 20px;
   opacity: 0;
   pointer-events: none;
@@ -1082,7 +1081,7 @@ img {
 .variant-option.active {
   border-color: var(--color-accent-primary);
   color: var(--color-accent-primary);
-  background: rgba(255, 107, 157, 0.1);
+  background: rgba(59, 130, 246, 0.1);
 }
 
 .product-quantity {

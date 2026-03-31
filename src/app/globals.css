@@ -285,7 +285,7 @@ select {
   gap: 6px;
 }
 .ship-bar-text strong {
-  color: var(--color-accent-primary, #FF6B9D);
+  color: var(--color-accent-primary, #3B82F6);
 }
 .ship-bar-success {
   color: #22c55e;
@@ -300,7 +300,7 @@ select {
 .ship-bar-fill {
   height: 100%;
   width: 100%;
-  background: linear-gradient(90deg, var(--color-accent-primary, #FF6B9D), var(--color-dot-coral, #FF8B6A), var(--color-dot-yellow, #FFD93D));
+  background: linear-gradient(90deg, var(--color-accent-primary, #3B82F6), var(--color-dot-cyan, #06B6D4), var(--color-dot-green, #22C55E));
   border-radius: 2px;
   transform-origin: left center;
   transform: scaleX(var(--fill-pct, 0));
@@ -358,13 +358,13 @@ select {
 .cart-drawer-price {
   font-size: 13px;
   font-weight: 700;
-  color: var(--color-accent-primary, #FF6B9D);
+  color: var(--color-accent-primary, #3B82F6);
   flex-shrink: 0;
 }
 .cart-drawer-footer {
   border-top: none;
   padding-top: var(--space-4, 16px);
-  background-image: radial-gradient(circle, var(--color-dot-pink, #FF6B9D) 2px, transparent 2px);
+  background-image: radial-gradient(circle, var(--color-dot-blue, #3B82F6) 2px, transparent 2px);
   background-size: 16px 4px;
   background-repeat: repeat-x;
   background-position: top center;
@@ -382,7 +382,7 @@ select {
   padding-bottom: 8px;
 }
 .cart-drawer-subtotal-value {
-  color: var(--color-accent-primary, #FF6B9D);
+  color: var(--color-accent-primary, #3B82F6);
 }
 .cart-drawer-footer .btn {
   text-align: center;
@@ -396,7 +396,7 @@ select {
   justify-content: center;
 }
 .cart-drawer-view {
-  background: var(--color-accent-primary, #FF6B9D);
+  background: var(--color-accent-primary, #3B82F6);
   color: #FFFFFF !important;
   width: 100%;
   padding: var(--space-3, 12px) var(--space-6, 24px);
@@ -404,7 +404,7 @@ select {
 }
 .cart-drawer-view:hover {
   transform: translateY(-2px);
-  box-shadow: var(--shadow-playful, 0 4px 12px rgba(255, 107, 157, 0.3));
+  box-shadow: var(--shadow-playful, 0 4px 12px rgba(59, 130, 246, 0.3));
 }
 .cart-drawer-continue {
   background: var(--color-bg-elevated, #0f172a);

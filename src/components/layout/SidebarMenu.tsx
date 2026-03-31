@@ -13,12 +13,12 @@ const NAV_ITEMS = [
 ] as const;
 
 const CATEGORY_ITEMS = [
-  { label: 'Magnetic', color: 'var(--color-magnetic, #B794F6)' },
-  { label: 'Squishy', color: 'var(--color-squishy, #FF6B9D)' },
-  { label: 'Clicky', color: 'var(--color-clicky, #00D4AA)' },
-  { label: 'Stretchy', color: 'var(--color-stretchy, #FFD93D)' },
-  { label: 'Desk Toys', color: 'var(--color-desk, #FF8B6A)' },
-  { label: 'Gift Sets', color: 'var(--color-collectible, #FF4757)' },
+  { label: 'Magnetic', color: 'var(--color-magnetic, #8B5CF6)' },
+  { label: 'Squishy', color: 'var(--color-squishy, #EC4899)' },
+  { label: 'Clicky', color: 'var(--color-clicky, #06B6D4)' },
+  { label: 'Stretchy', color: 'var(--color-stretchy, #22C55E)' },
+  { label: 'Desk Toys', color: 'var(--color-desk, #F59E0B)' },
+  { label: 'Gift Sets', color: 'var(--color-collectible, #3B82F6)' },
 ] as const;
 
 const FOOTER_LINKS = [
@@ -30,20 +30,20 @@ const FOOTER_LINKS = [
 // Preview color configs for each nav item
 const PREVIEW_CONFIGS: Record<string, string[]> = {
   Shop: [
-    'var(--color-magnetic, #B794F6)',
-    'var(--color-squishy, #FF6B9D)',
-    'var(--color-clicky, #00D4AA)',
-    'var(--color-stretchy, #FFD93D)',
-    'var(--color-desk, #FF8B6A)',
+    'var(--color-magnetic, #8B5CF6)',
+    'var(--color-squishy, #EC4899)',
+    'var(--color-clicky, #06B6D4)',
+    'var(--color-stretchy, #22C55E)',
+    'var(--color-desk, #F59E0B)',
   ],
   About: [
-    'var(--color-dot-pink, #FF6B9D)',
-    'var(--color-dot-violet, #B794F6)',
-    'var(--color-dot-cyan, #00B4D8)',
+    'var(--color-dot-blue, #3B82F6)',
+    'var(--color-dot-purple, #8B5CF6)',
+    'var(--color-dot-cyan, #06B6D4)',
   ],
   Contact: [
-    'var(--color-dot-coral, #FF8B6A)',
-    'var(--color-dot-yellow, #FFD93D)',
+    'var(--color-dot-green, #22C55E)',
+    'var(--color-dot-cyan, #06B6D4)',
   ],
 };
 

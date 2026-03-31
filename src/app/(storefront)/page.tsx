@@ -16,37 +16,37 @@ const CATEGORY_ITEMS = [
     label: 'Magnetic',
     href: '/products?category=Magnetic',
     rotation: -6,
-    hoverStyles: { bgColor: '#B794F6', textColor: '#fff' },
+    hoverStyles: { bgColor: '#8B5CF6', textColor: '#fff' },
   },
   {
     label: 'Squishy',
     href: '/products?category=Squishy',
     rotation: 5,
-    hoverStyles: { bgColor: '#FF6B9D', textColor: '#fff' },
+    hoverStyles: { bgColor: '#EC4899', textColor: '#fff' },
   },
   {
     label: 'Clicky',
     href: '/products?category=Clicky',
     rotation: 4,
-    hoverStyles: { bgColor: '#00D4AA', textColor: '#fff' },
+    hoverStyles: { bgColor: '#06B6D4', textColor: '#fff' },
   },
   {
     label: 'Stretchy',
     href: '/products?category=Stretchy',
     rotation: -5,
-    hoverStyles: { bgColor: '#FFD93D', textColor: '#1a1a1a' },
+    hoverStyles: { bgColor: '#22C55E', textColor: '#fff' },
   },
   {
     label: 'Desk Toys',
     href: '/products?category=Desk+Toy',
     rotation: 6,
-    hoverStyles: { bgColor: '#FF8B6A', textColor: '#fff' },
+    hoverStyles: { bgColor: '#F59E0B', textColor: '#fff' },
   },
   {
     label: 'Gift Sets',
     href: '/products?category=Gift+Set',
     rotation: -4,
-    hoverStyles: { bgColor: '#3b82f6', textColor: '#fff' },
+    hoverStyles: { bgColor: '#3B82F6', textColor: '#fff' },
   },
 ];
 
