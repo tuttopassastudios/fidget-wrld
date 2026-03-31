@@ -112,7 +112,12 @@ async function handleCheckoutComplete(session: Stripe.Checkout.Session) {
     });
 
   // Extract shipping info
-  const shippingDetails = session.shipping_details || session.customer_details;
+  // Stripe puts the address in collected_information.shipping_details (newer API),
+  // falling back to session.shipping_details, then customer_details as last resort.
+  const collectedShipping = (session as unknown as {
+    collected_information?: { shipping_details?: { name?: string; address?: Record<string, string | null> } }
+  }).collected_information?.shipping_details;
+  const shippingDetails = collectedShipping || session.shipping_details || session.customer_details;
   const shippingAddress = shippingDetails?.address ? {
     name: shippingDetails.name || '',
     line1: shippingDetails.address.line1 || '',
