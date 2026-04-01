@@ -105,8 +105,8 @@ export async function createCJOrder(
       const response = await cj.order.createOrder({
         orderNumber: `${orderId}${suffix}`,
         fromCountryCode: warehouse,
-        // CN warehouse uses CJ Packet Ordinary; US warehouse uses CJ's default domestic carrier
-        ...(warehouse === 'CN' && { logisticName: 'CJ Packet Ordinary' }),
+        // CN warehouse uses CJ Packet Ordinary; US warehouse uses USPS+
+        logisticName: warehouse === 'CN' ? 'CJ Packet Ordinary' : 'USPS+',
         shippingCountryCode: countryCode,
         shippingCountry: cjAddress.country,
         shippingProvince: cjAddress.province,
