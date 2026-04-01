@@ -213,8 +213,11 @@ export function CardNav() {
 
     const tl = tlRef.current;
     if (!tl) return;
-    tl.eventCallback('onReverseComplete', () => setIsExpanded(false));
-    tl.reverse();
+    tl.eventCallback('onReverseComplete', () => {
+      setIsExpanded(false);
+      tl.timeScale(1);
+    });
+    tl.timeScale(3).reverse();
   }, [isExpanded]);
 
   const toggleMenu = useCallback(() => {
@@ -240,7 +243,7 @@ export function CardNav() {
       tl.play(0);
     } else {
       tl.eventCallback('onReverseComplete', () => setIsExpanded(false));
-      tl.reverse();
+      tl.timeScale(1).reverse();
     }
   }, [isExpanded, trigger, calculateHeight]);
 
