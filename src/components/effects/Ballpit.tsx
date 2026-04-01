@@ -581,11 +581,12 @@ function processPointerInteraction() {
 
 function onTouchStart(e: TouchEvent) {
   if (e.touches.length > 0) {
-    e.preventDefault();
     pointerPosition.set(e.touches[0].clientX, e.touches[0].clientY);
+    let insideCanvas = false;
     for (const [elem, data] of pointerMap) {
       const rect = elem.getBoundingClientRect();
       if (isInside(rect)) {
+        insideCanvas = true;
         data.touching = true;
         updatePointerData(data, rect);
         if (!data.hover) {
@@ -595,13 +596,18 @@ function onTouchStart(e: TouchEvent) {
         data.onMove(data);
       }
     }
+    if (insideCanvas) e.preventDefault();
   }
 }
 
 function onTouchMove(e: TouchEvent) {
   if (e.touches.length > 0) {
-    e.preventDefault();
     pointerPosition.set(e.touches[0].clientX, e.touches[0].clientY);
+    let insideCanvas = false;
+    for (const [elem, data] of pointerMap) {
+      if (isInside(elem.getBoundingClientRect())) { insideCanvas = true; break; }
+    }
+    if (insideCanvas) e.preventDefault();
     for (const [elem, data] of pointerMap) {
       const rect = elem.getBoundingClientRect();
       updatePointerData(data, rect);
@@ -846,6 +852,7 @@ interface BallpitProps extends Partial<typeof XConfig> {
 const Ballpit: React.FC<BallpitProps> = ({ className = '', followCursor = true, interactive = true, ...props }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const spheresInstanceRef = useRef<CreateBallpitReturn | null>(null);
+  const [failed, setFailed] = React.useState(false);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -860,6 +867,7 @@ const Ballpit: React.FC<BallpitProps> = ({ className = '', followCursor = true, 
         }, interactive);
       } catch (err) {
         console.error('[Ballpit] Failed to create:', err);
+        setFailed(true);
       }
     });
 
@@ -871,6 +879,10 @@ const Ballpit: React.FC<BallpitProps> = ({ className = '', followCursor = true, 
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  if (failed) {
+    return <div className={className} style={{ width: '100%', height: '100%', background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)' }} />;
+  }
 
   return <canvas className={className} ref={canvasRef} style={{ width: '100%', height: '100%' }} />;
 };
