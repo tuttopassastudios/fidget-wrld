@@ -92,6 +92,15 @@ describe('PromoContext', () => {
       expect(discount.freeShipping).toBe(true);
     });
 
+    it('calculates percent_freeship promo (FIDGET10)', () => {
+      const { result } = renderHook(() => usePromo(), { wrapper });
+      act(() => { result.current.apply('FIDGET10', 100); });
+      const discount = result.current.calculateDiscount(100);
+      expect(discount.discount).toBeCloseTo(10); // 10% of $100
+      expect(discount.freeShipping).toBe(true);
+      expect(discount.label).toContain('FIDGET10');
+    });
+
     it('returns zero discount when minimum no longer met', () => {
       const { result } = renderHook(() => usePromo(), { wrapper });
       act(() => { result.current.apply('RESEARCH10', 60); });

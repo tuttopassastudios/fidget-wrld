@@ -20,7 +20,9 @@
 require('dotenv').config({ path: '.env.local' });
 const fs = require('fs');
 const path = require('path');
-const CJDropshipping = require('cj-dropshipping-sdk');
+// Use local SDK copy
+const CJDropshippingModule = require('../src/lib/cj-sdk/index.js');
+const CJDropshipping = CJDropshippingModule.default || CJDropshippingModule;
 
 const CJ_API_KEY = 'CJ3556407@api@12136edd24d14f27b10469e0f56fa300';
 const cj = new CJDropshipping({ apiKey: CJ_API_KEY });
