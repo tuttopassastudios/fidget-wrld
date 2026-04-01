@@ -34,11 +34,11 @@ export function BallpitBackground({
   size0 = 1,
   className,
 }: BallpitBackgroundProps) {
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    setIsMobile(window.matchMedia('(pointer: coarse)').matches);
-  }, []);
+  // Detect mobile synchronously so interactive is correct on first render,
+  // preventing touch listeners from being registered on mobile devices.
+  const [isMobile] = useState(() =>
+    typeof window !== 'undefined' && window.matchMedia('(pointer: coarse)').matches
+  );
 
   return (
     <Ballpit

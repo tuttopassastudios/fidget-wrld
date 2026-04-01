@@ -25,6 +25,8 @@
   gap: var(--space-6);
   pointer-events: none;
   padding: 0 var(--space-4);
+  /* Push content up so the absolute-positioned scroll hint can't overlap */
+  margin-bottom: 60px;
 }
 
 .heroLogo {

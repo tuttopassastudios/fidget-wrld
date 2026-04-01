@@ -602,11 +602,9 @@ function onTouchStart(e: TouchEvent) {
 function onTouchMove(e: TouchEvent) {
   if (e.touches.length > 0) {
     pointerPosition.set(e.touches[0].clientX, e.touches[0].clientY);
-    let insideCanvas = false;
-    for (const [elem, data] of pointerMap) {
-      if (isInside(elem.getBoundingClientRect())) { insideCanvas = true; break; }
-    }
-    if (insideCanvas) e.preventDefault();
+    // Do NOT call preventDefault — even a slight finger movement during a tap
+    // generates touchmove, and preventing default would cancel the tap gesture,
+    // breaking links and buttons that overlap the canvas area.
     for (const [elem, data] of pointerMap) {
       const rect = elem.getBoundingClientRect();
       updatePointerData(data, rect);
