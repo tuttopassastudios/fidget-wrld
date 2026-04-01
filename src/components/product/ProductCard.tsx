@@ -145,7 +145,7 @@ export function ProductCard({
               </div>
             )}
             <div className="product-card-footer">
-              <span className="product-card-price">{formatCurrency(product.price)}</span>
+              {!allOutOfStock && <span className="product-card-price">{formatCurrency(product.price)}</span>}
             </div>
             <button
               className={`btn btn-primary ${size === 'compact' ? 'btn-xs' : 'btn-sm'} product-card-atc`}
