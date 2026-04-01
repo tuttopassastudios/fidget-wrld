@@ -202,6 +202,21 @@ export function CardNav() {
     return () => window.removeEventListener('resize', handleResize);
   }, [isExpanded, calculateHeight, createTimeline]);
 
+  const closeMenu = useCallback(() => {
+    if (!isExpanded) return;
+
+    if (prefersReducedMotion.current) {
+      setIsExpanded(false);
+      if (navRef.current) navRef.current.style.height = `${BAR_HEIGHT}px`;
+      return;
+    }
+
+    const tl = tlRef.current;
+    if (!tl) return;
+    tl.eventCallback('onReverseComplete', () => setIsExpanded(false));
+    tl.reverse();
+  }, [isExpanded]);
+
   const toggleMenu = useCallback(() => {
     trigger('tap');
 
@@ -309,6 +324,7 @@ export function CardNav() {
                       href={lnk.href}
                       tabIndex={isExpanded ? 0 : -1}
                       transitionTypes={['navigation']}
+                      onClick={closeMenu}
                     >
                       <ArrowIcon />
                       {lnk.label}
@@ -329,6 +345,7 @@ export function CardNav() {
               className="card-nav-extra-link"
               tabIndex={isExpanded ? 0 : -1}
               transitionTypes={['navigation']}
+              onClick={closeMenu}
             >
               About
             </Link>
@@ -337,6 +354,7 @@ export function CardNav() {
               className="card-nav-extra-link"
               tabIndex={isExpanded ? 0 : -1}
               transitionTypes={['navigation']}
+              onClick={closeMenu}
             >
               Contact&nbsp;Us
             </Link>
