@@ -205,18 +205,15 @@ export function CardNav() {
   const closeMenu = useCallback(() => {
     if (!isExpanded) return;
 
+    setIsExpanded(false);
+
     if (prefersReducedMotion.current) {
-      setIsExpanded(false);
       if (navRef.current) navRef.current.style.height = `${BAR_HEIGHT}px`;
       return;
     }
 
     const tl = tlRef.current;
     if (!tl) return;
-    tl.eventCallback('onReverseComplete', () => {
-      setIsExpanded(false);
-      tl.timeScale(1);
-    });
     tl.timeScale(3).reverse();
   }, [isExpanded]);
 
