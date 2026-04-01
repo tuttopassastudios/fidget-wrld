@@ -257,6 +257,7 @@ export function ProductsPageClient({ products }: { products: ProductPage[] }) {
                   slug={p.slug}
                   meta={p.category}
                   variantCount={p.variants.length}
+                  allOutOfStock={p.isOutOfStock}
                 />
               ))}
             </div>

@@ -29,6 +29,7 @@ interface ProductCardProps {
   onQuickView?: () => void;
   productData?: ProductPage;
   enableViewTransition?: boolean;
+  allOutOfStock?: boolean;
 }
 
 export function ProductCard({
@@ -44,6 +45,7 @@ export function ProductCard({
   onQuickView,
   productData,
   enableViewTransition = true,
+  allOutOfStock = false,
 }: ProductCardProps) {
   const { addItem } = useCart();
   const { show } = useToast();
@@ -93,7 +95,7 @@ export function ProductCard({
 
   return (
     <>
-      <ReflectiveCard className="product-card" enableTilt={false}>
+      <ReflectiveCard className={`product-card${allOutOfStock ? ' product-card--out-of-stock' : ''}`} enableTilt={false}>
         <Link href={`/products/${slug}`} className="product-card-link" prefetch={true} style={enableViewTransition ? { viewTransitionName: `product-${slug}` } : undefined}>
           <div className="product-card-image" style={size !== 'standard' ? { aspectRatio: imageAspect } : undefined}>
             <img
@@ -110,6 +112,12 @@ export function ProductCard({
                 {badges.isNew && <span className="badge badge-new">NEW</span>}
                 {badges.isBestseller && <span className="badge badge-bestseller">BEST</span>}
                 {badges.isHot && <span className="badge badge-hot">HOT</span>}
+              </div>
+            )}
+            {allOutOfStock && (
+              <div className="product-card-oos-badge" aria-label="Out of Stock">
+                <span className="product-card-oos-dot" aria-hidden="true" />
+                Out of Stock
               </div>
             )}
             {/* Quick View button (desktop hover) */}
@@ -142,8 +150,10 @@ export function ProductCard({
             <button
               className={`btn btn-primary ${size === 'compact' ? 'btn-xs' : 'btn-sm'} product-card-atc`}
               onClick={handleButtonClick}
+              disabled={allOutOfStock}
+              aria-disabled={allOutOfStock}
             >
-              {hasMultipleVariants ? 'See Options' : 'Add to Cart'}
+              {allOutOfStock ? 'Out of Stock' : hasMultipleVariants ? 'See Options' : 'Add to Cart'}
             </button>
           </div>
         </Link>

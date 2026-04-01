@@ -955,6 +955,44 @@ img {
   margin-bottom: 4px;
 }
 
+/* Out-of-stock state */
+.product-card--out-of-stock {
+  opacity: 0.6;
+}
+
+.product-card-oos-badge {
+  position: absolute;
+  bottom: var(--space-2);
+  left: var(--space-2);
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 8px 3px 6px;
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  border-radius: var(--radius-full);
+  font-size: 11px;
+  font-weight: var(--font-semibold);
+  color: var(--color-error);
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+.product-card-oos-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--color-error);
+  flex-shrink: 0;
+}
+
+/* Disabled ATC when OOS */
+.product-card-atc:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
 /* Tag pills */
 .product-card-tags {
   display: flex;

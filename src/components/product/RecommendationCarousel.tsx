@@ -50,6 +50,7 @@ export function RecommendationCarousel({
                 isBestseller: p.isBestseller,
               }}
               enableViewTransition={false}
+              allOutOfStock={p.isOutOfStock}
             />
           ),
         };

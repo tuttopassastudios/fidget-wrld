@@ -275,6 +275,7 @@ export function ProductPageClient({ product }: { product: ProductPage }) {
                       isNew: p.isNew,
                       isBestseller: p.isBestseller,
                     }}
+                    allOutOfStock={p.isOutOfStock}
                   />
                 );
               })}
