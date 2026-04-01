@@ -1335,6 +1335,18 @@ img {
   }
 }
 
+/* Touch devices: ATC always visible (no hover interaction) */
+@media (hover: none) and (pointer: coarse) {
+  .product-card-body {
+    padding-bottom: 44px;
+  }
+
+  .product-card-atc {
+    transform: translateY(0) !important;
+    opacity: 1 !important;
+  }
+}
+
 @media (max-width: 480px) {
   .product-grid {
     grid-template-columns: 1fr;
