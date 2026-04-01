@@ -184,6 +184,10 @@ export function ProductsPageClient({ products }: { products: ProductPage[] }) {
 
     // Sort
     switch (sort) {
+      case 'featured':
+        // Push out-of-stock items to the end, preserve relative order within each group
+        items.sort((a, b) => (a.isOutOfStock ? 1 : 0) - (b.isOutOfStock ? 1 : 0));
+        break;
       case 'price-asc':
         items.sort((a, b) => a.displayVariant.price - b.displayVariant.price);
         break;

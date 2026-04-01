@@ -152,45 +152,49 @@ export function ProductPageClient({ product }: { product: ProductPage }) {
             onSelect={setVariantIdx}
           />
 
-          <div className={styles.quantityRow}>
-            <label className={styles.quantityLabel}>Quantity:</label>
-            <QuantitySelector value={quantity} onChange={setQuantity} />
-          </div>
+          {variant.inventory !== 0 && (
+            <>
+              <div className={styles.quantityRow}>
+                <label className={styles.quantityLabel}>Quantity:</label>
+                <QuantitySelector value={quantity} onChange={setQuantity} />
+              </div>
 
-          <div className={styles.bulkTier}>
-            {bulkTiers.map((t, i) => (
-              <span key={t.qty}>
-                <span className={quantity >= t.qty ? styles.bulkTierActive : undefined}>
-                  {t.qty}+ units: {t.label}
-                </span>
-                {i < bulkTiers.length - 1 && <span className={styles.bulkTierDivider}>&middot;</span>}
-              </span>
-            ))}
-          </div>
+              <div className={styles.bulkTier}>
+                {bulkTiers.map((t, i) => (
+                  <span key={t.qty}>
+                    <span className={quantity >= t.qty ? styles.bulkTierActive : undefined}>
+                      {t.qty}+ units: {t.label}
+                    </span>
+                    {i < bulkTiers.length - 1 && <span className={styles.bulkTierDivider}>&middot;</span>}
+                  </span>
+                ))}
+              </div>
 
-          {quantity >= 25 && (
-            <div className={styles.quantityWarningAmber}>
-              <svg className={styles.warningIcon} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
-                <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
-                <path d="M12 9v4" /><path d="M12 17h.01" />
-              </svg>
-              <span>
-                <strong>Wholesale inquiry recommended.</strong> For orders of 25+ units we offer custom pricing and priority fulfillment.{' '}
-                <a href="/contact" className={styles.warningLink}>Contact our sales team</a> for a quote.
-              </span>
-            </div>
-          )}
+              {quantity >= 25 && (
+                <div className={styles.quantityWarningAmber}>
+                  <svg className={styles.warningIcon} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+                    <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+                    <path d="M12 9v4" /><path d="M12 17h.01" />
+                  </svg>
+                  <span>
+                    <strong>Wholesale inquiry recommended.</strong> For orders of 25+ units we offer custom pricing and priority fulfillment.{' '}
+                    <a href="/contact" className={styles.warningLink}>Contact our sales team</a> for a quote.
+                  </span>
+                </div>
+              )}
 
-          {quantity >= 10 && quantity < 25 && (
-            <div className={styles.quantityWarningTeal}>
-              <svg className={styles.warningIcon} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
-                <circle cx="12" cy="12" r="10" />
-                <path d="M12 16v-4" /><path d="M12 8h.01" />
-              </svg>
-              <span>
-                Large order — bulk discount applied! Contact us for wholesale pricing on orders of 25+.
-              </span>
-            </div>
+              {quantity >= 10 && quantity < 25 && (
+                <div className={styles.quantityWarningTeal}>
+                  <svg className={styles.warningIcon} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+                    <circle cx="12" cy="12" r="10" />
+                    <path d="M12 16v-4" /><path d="M12 8h.01" />
+                  </svg>
+                  <span>
+                    Large order — bulk discount applied! Contact us for wholesale pricing on orders of 25+.
+                  </span>
+                </div>
+              )}
+            </>
           )}
 
           <div className={styles.actions}>
@@ -214,15 +218,17 @@ export function ProductPageClient({ product }: { product: ProductPage }) {
             </button>
           </div>
 
-          <div className={styles.features}>
-            <div className={styles.feature}>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
-                <rect width="20" height="20" x="2" y="2" rx="5" />
-                <path d="M5 12h14" /><path d="M12 5v14" />
-              </svg>
-              Ships within 24-48 hours
+          {variant.inventory !== 0 && (
+            <div className={styles.features}>
+              <div className={styles.feature}>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+                  <rect width="20" height="20" x="2" y="2" rx="5" />
+                  <path d="M5 12h14" /><path d="M12 5v14" />
+                </svg>
+                Ships within 24-48 hours
+              </div>
             </div>
-          </div>
+          )}
 
         </div>
       </div>

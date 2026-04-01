@@ -9,6 +9,7 @@ import './CategoryBubbles.css';
 
 interface CategoryItem {
   label: string;
+  icon?: string;
   href: string;
   rotation?: number;
   hoverStyles?: {
@@ -112,6 +113,7 @@ export function CategoryBubbles({ items, className }: CategoryBubblesProps) {
                   labelRefs.current[idx] = el;
                 }}
               >
+                {item.icon && <span className="pillIcon" aria-hidden="true">{item.icon}</span>}
                 {item.label}
               </span>
             </Link>

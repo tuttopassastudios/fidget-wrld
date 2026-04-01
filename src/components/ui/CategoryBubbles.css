@@ -98,10 +98,18 @@
 }
 
 .pillLabel {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
   will-change: transform, opacity;
   height: 1.2em;
   line-height: 1.2;
+}
+
+.pillIcon {
+  font-size: 0.85em;
+  line-height: 1;
+  flex-shrink: 0;
 }
 
 /* Desktop rotations + hover */

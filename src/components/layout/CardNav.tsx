@@ -49,9 +49,9 @@ const NAV_ITEMS: NavCardItem[] = [
     bgColor: '#22C55E',
     textColor: '#fff',
     links: [
-      { label: 'Stress Balls', href: '/products?category=Squishy' },
       { label: 'Squishy Toys', href: '/products?category=Squishy' },
       { label: 'Stretchy Toys', href: '/products?category=Stretchy' },
+      { label: 'Desk Toys', href: '/products?category=Desk+Toy' },
     ],
   },
 ];

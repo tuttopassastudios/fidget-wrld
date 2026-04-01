@@ -34,6 +34,8 @@
   overflow-x: auto;
   padding-bottom: var(--space-2);
   -webkit-overflow-scrolling: touch;
+  justify-content: center;
+  flex-wrap: wrap;
 }
 
 .miniCard {

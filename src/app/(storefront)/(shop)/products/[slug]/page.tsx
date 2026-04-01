@@ -18,7 +18,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   if (!product) return { title: 'Product Not Found' };
   const defaultVariant = product.variants[product.defaultVariantIndex];
   return {
-    title: product.metaTitle,
+    title: product.name,
     description: product.metaDescription,
     openGraph: {
       title: product.metaTitle,
@@ -48,9 +48,9 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
     '@type': 'Product',
     name: product.name,
     description: product.metaDescription,
-    image: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://pepmax.bio'}${defaultVariant.image}`,
+    image: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://www.fidgetwrld.com'}${defaultVariant.image}`,
     sku: defaultVariant.sku,
-    brand: { '@type': 'Brand', name: 'PepMax' },
+    brand: { '@type': 'Brand', name: 'Fidget WRLD' },
     offers: {
       '@type': 'AggregateOffer',
       priceCurrency: 'USD',

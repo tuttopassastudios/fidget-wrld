@@ -14,36 +14,42 @@ import styles from './page.module.css';
 const CATEGORY_ITEMS = [
   {
     label: 'Magnetic',
+    icon: '🧲',
     href: '/products?category=Magnetic',
     rotation: -6,
     hoverStyles: { bgColor: '#8B5CF6', textColor: '#fff' },
   },
   {
     label: 'Squishy',
+    icon: '🫧',
     href: '/products?category=Squishy',
     rotation: 5,
     hoverStyles: { bgColor: '#EC4899', textColor: '#fff' },
   },
   {
     label: 'Clicky',
+    icon: '🎯',
     href: '/products?category=Clicky',
     rotation: 4,
     hoverStyles: { bgColor: '#06B6D4', textColor: '#fff' },
   },
   {
     label: 'Stretchy',
+    icon: '🌀',
     href: '/products?category=Stretchy',
     rotation: -5,
     hoverStyles: { bgColor: '#22C55E', textColor: '#fff' },
   },
   {
     label: 'Desk Toys',
+    icon: '🖥️',
     href: '/products?category=Desk+Toy',
     rotation: 6,
     hoverStyles: { bgColor: '#F59E0B', textColor: '#fff' },
   },
   {
     label: 'Gift Sets',
+    icon: '🎁',
     href: '/products?category=Gift+Set',
     rotation: -4,
     hoverStyles: { bgColor: '#3B82F6', textColor: '#fff' },

@@ -112,6 +112,13 @@
   display: none;
 }
 
+/* ---- Desktop: hide the dock (nav bar handles desktop navigation) ---- */
+@media (min-width: 769px) {
+  .dock {
+    display: none;
+  }
+}
+
 /* ---- Mobile: floating liquid dock with labels ---- */
 @media (max-width: 768px) {
   .dock {
