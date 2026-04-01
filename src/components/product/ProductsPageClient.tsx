@@ -40,6 +40,7 @@ export function ProductsPageClient({ products }: { products: ProductPage[] }) {
     colors: [],
     moods: [],
     audiences: [],
+    stockStatus: 'all',
   });
 
   // Sync category from URL params (only when it actually changes)
@@ -107,6 +108,13 @@ export function ProductsPageClient({ products }: { products: ProductPage[] }) {
       });
     });
 
+    if (filters.stockStatus !== 'all') {
+      pills.push({
+        label: filters.stockStatus === 'in-stock' ? 'In Stock' : 'Out of Stock',
+        onRemove: () => setFilters(f => ({ ...f, stockStatus: 'all' })),
+      });
+    }
+
     return pills;
   }, [filters, defaultPriceRange, products]);
 
@@ -165,6 +173,13 @@ export function ProductsPageClient({ products }: { products: ProductPage[] }) {
           p.audiences.includes(a as typeof p.audiences[number])
         )
       );
+    }
+
+    // Stock status filter
+    if (filters.stockStatus === 'in-stock') {
+      items = items.filter(p => !p.isOutOfStock);
+    } else if (filters.stockStatus === 'out-of-stock') {
+      items = items.filter(p => !!p.isOutOfStock);
     }
 
     // Sort

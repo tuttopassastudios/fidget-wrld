@@ -12,6 +12,7 @@ export interface FilterState {
   colors: string[];
   moods: string[];
   audiences: string[];
+  stockStatus: 'all' | 'in-stock' | 'out-of-stock';
 }
 
 export interface FilterSidebarProps {
@@ -133,6 +134,7 @@ function SidebarContent({
     filters.colors.length > 0 ||
     filters.moods.length > 0 ||
     filters.audiences.length > 0 ||
+    filters.stockStatus !== 'all' ||
     filters.priceRange[0] !== priceRange[0] ||
     filters.priceRange[1] !== priceRange[1];
 
@@ -143,6 +145,7 @@ function SidebarContent({
       colors: [],
       moods: [],
       audiences: [],
+      stockStatus: 'all',
     });
   }, [onFilterChange, priceRange]);
 
@@ -182,6 +185,39 @@ function SidebarContent({
                   <span className={styles.categoryCount}>
                     {categoryCounts[cat.key] || 0}
                   </span>
+                </button>
+              </li>
+            );
+          })}
+        </ul>
+      </FilterSection>
+
+      {/* Availability */}
+      <FilterSection title="Availability" defaultOpen={true}>
+        <ul className={styles.categoryList}>
+          {(
+            [
+              { key: 'all', label: 'All' },
+              { key: 'in-stock', label: 'In Stock' },
+              { key: 'out-of-stock', label: 'Out of Stock' },
+            ] as const
+          ).map(opt => {
+            const count =
+              opt.key === 'all'
+                ? products.length
+                : opt.key === 'in-stock'
+                ? products.filter(p => !p.isOutOfStock).length
+                : products.filter(p => !!p.isOutOfStock).length;
+            const isActive = filters.stockStatus === opt.key;
+            return (
+              <li key={opt.key}>
+                <button
+                  type="button"
+                  className={`${styles.categoryButton} ${isActive ? styles.categoryButtonActive : ''}`}
+                  onClick={() => onFilterChange({ ...filters, stockStatus: opt.key })}
+                >
+                  {opt.label}
+                  <span className={styles.categoryCount}>{count}</span>
                 </button>
               </li>
             );
@@ -265,6 +301,7 @@ export function FilterSidebar({ products, filters, onFilterChange }: FilterSideb
     if (filters.colors.length > 0) count++;
     if (filters.moods.length > 0) count++;
     if (filters.audiences.length > 0) count++;
+    if (filters.stockStatus !== 'all') count++;
     // Check if price range differs from data range
     const prices = products.flatMap(p => p.variants.map(v => v.price));
     const dataMin = Math.floor(Math.min(...prices));
