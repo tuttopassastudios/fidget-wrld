@@ -769,7 +769,7 @@ interface CreateBallpitReturn {
   dispose: () => void;
 }
 
-function createBallpit(canvas: HTMLCanvasElement, config: Partial<typeof XConfig> = {}): CreateBallpitReturn {
+function createBallpit(canvas: HTMLCanvasElement, config: Partial<typeof XConfig> = {}, interactive = true): CreateBallpitReturn {
   const threeInstance = new X({
     canvas,
     size: 'parent',
@@ -787,14 +787,14 @@ function createBallpit(canvas: HTMLCanvasElement, config: Partial<typeof XConfig
   const intersectionPoint = new Vector3();
   let isPaused = false;
 
-  canvas.style.touchAction = 'none';
+  canvas.style.touchAction = interactive ? 'none' : 'auto';
   canvas.style.userSelect = 'none';
   (canvas.style as CSSStyleDeclaration & { webkitUserSelect?: string }).webkitUserSelect = 'none';
 
-  const pointerData = createPointerData({
+  const pointerData = interactive ? createPointerData({
     domElement: canvas,
-    onMove() {
-      raycaster.setFromCamera(pointerData.nPosition, threeInstance.camera);
+    onMove(data) {
+      raycaster.setFromCamera(data.nPosition, threeInstance.camera);
       threeInstance.camera.getWorldDirection(plane.normal);
       raycaster.ray.intersectPlane(plane, intersectionPoint);
       spheres.physics.center.copy(intersectionPoint);
@@ -803,7 +803,7 @@ function createBallpit(canvas: HTMLCanvasElement, config: Partial<typeof XConfig
     onLeave() {
       spheres.config.controlSphere0 = false;
     }
-  });
+  }) : { dispose: undefined };
   function initialize(cfg: Partial<typeof XConfig>) {
     if (spheres) {
       threeInstance.clear();
@@ -840,9 +840,10 @@ function createBallpit(canvas: HTMLCanvasElement, config: Partial<typeof XConfig
 interface BallpitProps extends Partial<typeof XConfig> {
   className?: string;
   followCursor?: boolean;
+  interactive?: boolean;
 }
 
-const Ballpit: React.FC<BallpitProps> = ({ className = '', followCursor = true, ...props }) => {
+const Ballpit: React.FC<BallpitProps> = ({ className = '', followCursor = true, interactive = true, ...props }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const spheresInstanceRef = useRef<CreateBallpitReturn | null>(null);
 
@@ -854,9 +855,9 @@ const Ballpit: React.FC<BallpitProps> = ({ className = '', followCursor = true, 
     const frameId = requestAnimationFrame(() => {
       try {
         spheresInstanceRef.current = createBallpit(canvas, {
-          followCursor,
+          followCursor: interactive ? followCursor : false,
           ...props
-        });
+        }, interactive);
       } catch (err) {
         console.error('[Ballpit] Failed to create:', err);
       }

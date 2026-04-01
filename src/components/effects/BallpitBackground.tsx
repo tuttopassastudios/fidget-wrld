@@ -1,6 +1,7 @@
 'use client';
 
 import dynamic from 'next/dynamic';
+import { useEffect, useState } from 'react';
 
 const Ballpit = dynamic(() => import('./Ballpit'), {
   ssr: false,
@@ -33,6 +34,12 @@ export function BallpitBackground({
   size0 = 1,
   className,
 }: BallpitBackgroundProps) {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    setIsMobile(window.matchMedia('(pointer: coarse)').matches);
+  }, []);
+
   return (
     <Ballpit
       className={className}
@@ -46,6 +53,7 @@ export function BallpitBackground({
       minSize={minSize}
       maxSize={maxSize}
       size0={size0}
+      interactive={!isMobile}
     />
   );
 }
