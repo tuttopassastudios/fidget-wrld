@@ -285,12 +285,6 @@ export async function getBestSellers(): Promise<ProductPage[]> {
   'use cache';
   cacheTag('products');
   const products = await getAllProducts();
-  // Return products marked as bestsellers, or fall back to featured slugs
-  const bestsellers = products.filter(p => p.isBestseller);
-  if (bestsellers.length > 0) return bestsellers.slice(0, 4);
-
-  const featuredSlugs = ['magnet-balls', 'fidget-cube', 'infinity-cube', 'stress-ball-set'];
-  return featuredSlugs
-    .map(slug => products.find(p => p.slug === slug))
-    .filter((p): p is ProductPage => p !== undefined);
+  const bestsellers = products.filter(p => p.isBestseller && !p.isOutOfStock);
+  return bestsellers.slice(0, 3);
 }
