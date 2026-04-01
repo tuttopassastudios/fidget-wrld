@@ -69,19 +69,23 @@ export function VariantSelector({ variants, selectedIndex, onSelect }: VariantSe
                   border: 'none',
                   cursor: 'pointer',
                   opacity: isOutOfStock ? 0.5 : 1,
+                  minWidth: 44,
+                  minHeight: 44,
+                  justifyContent: 'center',
                 }}
               >
                 <span
                   style={{
                     display: 'block',
-                    width: 28,
-                    height: 28,
+                    width: 36,
+                    height: 36,
                     borderRadius: '50%',
                     backgroundColor: v.colorHex,
                     outline: i === selectedIndex ? '2px solid var(--color-accent-primary)' : '1px solid var(--color-border)',
                     outlineOffset: 2,
                     transition: 'outline 0.15s',
                     position: 'relative',
+                    flexShrink: 0,
                   }}
                   aria-hidden="true"
                 />

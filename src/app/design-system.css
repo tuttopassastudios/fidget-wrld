@@ -487,6 +487,13 @@ img {
   transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
 }
 
+/* Prevent iOS auto-zoom: all form fields ≥ 16px on mobile */
+@media (max-width: 768px) {
+  input, select, textarea, .form-input {
+    font-size: 16px !important;
+  }
+}
+
 .form-input:focus {
   outline: none;
   border-color: var(--color-accent-primary);
@@ -1064,6 +1071,10 @@ img {
 
 .variant-option {
   padding: var(--space-2) var(--space-4);
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   background: var(--color-bg-elevated);
   border: 2px solid var(--color-border);
   border-radius: var(--radius-md);
@@ -1072,16 +1083,24 @@ img {
   color: var(--color-text-secondary);
   cursor: pointer;
   transition: border-color var(--transition-fast), color var(--transition-fast), background var(--transition-fast);
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .variant-option:hover {
   border-color: var(--color-text-muted);
 }
 
+.variant-option:active {
+  border-color: var(--color-accent-primary);
+  background: rgba(59, 130, 246, 0.18);
+  transform: scale(0.96);
+}
+
 .variant-option.active {
   border-color: var(--color-accent-primary);
   color: var(--color-accent-primary);
-  background: rgba(59, 130, 246, 0.1);
+  background: rgba(59, 130, 246, 0.16);
 }
 
 .product-quantity {

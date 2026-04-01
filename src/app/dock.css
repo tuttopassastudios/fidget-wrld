@@ -127,8 +127,14 @@
     /* Disable magnification on mobile — no hover */
     transform: none !important;
     padding: 4px 0;
-    min-width: 0;
+    min-width: 50px;
+    min-height: 44px;
     flex: 1;
+  }
+
+  .dock-item:active {
+    color: var(--color-text-primary);
+    opacity: 0.7;
   }
 
   .dock-item svg {

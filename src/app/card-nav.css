@@ -103,12 +103,20 @@
   font-size: 20px;
   font-weight: var(--font-bold);
   letter-spacing: -0.5px;
+  color: var(--color-accent-tertiary);
   background: linear-gradient(135deg, #00B4D8 0%, #4ADE80 50%, #00B4D8 100%);
   background-size: 200% 100%;
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
   white-space: nowrap;
+}
+
+@supports not (background-clip: text) {
+  .card-nav-logo-text {
+    background: none;
+    -webkit-text-fill-color: unset;
+  }
 }
 
 /* Right actions */
@@ -123,8 +131,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
   background: transparent;
   border: none;
   border-radius: var(--radius-md);
@@ -133,6 +141,8 @@
   transition: background var(--transition-fast), color var(--transition-fast);
   text-decoration: none;
   position: relative;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .card-nav-icon-btn:hover {
