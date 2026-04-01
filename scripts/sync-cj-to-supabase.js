@@ -12,6 +12,8 @@ const { createClient } = require('@supabase/supabase-js');
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL;
+const REVALIDATE_SECRET = process.env.AGE_GATE_SECRET;
 
 if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY) {
   console.error('Missing Supabase credentials in .env.local');
@@ -239,6 +241,171 @@ const newCjProducts = [
     meta_title: 'Heart Spinner Ring | Fidget WRLD',
     meta_description: 'Vintage two-tone heart spinner ring with rotatable hearts. Beautiful anxiety relief jewelry in sizes 5-11.',
   },
+  // Product 8: Magic Sand (CJ PID: FC3E917A-0094-45D1-B80E-053F7EFFDBE5)
+  {
+    slug: 'cj-magic-sand',
+    name: 'Magic Sand',
+    tagline: 'Sculpt, mold, and play',
+    category: 'Squishy',
+    variants: [
+      { sku: 'CJ-SAND-PINK', name: 'Magic Sand', variant: 'Pink', color: 'Pink', colorHex: '#FF69B4', price: 2.99, image: 'https://cf.cjdropshipping.com/20190803/2446172977195.jpg' },
+      { sku: 'CJ-SAND-PURPLE', name: 'Magic Sand', variant: 'Purple', color: 'Purple', colorHex: '#8A2BE2', price: 2.99, image: 'https://cf.cjdropshipping.com/20190803/38729033035632.jpg' },
+      { sku: 'CJ-SAND-BLUE', name: 'Magic Sand', variant: 'Blue', color: 'Blue', colorHex: '#1E90FF', price: 2.99, inventory: 0, image: 'https://cf.cjdropshipping.com/20190803/196979096855.jpg' },
+      { sku: 'CJ-SAND-RED', name: 'Magic Sand', variant: 'Red', color: 'Red', colorHex: '#DC143C', price: 2.99, image: 'https://cf.cjdropshipping.com/20190803/1572400752072.jpg' },
+      { sku: 'CJ-SAND-ORANGE', name: 'Magic Sand', variant: 'Orange', color: 'Orange', colorHex: '#FF8C00', price: 2.99, image: 'https://cf.cjdropshipping.com/15647616/1567367686041.jpg' },
+      { sku: 'CJ-SAND-YELLOW', name: 'Magic Sand', variant: 'Yellow', color: 'Yellow', colorHex: '#FFD700', price: 2.99, image: 'https://cf.cjdropshipping.com/20190803/810830999777.jpg' },
+      { sku: 'CJ-SAND-4PACK', name: 'Magic Sand', variant: '4-Pack', price: 9.99, inventory: 0, image: 'https://cf.cjdropshipping.com/4386ae6c-5fd4-4052-b37a-0c228b9dea3a.jpg' },
+    ],
+    default_variant_index: 0,
+    description: '<p>Experience the magic of hydrophobic sand that never gets wet! This amazing Mars Space Sand can be molded, sculpted, and shaped into endless creations, then breaks apart with a satisfying texture.</p><p>Non-toxic and safe for kids, this educational toy promotes creativity, fine motor skills, and sensory play. Unlike regular sand, it stays dry even underwater and cleans up easily without mess.</p>',
+    features: ['Hydrophobic - stays dry underwater', 'Non-toxic and safe for kids', 'Moldable and sculptable', 'Easy cleanup - no mess', 'Promotes creativity and fine motor skills'],
+    specifications: { 'Material': 'Hydrophobic Sand', 'Weight': '200g per pack', 'Type': 'Sensory / Educational Toy', 'Safety': 'Non-toxic' },
+    moods: ['play', 'calm', 'focus'],
+    audiences: ['kids', 'all'],
+    textures: ['soft', 'mixed'],
+    age_recommendation: '3+',
+    materials: ['Hydrophobic Sand'],
+    is_new: true,
+    is_bestseller: false,
+    is_limited: false,
+    related_slugs: ['cj-popcorn-squishy', 'stress-ball-set', 'cj-sticky-wall-ball'],
+    meta_title: 'Magic Sand | Fidget WRLD',
+    meta_description: 'Hydrophobic magic sand that never gets wet. Non-toxic, moldable sensory toy for creative play. Available in 6 colors.',
+  },
+  // Product 9: Magnetic Putty (CJ PID: 97C637BB-DB86-49D1-9B55-E94F6A46D2A6)
+  {
+    slug: 'cj-magnetic-putty',
+    name: 'Magnetic Putty',
+    tagline: 'Mesmerizing magnetic magic',
+    category: 'Magnetic',
+    variants: [
+      { sku: 'CJ-MAGPUTTY-BLK', name: 'Magnetic Putty', variant: 'Black', color: 'Black', colorHex: '#2a2a2a', price: 3.99, inventory: 0, image: 'https://cf.cjdropshipping.com/15144192/1945421527452.png' },
+      { sku: 'CJ-MAGPUTTY-BLU', name: 'Magnetic Putty', variant: 'Blue', color: 'Blue', colorHex: '#1E90FF', price: 3.99, inventory: 0, image: 'https://cf.cjdropshipping.com/15144192/550769235177.png' },
+      { sku: 'CJ-MAGPUTTY-ORG', name: 'Magnetic Putty', variant: 'Orange', color: 'Orange', colorHex: '#FF8C00', price: 3.99, image: 'https://cf.cjdropshipping.com/15144192/11754451409688.png' },
+      { sku: 'CJ-MAGPUTTY-GRN', name: 'Magnetic Putty', variant: 'Green', color: 'Green', colorHex: '#32CD32', price: 3.99, image: 'https://cf.cjdropshipping.com/15144192/577122354972.png' },
+      { sku: 'CJ-MAGPUTTY-PNK', name: 'Magnetic Putty', variant: 'Pink', color: 'Pink', colorHex: '#FF69B4', price: 3.99, image: 'https://cf.cjdropshipping.com/15144192/1488641220192.png' },
+      { sku: 'CJ-MAGPUTTY-SLV', name: 'Magnetic Putty', variant: 'Silver', color: 'Silver', colorHex: '#C0C0C0', price: 3.99, image: 'https://cf.cjdropshipping.com/15144192/765565698135.png' },
+      { sku: 'CJ-MAGPUTTY-6PK', name: 'Magnetic Putty', variant: '6-Pack', price: 14.99, inventory: 0, image: 'https://cf.cjdropshipping.com/15144192/2977873394650.png' },
+    ],
+    default_variant_index: 2,
+    description: '<p>Watch in amazement as this incredible magnetic putty comes alive! Place a magnet nearby and watch the putty slowly engulf it, creating mesmerizing tendrils and shapes as it responds to the magnetic field.</p><p>Perfect for stress relief and ASMR-style relaxation. The putty is soft, pliable, and endlessly entertaining. Great for desk fidgeting, science demonstrations, or just mesmerizing fun.</p>',
+    features: ['Responds to magnetic fields', 'Soft and pliable texture', 'Mesmerizing ASMR-style movement', 'Great for stress relief', 'Includes strong magnet'],
+    specifications: { 'Material': 'Magnetic Putty Compound', 'Weight': '50g per tin', 'Includes': 'Putty + Magnet', 'Type': 'Magnetic Fidget Toy' },
+    moods: ['calm', 'focus', 'play'],
+    audiences: ['adults', 'kids', 'office'],
+    textures: ['soft', 'smooth'],
+    age_recommendation: '8+',
+    materials: ['Magnetic Putty', 'Iron Particles'],
+    is_new: true,
+    is_bestseller: false,
+    is_limited: false,
+    related_slugs: ['magnet-balls', 'cj-ferrofluid-speaker', 'cj-magic-sand'],
+    meta_title: 'Magnetic Putty | Fidget WRLD',
+    meta_description: 'Mesmerizing magnetic putty that swallows magnets. Watch it come alive with incredible magnetic effects. Perfect stress relief fidget toy.',
+  },
+  // Product 10: Sensory Twist Stick (CJ PID: 1968510332013142017)
+  {
+    slug: 'cj-sensory-twist-stick',
+    name: 'Sensory Twist Stick',
+    tagline: 'Bend it, twist it, feel it',
+    category: 'Clicky',
+    variants: [
+      { sku: 'CJ-TWIST-STICK', name: 'Sensory Twist Stick', variant: 'Default', price: 28.99, inventory: 667, image: 'https://cf.cjdropshipping.com/6644ab24-b26c-4c1c-9e15-05269ffadeb1.png' },
+    ],
+    default_variant_index: 0,
+    description: '<p>The Sensory Twist Stick is the satisfying decompression toy you didn\'t know you needed. Twist it, bend it, and flex it in endless configurations — each movement delivers tactile feedback that melts stress away.</p><p>Compact enough for a desk, backpack, or pocket, this stick is perfect for keeping hands busy during meetings, studying, or any time anxiety creeps in. The smooth resistance of each twist is endlessly repeatable and never gets old.</p>',
+    features: ['Satisfying twist and flex resistance', 'Compact — fits in pocket or bag', 'Quiet and desk-friendly', 'Endless configurations to explore', 'Ships from US warehouse — fast delivery'],
+    specifications: { 'Weight': '104g', 'Type': 'Decompression Twist Stick', 'SKU': 'CJYZ2533527' },
+    moods: ['calm', 'focus'],
+    audiences: ['adults', 'kids', 'office'],
+    textures: ['smooth'],
+    age_recommendation: '6+',
+    materials: ['Plastic'],
+    is_new: true,
+    is_bestseller: false,
+    is_limited: false,
+    related_slugs: ['cj-magic-sand', 'cj-magnetic-putty', 'fidget-cube'],
+    meta_title: 'Sensory Twist Stick | Fidget WRLD',
+    meta_description: 'Bend, twist, and flex your stress away with the Sensory Twist Stick. 667 units in US warehouse — fast shipping.',
+  },
+  // Product 11: Crystal Mud Slime (CJ PID: 76FABA4F-4632-40A3-834E-B3986701A663)
+  {
+    slug: 'cj-crystal-slime',
+    name: 'Crystal Mud Slime',
+    tagline: 'Stretch it, squish it, zone out',
+    category: 'Squishy',
+    variants: [
+      { sku: 'CJ-SLIME-BLGRN', name: 'Crystal Mud Slime', variant: 'Blue/Green', color: 'Blue/Green', colorHex: '#00CED1', price: 4.99, inventory: 95, image: 'https://cf.cjdropshipping.com/15465312/743928183936.jpg' },
+      { sku: 'CJ-SLIME-BLPNK', name: 'Crystal Mud Slime', variant: 'Blue/Pink', color: 'Blue/Pink', colorHex: '#FF69B4', price: 4.99, inventory: 91, image: 'https://cf.cjdropshipping.com/15465312/1055366378112.jpg' },
+      { sku: 'CJ-SLIME-BLPUR', name: 'Crystal Mud Slime', variant: 'Blue/Purple', color: 'Blue/Purple', colorHex: '#8A2BE2', price: 4.99, inventory: 76, image: 'https://cf.cjdropshipping.com/15465312/2090230617046.jpg' },
+    ],
+    default_variant_index: 0,
+    description: '<p>Lose yourself in the mesmerizing gradient swirls of our Crystal Mud Slime. This ultra-clear crystal slime stretches, squishes, and flows in ways that are deeply satisfying to watch and feel.</p><p>The two-tone gradient creates a hypnotic color blend as you play. Each 60ml jar is the perfect desk companion — pop it open, stretch a strand, and feel the stress disappear. Non-sticky, non-toxic, and endlessly re-playable.</p>',
+    features: ['Stunning gradient two-tone color swirls', 'Ultra-clear crystal texture', 'Non-sticky and non-toxic formula', '60ml jar — perfect desk size', 'Ships from US warehouse — fast delivery'],
+    specifications: { 'Volume': '60ml per jar', 'Weight': '37–110g', 'Type': 'Crystal Mud Slime', 'Safety': 'Non-toxic' },
+    moods: ['calm', 'play'],
+    audiences: ['kids', 'adults'],
+    textures: ['soft', 'smooth'],
+    age_recommendation: '6+',
+    materials: ['Crystal Mud'],
+    is_new: true,
+    is_bestseller: false,
+    is_limited: false,
+    related_slugs: ['cj-magic-sand', 'cj-magnetic-putty', 'stress-ball-set'],
+    meta_title: 'Crystal Mud Slime | Fidget WRLD',
+    meta_description: 'Two-tone gradient crystal mud slime — stretch it, squish it, zone out. Non-toxic 60ml jar ships from US warehouse.',
+  },
+  // Product 12: Cotton Cloud Slime (CJ PID: 1399935069627486208)
+  {
+    slug: 'cj-cotton-slime',
+    name: 'Cotton Cloud Slime',
+    tagline: 'Soft as a cloud, satisfying as ever',
+    category: 'Squishy',
+    variants: [
+      { sku: 'CJ-COTTON-SLIME-BLU', name: 'Cotton Cloud Slime', variant: 'Blue', color: 'Blue', colorHex: '#1E90FF', price: 4.99, inventory: 102, image: 'https://cf.cjdropshipping.com/ff0e4e07-3c4d-42b9-94a3-7ae196f2cd32.jpg' },
+      { sku: 'CJ-COTTON-SLIME-PKB', name: 'Cotton Cloud Slime', variant: 'Pink and Blue', color: 'Pink/Blue', colorHex: '#FF69B4', price: 4.99, inventory: 41, image: 'https://cf.cjdropshipping.com/d7d1afbf-b257-469f-bb24-d792d3ca5ba2.jpg' },
+    ],
+    default_variant_index: 0,
+    description: '<p>Fluffy, stretchy, and impossibly soft — our Cotton Cloud Slime has the lightest, most satisfying texture of any slime you\'ve tried. Poke it, pull it, and watch it slowly spring back like a real cloud.</p><p>The three-color swirl design creates a mesmerizing visual as you play. Non-sticky and non-toxic, it\'s the perfect sensory toy for kids and adults who need a calm, satisfying outlet for restless hands.</p>',
+    features: ['Ultra-fluffy cotton cloud texture', 'Three-color swirl design', 'Slow-rise, satisfying spring-back', 'Non-sticky and non-toxic', 'Ships from US warehouse — fast delivery'],
+    specifications: { 'Weight': '100g', 'Type': 'Cotton Cloud Slime', 'Safety': 'Non-toxic' },
+    moods: ['calm', 'play'],
+    audiences: ['kids', 'adults'],
+    textures: ['soft'],
+    age_recommendation: '6+',
+    materials: ['Cotton Slime'],
+    is_new: true,
+    is_bestseller: false,
+    is_limited: false,
+    related_slugs: ['cj-crystal-slime', 'cj-magic-sand', 'stress-ball-set'],
+    meta_title: 'Cotton Cloud Slime | Fidget WRLD',
+    meta_description: 'Ultra-fluffy three-color cotton cloud slime — poke it, stretch it, feel the stress melt away. Ships from US warehouse.',
+  },
+  // Product 13: Giant Goose Pillow (CJ PID: 2406100313121600000)
+  {
+    slug: 'cj-goose-pillow',
+    name: 'Giant Goose Pillow',
+    tagline: 'Squeeze it, hug it, squish it',
+    category: 'Squishy',
+    variants: [
+      { sku: 'CJ-GOOSE-190', name: 'Giant Goose Pillow', variant: '190cm', price: 22.99, inventory: 83, image: 'https://cf.cjdropshipping.com/quick/product/c78d27e9-d9c6-4f5b-bdfc-95f8afc2e00c.jpg' },
+    ],
+    default_variant_index: 0,
+    description: '<p>Meet the ultimate comfort companion — a giant 190cm goose plushie that doubles as a squishy stress toy. Soft enough to squish, big enough to hug, and satisfying enough to keep your hands busy all day.</p><p>The oversized plush body is filled with ultra-soft PP cotton for a pillowy, squeeze-able feel. Works as a body pillow, seat cushion, or just a giant friend to flop onto when stress hits.</p>',
+    features: ['Massive 190cm size — bigger than you', 'Ultra-soft PP cotton fill', 'Satisfying squish and hug texture', 'Works as a body pillow or seat cushion', 'Ships from US warehouse — fast delivery'],
+    specifications: { 'Size': '190cm (75 inches)', 'Fill': 'PP Cotton', 'Color': 'White', 'Weight': '~1900g' },
+    moods: ['calm', 'play'],
+    audiences: ['kids', 'adults'],
+    textures: ['soft'],
+    age_recommendation: '3+',
+    materials: ['Plush', 'PP Cotton'],
+    is_new: true,
+    is_bestseller: false,
+    is_limited: false,
+    related_slugs: ['cj-magic-sand', 'cj-magnetic-putty', 'stress-ball-set'],
+    meta_title: 'Giant Goose Pillow | Fidget WRLD',
+    meta_description: 'Giant 190cm goose plush pillow — squeeze it, hug it, squish it. Oversized stress-relief plushie ships from US warehouse.',
+  },
 ];
 
 async function syncProducts() {
@@ -317,6 +484,26 @@ async function syncProducts() {
   console.log(`   Updated: ${skipped} existing products`);
   console.log(`   Errors: ${errors}`);
   console.log('='.repeat(60));
+
+  // Step 3: Bust the Next.js products cache
+  if (SITE_URL && REVALIDATE_SECRET) {
+    console.log('\n📦 Step 3: Busting Next.js products cache...\n');
+    try {
+      const res = await fetch(`${SITE_URL}/api/revalidate/products?token=${encodeURIComponent(REVALIDATE_SECRET)}`, {
+        method: 'POST',
+      });
+      const json = await res.json();
+      if (res.ok) {
+        console.log('   ✅ Cache revalidated successfully');
+      } else {
+        console.log(`   ⚠️  Cache revalidation failed: ${JSON.stringify(json)}`);
+      }
+    } catch (err) {
+      console.log(`   ⚠️  Cache revalidation request failed: ${err.message}`);
+    }
+  } else {
+    console.log('\n⚠️  Cache NOT revalidated — set NEXT_PUBLIC_SITE_URL and AGE_GATE_SECRET in .env.local to auto-bust cache after sync.');
+  }
 }
 
 syncProducts().catch(console.error);
