@@ -160,6 +160,71 @@ export interface Database {
         };
         Relationships: [];
       };
+      email_automations: {
+        Row: {
+          id: string;
+          trigger: string;
+          label: string;
+          description: string | null;
+          template_id: string | null;
+          enabled: boolean;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          trigger: string;
+          label: string;
+          description?: string | null;
+          template_id?: string | null;
+          enabled?: boolean;
+          updated_at?: string;
+        };
+        Update: {
+          label?: string;
+          description?: string | null;
+          template_id?: string | null;
+          enabled?: boolean;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      email_templates: {
+        Row: {
+          id: string;
+          name: string;
+          slug: string;
+          description: string | null;
+          subject: string;
+          html_body: string;
+          text_body: string;
+          enabled: boolean;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          name: string;
+          slug: string;
+          description?: string | null;
+          subject: string;
+          html_body?: string;
+          text_body?: string;
+          enabled?: boolean;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          name?: string;
+          slug?: string;
+          description?: string | null;
+          subject?: string;
+          html_body?: string;
+          text_body?: string;
+          enabled?: boolean;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
       contact_submissions: {
         Row: {
           id: string;

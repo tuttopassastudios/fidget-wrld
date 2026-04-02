@@ -59,6 +59,18 @@ export default function SignupPage() {
     try {
       const displayName = `${sanitizeText(firstName, 100)} ${sanitizeText(lastName, 100)}`;
       await signUp(email, password, displayName);
+
+      // Fire welcome email (best-effort, don't block navigation)
+      fetch('/api/email/trigger', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          trigger: 'welcome',
+          to: email,
+          vars: { first_name: sanitizeText(firstName, 100), email },
+        }),
+      }).catch(() => {});
+
       router.push('/account');
     } catch (err: unknown) {
       const error = err as { code?: string; message?: string };

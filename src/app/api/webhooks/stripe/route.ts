@@ -180,7 +180,20 @@ async function handleCheckoutComplete(session: Stripe.Checkout.Session) {
     customerPhone
   );
 
-  // TODO: Send confirmation email
+  // Send order confirmation email (best-effort)
+  try {
+    const { triggerEmail } = await import('@/lib/email');
+    const firstName = (shippingAddress as { name?: string }).name?.split(' ')[0] || 'there';
+    const itemsSummary = items.map(i => `${i.name} × ${i.quantity}`).join(', ');
+    await triggerEmail('order_confirmation', session.customer_details?.email || session.customer_email || '', {
+      first_name: firstName,
+      email: session.customer_details?.email || session.customer_email || '',
+      order_id: data.id.slice(0, 8).toUpperCase(),
+      order_total: `$${total.toFixed(2)}`,
+      items: itemsSummary,
+    });
+  } catch {}
+
   // TODO: Update inventory
   // TODO: Notify admin
 

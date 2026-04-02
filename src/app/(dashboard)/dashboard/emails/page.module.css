@@ -309,6 +309,212 @@
   cursor: not-allowed;
 }
 
+/* ─── Template list ─────────────────────────────────────────────────────────── */
+
+.templateList {
+  width: 100%;
+}
+
+/* ─── Editor layout ──────────────────────────────────────────────────────────── */
+
+.editorLayout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-6);
+  align-items: start;
+}
+
+.editorForm {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.previewPanel {
+  position: sticky;
+  top: var(--space-6);
+}
+
+.previewHtml {
+  background: #fff;
+  color: #111;
+  border-radius: 8px;
+  border: 1px solid var(--color-border);
+  padding: var(--space-4);
+  min-height: 200px;
+  max-height: 600px;
+  overflow-y: auto;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  word-break: break-word;
+}
+
+.previewVars {
+  background: var(--color-bg-card, #0a1628);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: var(--space-3);
+  margin-bottom: var(--space-3);
+}
+
+/* ─── Form fields ────────────────────────────────────────────────────────────── */
+
+.fieldGroup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.fieldLabel {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+}
+
+.fieldInput {
+  width: 100%;
+  padding: var(--space-2) var(--space-3);
+  background: var(--color-bg-elevated, #0d1f38);
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  color: var(--color-text-primary);
+  font-size: 0.875rem;
+  font-family: inherit;
+  transition: border-color 0.15s;
+  box-sizing: border-box;
+}
+
+.fieldInput:focus {
+  outline: none;
+  border-color: var(--color-accent-primary);
+}
+
+.fieldSelect {
+  width: 100%;
+  padding: var(--space-2) var(--space-3);
+  background: var(--color-bg-elevated, #0d1f38);
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  color: var(--color-text-primary);
+  font-size: 0.875rem;
+  font-family: inherit;
+  cursor: pointer;
+  transition: border-color 0.15s;
+}
+
+.fieldSelect:focus {
+  outline: none;
+  border-color: var(--color-accent-primary);
+}
+
+.codeArea {
+  font-family: 'Courier New', Courier, monospace;
+  min-height: 300px;
+  resize: vertical;
+  line-height: 1.5;
+}
+
+/* ─── Toggle switch ──────────────────────────────────────────────────────────── */
+
+.toggle {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  gap: var(--space-2);
+}
+
+.toggle input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.toggleTrack {
+  display: block;
+  width: 40px;
+  height: 22px;
+  background: var(--color-bg-elevated, #0d1f38);
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  position: relative;
+  transition: background 0.2s, border-color 0.2s;
+  flex-shrink: 0;
+}
+
+.toggle input:checked ~ .toggleTrack {
+  background: var(--color-accent-primary);
+  border-color: var(--color-accent-primary);
+}
+
+.toggleThumb {
+  display: block;
+  width: 16px;
+  height: 16px;
+  background: #fff;
+  border-radius: 50%;
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  transition: transform 0.2s;
+}
+
+.toggle input:checked ~ .toggleTrack .toggleThumb {
+  transform: translateX(18px);
+}
+
+.toggle:focus-within .toggleTrack {
+  outline: 2px solid var(--color-accent-primary);
+  outline-offset: 2px;
+}
+
+/* ─── Chips ──────────────────────────────────────────────────────────────────── */
+
+.chip {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.chipEnabled {
+  background: rgba(52, 211, 153, 0.15);
+  color: #34d399;
+}
+
+.chipDisabled {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--color-text-muted);
+}
+
+/* ─── Automations ────────────────────────────────────────────────────────────── */
+
+.automationRow td {
+  vertical-align: middle;
+}
+
+/* ─── Broadcasts ─────────────────────────────────────────────────────────────── */
+
+.broadcastForm {
+  max-width: 640px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.confirmBanner {
+  background: rgba(251, 191, 36, 0.08);
+  border: 1px solid rgba(251, 191, 36, 0.25);
+  border-radius: 8px;
+  padding: var(--space-4);
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+}
+
+/* ─── Responsive ─────────────────────────────────────────────────────────────── */
+
 @media (max-width: 768px) {
   .content {
     padding: var(--space-4);
@@ -321,5 +527,13 @@
 
   .tdSubject {
     max-width: 160px;
+  }
+
+  .editorLayout {
+    grid-template-columns: 1fr;
+  }
+
+  .previewPanel {
+    position: static;
   }
 }
