@@ -34,23 +34,8 @@ const securityHeaders = [
     key: "Cross-Origin-Opener-Policy",
     value: "same-origin-allow-popups",
   },
-  {
-    key: "Content-Security-Policy",
-    value: [
-      "default-src 'self'",
-      `script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval'${process.env.NODE_ENV === "development" ? " 'unsafe-eval'" : ""} https://apis.google.com https://va.vercel-scripts.com`,
-      "style-src 'self' 'unsafe-inline'",
-      "img-src 'self' data: blob: https://*.supabase.co https://cf.cjdropshipping.com https://oss-cf.cjdropshipping.com https://cc-west-usa.oss-us-west-1.aliyuncs.com",
-      "font-src 'self'",
-      "connect-src 'self' https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://firebasedataconnect.googleapis.com https://accounts.google.com https://*.firebaseio.com https://va.vercel-scripts.com",
-      "frame-src https://accounts.google.com https://*.firebaseapp.com",
-      "object-src 'none'",
-      "base-uri 'self'",
-      "form-action 'self'",
-      "frame-ancestors 'none'",
-      "upgrade-insecure-requests",
-    ].join("; "),
-  },
+  // Content-Security-Policy is set per-request in src/proxy.ts (nonce-based).
+  // Do not add a static CSP here — it would conflict with the dynamic nonce.
 ];
 
 const nextConfig: NextConfig = {
