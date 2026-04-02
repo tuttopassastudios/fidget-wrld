@@ -14,6 +14,7 @@ const NAV_ITEMS = [
   { href: '/dashboard/users', label: 'Users', icon: '◉' },
   { href: '/dashboard/products', label: 'Products', icon: '◆' },
   { href: '/dashboard/promos', label: 'Promos', icon: '✦' },
+  { href: '/dashboard/emails', label: 'E-Mails', icon: '✉' },
   { href: '/dashboard/health', label: 'Site Health', icon: '♡' },
 ];
 

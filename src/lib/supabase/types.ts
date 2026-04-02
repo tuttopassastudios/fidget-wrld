@@ -160,6 +160,30 @@ export interface Database {
         };
         Relationships: [];
       };
+      contact_submissions: {
+        Row: {
+          id: string;
+          name: string;
+          email: string;
+          subject: string;
+          message: string;
+          read: boolean;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          name: string;
+          email: string;
+          subject: string;
+          message: string;
+          read?: boolean;
+          created_at?: string;
+        };
+        Update: {
+          read?: boolean;
+        };
+        Relationships: [];
+      };
       orders: {
         Row: {
           id: string;
