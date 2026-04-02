@@ -166,6 +166,78 @@
   font-size: 0.8125rem;
 }
 
+.errorText {
+  color: var(--color-error, #f87171);
+  font-size: 0.8125rem;
+}
+
+.trackingBtn {
+  margin-top: var(--space-3);
+  background: transparent;
+  border: 1px solid var(--color-accent-primary, #46C8DC);
+  color: var(--color-accent-primary, #46C8DC);
+  padding: var(--space-1) var(--space-3);
+  border-radius: 6px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.trackingBtn:hover:not(:disabled) {
+  background: var(--color-accent-primary, #46C8DC);
+  color: var(--color-bg-dark, #001428);
+}
+
+.trackingBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.trackingEvents {
+  margin-top: var(--space-3);
+  border-top: 1px solid var(--color-border);
+  padding-top: var(--space-3);
+}
+
+.trackingMeta {
+  font-size: 0.8125rem;
+  color: var(--color-text-muted);
+  margin: 0 0 var(--space-2);
+}
+
+.noEvents {
+  font-size: 0.8125rem;
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+.eventList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.eventItem {
+  display: grid;
+  grid-template-columns: 160px 1fr;
+  gap: var(--space-2);
+  font-size: 0.8125rem;
+}
+
+.eventTime {
+  color: var(--color-text-muted);
+  font-variant-numeric: tabular-nums;
+  flex-shrink: 0;
+}
+
+.eventContext {
+  color: var(--color-text-secondary);
+}
+
 @media (max-width: 768px) {
   .content {
     padding: var(--space-4);

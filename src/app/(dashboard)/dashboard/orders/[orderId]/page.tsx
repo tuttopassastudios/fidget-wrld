@@ -20,6 +20,13 @@ interface OrderItem {
   image: string | null;
 }
 
+interface TrackingEvent {
+  time?: string;
+  context?: string;
+  description?: string;
+  date?: string;
+}
+
 interface OrderDetail {
   id: string;
   orderId: string;
@@ -45,6 +52,9 @@ interface OrderDetail {
   estDeliveryDisplay: string | null;
   createdAt: string;
   updatedAt: string;
+  cjOrderId: string | null;
+  cjOrderStatus: string | null;
+  fulfillmentError: string | null;
   orderItems_on_order: OrderItem[];
 }
 
@@ -59,6 +69,10 @@ export default function OrderDetailPage({ params }: { params: Promise<{ orderId:
   const [updating, setUpdating] = useState(false);
   const [newStatus, setNewStatus] = useState('');
   const [trackingNumber, setTrackingNumber] = useState('');
+  const [liveTracking, setLiveTracking] = useState<TrackingEvent[] | null>(null);
+  const [trackingMeta, setTrackingMeta] = useState<{ carrier?: string; status?: string } | null>(null);
+  const [trackingLoading, setTrackingLoading] = useState(false);
+  const [trackingError, setTrackingError] = useState<string | null>(null);
 
   const fetchOrder = useCallback(async () => {
     if (!user) return;
@@ -111,6 +125,29 @@ export default function OrderDetailPage({ params }: { params: Promise<{ orderId:
     }
   };
 
+  const fetchLiveTracking = async () => {
+    if (!user || !order?.trackingNumber) return;
+    setTrackingLoading(true);
+    setTrackingError(null);
+    try {
+      const token = await user.getIdToken();
+      const res = await fetch(
+        `/api/admin/orders/tracking?trackingNumber=${encodeURIComponent(order.trackingNumber)}`,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Failed to fetch tracking');
+      const t = data.tracking;
+      setTrackingMeta({ carrier: t.logisticName || t.carrier, status: t.status });
+      const events: TrackingEvent[] = t.trackInfoList || t.trackInfo || t.events || [];
+      setLiveTracking(events);
+    } catch (err) {
+      setTrackingError(err instanceof Error ? err.message : 'Unknown error');
+    } finally {
+      setTrackingLoading(false);
+    }
+  };
+
   if (loading) {
     return (
       <>
@@ -160,7 +197,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ orderId:
               <dt>Shipping</dt><dd>${order.shipping.toFixed(2)} ({order.shippingMethod})</dd>
               <dt>Total</dt><dd className={styles.total}>${order.total.toFixed(2)}</dd>
               {order.trackingNumber && (
-                <><dt>Tracking</dt><dd>{order.trackingNumber}</dd></>
+                <><dt>Tracking</dt><dd className={styles.mono}>{order.trackingNumber}</dd></>
               )}
             </dl>
           </div>
@@ -177,6 +214,62 @@ export default function OrderDetailPage({ params }: { params: Promise<{ orderId:
               {order.shipPhone && <><br />{order.shipPhone}</>}
             </p>
           </div>
+
+          {/* CJ Fulfillment */}
+          {(order.cjOrderId || order.fulfillmentError) && (
+            <div className={styles.card}>
+              <h3 className={styles.cardTitle}>CJ Fulfillment</h3>
+              <dl className={styles.dl}>
+                {order.cjOrderId && (
+                  <><dt>CJ Order ID</dt><dd className={styles.mono}>{order.cjOrderId}</dd></>
+                )}
+                {order.cjOrderStatus && (
+                  <><dt>CJ Status</dt><dd><StatusBadge status={order.cjOrderStatus} /></dd></>
+                )}
+                {order.trackingNumber && (
+                  <><dt>Tracking #</dt><dd className={styles.mono}>{order.trackingNumber}</dd></>
+                )}
+                {order.fulfillmentError && (
+                  <><dt>Error</dt><dd className={styles.errorText}>{order.fulfillmentError}</dd></>
+                )}
+              </dl>
+              {order.trackingNumber && (
+                <button
+                  type="button"
+                  onClick={fetchLiveTracking}
+                  disabled={trackingLoading}
+                  className={styles.trackingBtn}
+                >
+                  {trackingLoading ? 'Fetching\u2026' : 'Fetch live tracking'}
+                </button>
+              )}
+              {trackingError && (
+                <p className={styles.errorText} style={{ marginTop: 'var(--space-2)' }}>{trackingError}</p>
+              )}
+              {liveTracking !== null && (
+                <div className={styles.trackingEvents}>
+                  {trackingMeta && (
+                    <p className={styles.trackingMeta}>
+                      {trackingMeta.carrier && <span>Carrier: <strong>{trackingMeta.carrier}</strong></span>}
+                      {trackingMeta.status && <span> &middot; {trackingMeta.status}</span>}
+                    </p>
+                  )}
+                  {liveTracking.length === 0 ? (
+                    <p className={styles.noEvents}>No tracking events yet.</p>
+                  ) : (
+                    <ol className={styles.eventList}>
+                      {liveTracking.map((e, i) => (
+                        <li key={i} className={styles.eventItem}>
+                          <span className={styles.eventTime}>{e.time || e.date || ''}</span>
+                          <span className={styles.eventContext}>{e.context || e.description || ''}</span>
+                        </li>
+                      ))}
+                    </ol>
+                  )}
+                </div>
+              )}
+            </div>
+          )}
 
           {/* Update status (admin only) */}
           {role === 'admin' && (

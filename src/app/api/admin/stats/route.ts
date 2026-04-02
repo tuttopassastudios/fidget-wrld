@@ -62,9 +62,11 @@ export async function GET(request: NextRequest) {
     // Filter orders by date range
     const orders = orderList.filter(o => new Date(o.created_at) >= cutoff);
 
-    // Calculate stats
-    const totalOrders = orders.length;
-    const totalRevenue = orders.reduce((sum, o) => sum + (o.total || 0), 0);
+    // Calculate stats — exclude cancelled/refunded from revenue metrics
+    const EXCLUDED_STATUSES = new Set(['cancelled', 'refunded']);
+    const revenueOrders = orders.filter(o => !EXCLUDED_STATUSES.has(o.status));
+    const totalOrders = revenueOrders.length;
+    const totalRevenue = revenueOrders.reduce((sum, o) => sum + (o.total || 0), 0);
     const aov = totalOrders > 0 ? totalRevenue / totalOrders : 0;
     const pendingOrders = orders.filter(o => o.status === 'pending').length;
     const paidOrders = orders.filter(o => o.status === 'paid').length;
@@ -83,7 +85,7 @@ export async function GET(request: NextRequest) {
       dailyMap.set(key, { revenue: 0, orders: 0 });
     }
 
-    for (const o of orders) {
+    for (const o of revenueOrders) {
       const key = toDateKey(o.created_at);
       const existing = dailyMap.get(key) || { revenue: 0, orders: 0 };
       existing.revenue += o.total || 0;
@@ -99,9 +101,9 @@ export async function GET(request: NextRequest) {
         orders: data.orders,
       }));
 
-    // Top products by revenue
+    // Top products by revenue — exclude cancelled/refunded orders
     const productMap = new Map<string, { name: string; revenue: number; unitsSold: number }>();
-    for (const o of orders) {
+    for (const o of revenueOrders) {
       const items = (o.items as unknown as OrderItem[]) || [];
       for (const item of items) {
         const key = item.name;
@@ -173,7 +175,7 @@ export async function GET(request: NextRequest) {
       const prevCutoff = new Date(cutoff.getTime() - rangeDays * 24 * 60 * 60 * 1000);
       const prevOrders = orderList.filter(o => {
         const d = new Date(o.created_at);
-        return d >= prevCutoff && d < cutoff;
+        return d >= prevCutoff && d < cutoff && !EXCLUDED_STATUSES.has(o.status);
       });
       const prevTotal = prevOrders.length;
       const prevRevenue = prevOrders.reduce((sum, o) => sum + (o.total || 0), 0);

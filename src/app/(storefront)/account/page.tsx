@@ -23,8 +23,8 @@ export default function AccountPage() {
         const role = result.claims.role as string | undefined;
         const admin = role === 'admin' || role === 'team';
         setIsAdmin(admin);
-
-        // Pre-sync __session cookie so the proxy doesn't block /dashboard
+        // Allow dashboard navigation immediately — sync session in background
+        setSessionReady(true);
         if (admin) {
           user.getIdToken().then((idToken) =>
             fetch('/api/admin/session', {
@@ -32,37 +32,16 @@ export default function AccountPage() {
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({ idToken }),
             })
-          ).then(() => {
-            setSessionReady(true);
-          }).catch(() => {
-            // Still allow navigation — DashboardGuard will re-sync
-            setSessionReady(true);
+          ).catch(() => {
+            // DashboardGuard will re-sync on arrival if this fails
           });
         }
       });
     }
   }, [user]);
 
-  if (loading) {
-    return (
-      <section className="product-page" style={{ padding: '48px 0', minHeight: '60vh' }}>
-        <div className="container" style={{ maxWidth: 600, textAlign: 'center' }}>
-          <div style={{
-            width: 40,
-            height: 40,
-            border: '3px solid var(--color-border)',
-            borderTopColor: 'var(--color-accent-primary)',
-            borderRadius: '50%',
-            animation: 'spin 0.8s linear infinite',
-            margin: '0 auto'
-          }} />
-          <style jsx>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
-        </div>
-      </section>
-    );
-  }
-
-  if (!user) {
+  // Don't block render on auth loading — redirect effect handles the unauthed case
+  if (!loading && !user) {
     return null;
   }
 
@@ -76,7 +55,7 @@ export default function AccountPage() {
       <div className="container" style={{ maxWidth: 800 }}>
         <h1 style={{ marginBottom: 8 }}>My Account</h1>
         <p style={{ color: 'var(--color-text-muted)', marginBottom: 32 }}>
-          Welcome back, {user.displayName || user.email}
+          {user ? `Welcome back, ${user.displayName || user.email}` : '\u00a0'}
         </p>
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: 16 }}>
@@ -202,13 +181,15 @@ export default function AccountPage() {
           </Link>
         </div>
 
-        <div style={{ marginTop: 32, paddingTop: 24, borderTop: '1px solid var(--color-border)' }}>
-          <h3 style={{ fontSize: 14, fontWeight: 600, marginBottom: 12 }}>Account Details</h3>
-          <div style={{ fontSize: 14, color: 'var(--color-text-secondary)' }}>
-            <p style={{ marginBottom: 8 }}><strong>Email:</strong> {user.email}</p>
-            {user.displayName && <p style={{ marginBottom: 8 }}><strong>Name:</strong> {user.displayName}</p>}
+        {user && (
+          <div style={{ marginTop: 32, paddingTop: 24, borderTop: '1px solid var(--color-border)' }}>
+            <h3 style={{ fontSize: 14, fontWeight: 600, marginBottom: 12 }}>Account Details</h3>
+            <div style={{ fontSize: 14, color: 'var(--color-text-secondary)' }}>
+              <p style={{ marginBottom: 8 }}><strong>Email:</strong> {user.email}</p>
+              {user.displayName && <p style={{ marginBottom: 8 }}><strong>Name:</strong> {user.displayName}</p>}
+            </div>
           </div>
-        </div>
+        )}
 
         <button
           onClick={handleSignOut}
