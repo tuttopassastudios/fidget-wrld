@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, useEffect, useMemo, lazy, Suspense } from 'react';
+import { useState, useEffect, useMemo } from 'react';
+import dynamic from 'next/dynamic';
 import { useCart } from '@/context/CartContext';
 import { useToast } from '@/context/ToastContext';
 import { useWishlist } from '@/context/WishlistContext';
@@ -26,8 +27,15 @@ import type { ProductPage, PrintCustomization } from '@/types';
 import styles from './ProductPageClient.module.css';
 import './AboutCarousel.css';
 
-// Lazy-load the heavy STL viewer so it doesn't bloat the initial bundle
-const STLViewer = lazy(() => import('./STLViewer').then(m => ({ default: m.STLViewer })));
+// Load the STL viewer client-only — Three.js requires browser APIs (WebGL) unavailable on the server
+const STLViewer = dynamic(() => import('./STLViewer').then(m => ({ default: m.STLViewer })), {
+  ssr: false,
+  loading: () => (
+    <div style={{ width: '100%', height: '400px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f8fafc', borderRadius: '12px', color: '#888', fontSize: '14px' }}>
+      Loading 3D model&hellip;
+    </div>
+  ),
+});
 
 export function ProductPageClient({ product }: { product: ProductPage }) {
   // Memoize model component lookup to satisfy React 19 render rules
@@ -133,13 +141,7 @@ export function ProductPageClient({ product }: { product: ProductPage }) {
         <div className="reveal-item">
           <div className={styles.gallery}>
             {is3DPrinted && product.stlFile ? (
-              <Suspense fallback={
-                <div style={{ width: '100%', height: '400px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f8fafc', borderRadius: '12px', color: '#666', fontSize: '14px' }}>
-                  Loading 3D model&hellip;
-                </div>
-              }>
-                <STLViewer stlPath={product.stlFile} color={selectedColorHex ?? '#F8F8F8'} />
-              </Suspense>
+              <STLViewer stlPath={product.stlFile} color={selectedColorHex ?? '#F8F8F8'} />
             ) : (
               <img
                 className={styles.galleryImage}
