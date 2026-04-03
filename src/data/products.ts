@@ -15,7 +15,12 @@ export const productPages: ProductPage[] = [
     category: 'Collectible',
     fulfillmentType: '3d-printed',
     stlFile: '/models/dummy13-runners.stl',
+    assembledPhotoUrl: '/images/products/dummy-13.jpg',
     availableFilamentColorIds: ['white', 'black'],
+    multiColorParts: [
+      { id: 'armor', label: 'Armor' },
+      { id: 'frame', label: 'Frame' },
+    ],
     customizationOptions: {
       engravingText: false,
       keychainHole: false,

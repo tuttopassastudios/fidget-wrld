@@ -14,6 +14,7 @@ export interface PrintCustomization {
   filamentColorId?: string;
   engravingText?: string;
   keychainHole?: boolean;
+  partColors?: Record<string, string>; // { armor: 'white', frame: 'black' } for multi-part products
 }
 
 export type ProductCategory =
@@ -70,7 +71,9 @@ export interface ProductPage {
   // 3D printing
   fulfillmentType?: FulfillmentType;       // defaults to 'dropship' if absent
   stlFile?: string;                        // path like '/models/yafic_v2.stl'
+  assembledPhotoUrl?: string;             // real product photo shown alongside 3D viewer (toggleable)
   availableFilamentColorIds?: string[];    // references FilamentColor.id
+  multiColorParts?: Array<{ id: string; label: string }>; // e.g. [{ id: 'armor', label: 'Armor' }, { id: 'frame', label: 'Frame' }]
   customizationOptions?: {
     engravingText?: boolean;
     keychainHole?: boolean;

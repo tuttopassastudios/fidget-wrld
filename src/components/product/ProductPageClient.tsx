@@ -45,8 +45,18 @@ export function ProductPageClient({ product }: { product: ProductPage }) {
 
   const [variantIdx, setVariantIdx] = useState(product.defaultVariantIndex);
   const [quantity, setQuantity] = useState(1);
+  const [galleryView, setGalleryView] = useState<'3d' | 'photo'>('3d');
+
+  // Initialize part colors with the first available color for each part
+  const initialPartColors = useMemo(() => {
+    if (!product.multiColorParts || !product.availableFilamentColorIds) return undefined;
+    const firstColorId = product.availableFilamentColorIds[0] ?? 'white';
+    return Object.fromEntries(product.multiColorParts.map(p => [p.id, firstColorId]));
+  }, [product.multiColorParts, product.availableFilamentColorIds]);
+
   const [printCustomization, setPrintCustomization] = useState<PrintCustomization>({
     filamentColorId: product.variants[product.defaultVariantIndex].filamentColorId,
+    partColors: initialPartColors,
   });
   const { addItem } = useCart();
   const { show } = useToast();
@@ -141,7 +151,63 @@ export function ProductPageClient({ product }: { product: ProductPage }) {
         <div className="reveal-item">
           <div className={styles.gallery}>
             {is3DPrinted && product.stlFile ? (
-              <STLViewer stlPath={product.stlFile} color={selectedColorHex ?? '#F8F8F8'} />
+              <>
+                {product.assembledPhotoUrl && (
+                  <div style={{ display: 'flex', gap: '4px', marginBottom: '12px' }}>
+                    <button
+                      onClick={() => setGalleryView('3d')}
+                      style={{
+                        flex: 1,
+                        padding: '6px 12px',
+                        fontSize: '13px',
+                        fontWeight: 600,
+                        border: '1px solid',
+                        borderRadius: '8px 0 0 8px',
+                        cursor: 'pointer',
+                        transition: 'background 0.15s, color 0.15s',
+                        background: galleryView === '3d' ? '#0d9488' : '#fff',
+                        color: galleryView === '3d' ? '#fff' : '#555',
+                        borderColor: galleryView === '3d' ? '#0d9488' : '#d1d5db',
+                      }}
+                      aria-pressed={galleryView === '3d'}
+                    >
+                      3D Model
+                    </button>
+                    <button
+                      onClick={() => setGalleryView('photo')}
+                      style={{
+                        flex: 1,
+                        padding: '6px 12px',
+                        fontSize: '13px',
+                        fontWeight: 600,
+                        border: '1px solid',
+                        borderRadius: '0 8px 8px 0',
+                        cursor: 'pointer',
+                        transition: 'background 0.15s, color 0.15s',
+                        background: galleryView === 'photo' ? '#0d9488' : '#fff',
+                        color: galleryView === 'photo' ? '#fff' : '#555',
+                        borderColor: galleryView === 'photo' ? '#0d9488' : '#d1d5db',
+                        marginLeft: '-1px',
+                      }}
+                      aria-pressed={galleryView === 'photo'}
+                    >
+                      Assembled Photo
+                    </button>
+                  </div>
+                )}
+                {galleryView === '3d' ? (
+                  <STLViewer stlPath={product.stlFile} color={selectedColorHex ?? '#A8A8A8'} />
+                ) : (
+                  <img
+                    className={styles.galleryImage}
+                    src={product.assembledPhotoUrl}
+                    alt={`${product.name} — assembled`}
+                    loading="eager"
+                    style={{ viewTransitionName: `product-${product.slug}` }}
+                    onError={(e) => { (e.currentTarget as HTMLImageElement).src = '/images/products/placeholder.svg'; }}
+                  />
+                )}
+              </>
             ) : (
               <img
                 className={styles.galleryImage}
@@ -202,12 +268,35 @@ export function ProductPageClient({ product }: { product: ProductPage }) {
 
           {is3DPrinted && filamentColors.length > 0 ? (
             <div style={{ marginBottom: '16px' }}>
-              <p style={{ margin: '0 0 8px', fontSize: '13px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em', color: '#666' }}>Color</p>
-              <FilamentColorPicker
-                colors={filamentColors}
-                selectedId={printCustomization.filamentColorId ?? filamentColors[0].id}
-                onChange={handleFilamentColorChange}
-              />
+              <p style={{ margin: '0 0 10px', fontSize: '13px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em', color: '#666' }}>Color</p>
+              {product.multiColorParts && printCustomization.partColors ? (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                  {product.multiColorParts.map(part => (
+                    <div key={part.id} style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                      <span style={{ fontSize: '13px', fontWeight: 500, color: '#444', width: '56px', flexShrink: 0 }}>{part.label}</span>
+                      <FilamentColorPicker
+                        colors={filamentColors}
+                        selectedId={printCustomization.partColors![part.id] ?? filamentColors[0].id}
+                        onChange={(colorId) =>
+                          setPrintCustomization(prev => ({
+                            ...prev,
+                            partColors: { ...prev.partColors, [part.id]: colorId },
+                          }))
+                        }
+                      />
+                    </div>
+                  ))}
+                  <p style={{ margin: 0, fontSize: '12px', color: '#888', fontStyle: 'italic' }}>
+                    Each part is printed separately in your chosen color and assembled.
+                  </p>
+                </div>
+              ) : (
+                <FilamentColorPicker
+                  colors={filamentColors}
+                  selectedId={printCustomization.filamentColorId ?? filamentColors[0].id}
+                  onChange={handleFilamentColorChange}
+                />
+              )}
             </div>
           ) : (
             <VariantSelector

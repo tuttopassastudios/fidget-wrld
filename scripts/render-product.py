@@ -63,8 +63,8 @@ def render_stl(stl_path, output_path, color_hex='#F0F0F0'):
     bpy.context.collection.objects.link(cam_obj)
     bpy.context.scene.camera = cam_obj
 
-    # Isometric-ish angle: slightly above, to the front-right
-    cam_obj.location = (1.8, -1.8, 1.4)
+    # Isometric-ish angle: slightly above, to the front-right (closer = larger subject)
+    cam_obj.location = (1.35, -1.35, 1.05)
     cam_obj.rotation_euler = (math.radians(58), 0, math.radians(45))
 
     # Track-to constraint so camera always looks at object
@@ -130,6 +130,6 @@ if len(args) < 2:
 
 stl_path   = args[0]
 output_path = args[1]
-color_hex  = args[2] if len(args) > 2 else '#F0F0F0'
+color_hex  = args[2] if len(args) > 2 else '#A8A8A8'
 
 render_stl(stl_path, output_path, color_hex)
