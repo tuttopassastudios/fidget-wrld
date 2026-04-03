@@ -2,7 +2,7 @@
 
 import { Suspense, useRef, useState, useEffect } from 'react';
 import { Canvas, useLoader } from '@react-three/fiber';
-import { OrbitControls, Center, Environment, useProgress, Html } from '@react-three/drei';
+import { OrbitControls, Center, useProgress, Html } from '@react-three/drei';
 import { STLLoader } from 'three/examples/jsm/loaders/STLLoader.js';
 
 export interface STLViewerProps {
@@ -57,10 +57,10 @@ function STLModel({ stlPath, color }: { stlPath: string; color: string }) {
 function Scene({ stlPath, color, autoRotate }: { stlPath: string; color: string; autoRotate: boolean }) {
   return (
     <>
-      <ambientLight intensity={0.6} />
-      <directionalLight position={[5, 10, 7]} intensity={1.2} castShadow />
-      <directionalLight position={[-5, -5, -5]} intensity={0.3} />
-      <Environment preset="studio" />
+      <ambientLight intensity={0.8} />
+      <directionalLight position={[5, 10, 7]} intensity={1.4} castShadow />
+      <directionalLight position={[-5, -5, -5]} intensity={0.4} />
+      <directionalLight position={[0, -10, 0]} intensity={0.2} />
       <Suspense fallback={<ProgressTracker />}>
         <STLModel stlPath={stlPath} color={color} />
       </Suspense>
