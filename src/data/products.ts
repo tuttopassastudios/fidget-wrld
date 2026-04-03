@@ -9,9 +9,9 @@ export const bulkTiers: BulkTier[] = [
 export const productPages: ProductPage[] = [
   // ========== 3D PRINTED ==========
   {
-    slug: 'yafic-fidget-toy',
-    name: 'YAFIC Fidget Toy',
-    tagline: 'Custom 3D-printed fidget toy, made to order',
+    slug: 'infinity-cube',
+    name: 'Infinity Cube',
+    tagline: 'The endless fold — print-in-place, made to order',
     category: 'Clicky',
     fulfillmentType: '3d-printed',
     stlFile: '/models/yafic_v2.stl',
@@ -23,8 +23,8 @@ export const productPages: ProductPage[] = [
     printLeadTime: '3–5 business days',
     variants: [
       {
-        sku: '3DP-YAFIC-WHT',
-        name: 'YAFIC Fidget Toy',
+        sku: '3DP-INFCUBE-WHT',
+        name: 'Infinity Cube',
         variant: 'Arctic White',
         color: 'Arctic White',
         colorHex: '#F8F8F8',
@@ -34,8 +34,8 @@ export const productPages: ProductPage[] = [
         inventory: 999,
       },
       {
-        sku: '3DP-YAFIC-BLK',
-        name: 'YAFIC Fidget Toy',
+        sku: '3DP-INFCUBE-BLK',
+        name: 'Infinity Cube',
         variant: 'Midnight Black',
         color: 'Midnight Black',
         colorHex: '#1A1A1A',
@@ -46,30 +46,31 @@ export const productPages: ProductPage[] = [
       },
     ],
     defaultVariantIndex: 0,
-    description: `<p>The YAFIC Fidget Toy is precision 3D-printed in-house using premium PLA filament. Every unit is made to order — pick your color, add a personal engraving, or attach a keychain ring.</p>
-<p>Smooth action, satisfying tactile feedback, and built to last. Because it is printed on demand, you can customize it in ways mass-produced toys simply cannot match.</p>`,
+    description: `<p>The Infinity Cube is a classic kinetic toy made of eight interconnected cubes that can be folded and unfolded endlessly in a continuous, mesmerizing motion. As a "print-in-place" model, it comes directly off the 3D printer fully assembled, though a well-calibrated machine is essential to ensure its joints print correctly. It prints easily in PLA plastic without needing support material, providing a smooth, repetitive, and quiet fidget experience that is excellent for improving focus in calm settings.</p>`,
     features: [
+      'Print-in-place — comes off the printer fully assembled',
+      'Eight interconnected cubes, endless fold cycle',
+      'No support material needed',
       'Made to order — printed in-house',
       'Choose your filament color',
       'Optional text engraving',
       'Optional keychain hole add-on',
-      'Premium PLA filament',
     ],
     specifications: {
       'Material': 'PLA Filament',
+      'Print Style': 'Print-in-place (no assembly)',
       'Print Resolution': '0.2mm layer height',
-      'Infill': '20%',
       'Lead Time': '3–5 business days',
     },
-    moods: ['focus', 'play', 'calm'],
+    moods: ['focus', 'calm'],
     audiences: ['adults', 'kids', 'office'],
     textures: ['smooth'],
     ageRecommendation: '8+',
     materials: ['PLA Plastic'],
     isNew: true,
     relatedSlugs: ['magnet-balls', 'fidget-cube'],
-    metaTitle: 'YAFIC Fidget Toy | Custom 3D-Printed | Fidget WRLD',
-    metaDescription: 'Custom 3D-printed fidget toy made to order. Choose your color, add engraving or a keychain. Ships in 3–5 business days.',
+    metaTitle: 'Infinity Cube | Custom 3D-Printed Fidget Toy | Fidget WRLD',
+    metaDescription: 'The Infinity Cube is a print-in-place fidget toy — eight interconnected cubes that fold endlessly. Made to order in your choice of color.',
   },
 
   // ========== MAGNETIC ==========

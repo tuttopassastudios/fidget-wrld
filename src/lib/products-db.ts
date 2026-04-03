@@ -82,6 +82,10 @@ function productPageToDbRow(product: ProductPage): DbProductInsert {
 // ---------------------------------------------------------------------------
 
 export async function getAllProducts(): Promise<ProductPage[]> {
+  // Always include static 3D-printed products (managed in code, not Supabase)
+  const { productPages: staticProducts } = await import('@/data/products');
+  const staticPrinted = staticProducts.filter(p => p.fulfillmentType === '3d-printed');
+
   try {
     const supabase = getAdminClient();
     const { data, error } = await supabase
@@ -90,13 +94,15 @@ export async function getAllProducts(): Promise<ProductPage[]> {
       .order('name');
 
     if (error) throw error;
-    if (!data) return [];
+    if (!data) return staticPrinted;
 
-    return data.map(dbRowToProductPage);
+    // Merge: static 3D-printed products first, then Supabase products
+    const supabaseSlugs = new Set(data.map(r => r.slug as string));
+    const dedupedStatic = staticPrinted.filter(p => !supabaseSlugs.has(p.slug));
+    return [...dedupedStatic, ...data.map(dbRowToProductPage)];
   } catch (error) {
     console.error('[products-db] Supabase read failed, using static fallback:', error);
-    const { productPages } = await import('@/data/products');
-    return productPages;
+    return staticProducts;
   }
 }
 
@@ -110,7 +116,11 @@ export async function getProductBySlug(slug: string): Promise<ProductPage | null
       .single();
 
     if (error) {
-      if (error.code === 'PGRST116') return null; // Not found
+      if (error.code === 'PGRST116') {
+        // Not in Supabase — fall back to static catalog (covers 3D-printed products)
+        const { getProductBySlug: staticGet } = await import('@/data/products');
+        return staticGet(slug) ?? null;
+      }
       throw error;
     }
     if (!data) return null;
