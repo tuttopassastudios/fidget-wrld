@@ -67,6 +67,8 @@ class X {
   #animationState = { elapsed: 0, delta: 0 };
   #isAnimating: boolean = false;
   #isVisible: boolean = false;
+  #boundOnResize!: () => void;
+  #boundOnVisibilityChange!: () => void;
 
   canvas!: HTMLCanvasElement;
   camera!: PerspectiveCamera;
@@ -144,10 +146,13 @@ class X {
   }
 
   #initObservers() {
+    // Store bound references so the same function can be removed later
+    this.#boundOnResize = this.#onResize.bind(this);
+    this.#boundOnVisibilityChange = this.#onVisibilityChange.bind(this);
     if (!(this.#config.size instanceof Object)) {
-      window.addEventListener('resize', this.#onResize.bind(this));
+      window.addEventListener('resize', this.#boundOnResize);
       if (this.#config.size === 'parent' && this.canvas.parentNode) {
-        this.#resizeObserver = new ResizeObserver(this.#onResize.bind(this));
+        this.#resizeObserver = new ResizeObserver(this.#boundOnResize);
         this.#resizeObserver.observe(this.canvas.parentNode as Element);
       }
     }
@@ -157,7 +162,7 @@ class X {
       threshold: 0
     });
     this.#intersectionObserver.observe(this.canvas);
-    document.addEventListener('visibilitychange', this.#onVisibilityChange.bind(this));
+    document.addEventListener('visibilitychange', this.#boundOnVisibilityChange);
   }
 
   #onResize() {
@@ -309,15 +314,19 @@ class X {
     this.clear();
     this.#postprocessing?.dispose();
     this.renderer.dispose();
-    this.renderer.forceContextLoss();
+    // Do NOT call forceContextLoss() — it triggers a context-lost event that prevents
+    // the browser from immediately issuing a new WebGL context on SPA re-navigation,
+    // causing the next mount to fail and fall back to the error state.
+    // renderer.dispose() alone releases GPU resources; the context is freed naturally
+    // when the canvas element is garbage collected.
     this.isDisposed = true;
   }
 
   #onResizeCleanup() {
-    window.removeEventListener('resize', this.#onResize.bind(this));
+    window.removeEventListener('resize', this.#boundOnResize);
     this.#resizeObserver?.disconnect();
     this.#intersectionObserver?.disconnect();
-    document.removeEventListener('visibilitychange', this.#onVisibilityChange.bind(this));
+    document.removeEventListener('visibilitychange', this.#boundOnVisibilityChange);
   }
 }
 
