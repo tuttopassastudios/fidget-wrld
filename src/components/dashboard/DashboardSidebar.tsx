@@ -11,6 +11,7 @@ const NAV_ITEMS = [
   { href: '/dashboard/analytics', label: 'Analytics', icon: '▤' },
   { href: '/dashboard/customers', label: 'Customers', icon: '♟' },
   { href: '/dashboard/orders', label: 'Orders', icon: '☰' },
+  { href: '/dashboard/print-queue', label: 'Print Queue', icon: '⬡' },
   { href: '/dashboard/users', label: 'Users', icon: '◉' },
   { href: '/dashboard/products', label: 'Products', icon: '◆' },
   { href: '/dashboard/promos', label: 'Promos', icon: '✦' },

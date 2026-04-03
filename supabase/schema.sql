@@ -92,6 +92,7 @@ CREATE TABLE orders (
   promo_code TEXT,
   discount DECIMAL(10, 2) NOT NULL DEFAULT 0,
   notes TEXT,
+  print_status TEXT CHECK (print_status IN ('pending_review', 'approved', 'printing', 'ready_to_ship', 'shipped')),
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );

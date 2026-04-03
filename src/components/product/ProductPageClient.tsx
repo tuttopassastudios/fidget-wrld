@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, lazy, Suspense } from 'react';
 import { useCart } from '@/context/CartContext';
 import { useToast } from '@/context/ToastContext';
 import { useWishlist } from '@/context/WishlistContext';
@@ -14,25 +14,50 @@ import { CompleteTheSet } from './CompleteTheSet';
 import { SectionHeading } from '@/components/ui/SectionHeading';
 import { EditorialGrid } from '@/components/ui/EditorialGrid';
 import { PolkaDots } from '@/components/ui/DecorativePatterns';
+import { FilamentColorPicker } from './FilamentColorPicker';
+import { CustomizationPanel } from './CustomizationPanel';
+import { MadeToOrderBadge } from './MadeToOrderBadge';
 import { formatCurrency } from '@/lib/utils';
 import { useHaptics } from '@/hooks/useHaptics';
 import { getRecommendations, bulkTiers, productPages } from '@/data/products';
+import { getAvailableColors } from '@/data/filament-colors';
 import { getModelComponent } from './models';
-import type { ProductPage } from '@/types';
+import type { ProductPage, PrintCustomization } from '@/types';
 import styles from './ProductPageClient.module.css';
 import './AboutCarousel.css';
+
+// Lazy-load the heavy STL viewer so it doesn't bloat the initial bundle
+const STLViewer = lazy(() => import('./STLViewer').then(m => ({ default: m.STLViewer })));
 
 export function ProductPageClient({ product }: { product: ProductPage }) {
   // Memoize model component lookup to satisfy React 19 render rules
   const ModelComponent = useMemo(() => getModelComponent(product.slug), [product.slug]);
   const hasModel = ModelComponent !== null;
+  const is3DPrinted = product.fulfillmentType === '3d-printed';
+
   const [variantIdx, setVariantIdx] = useState(product.defaultVariantIndex);
   const [quantity, setQuantity] = useState(1);
+  const [printCustomization, setPrintCustomization] = useState<PrintCustomization>({
+    filamentColorId: product.variants[product.defaultVariantIndex].filamentColorId,
+  });
   const { addItem } = useCart();
   const { show } = useToast();
   const { toggle, isWishlisted } = useWishlist();
   const { track } = useRecentlyViewed();
   const { trigger } = useHaptics();
+
+  // Available filament colors for this product
+  const filamentColors = useMemo(
+    () => (product.availableFilamentColorIds ? getAvailableColors(product.availableFilamentColorIds) : []),
+    [product.availableFilamentColorIds]
+  );
+
+  // Keep filamentColorId in sync when variant changes externally
+  const selectedColorHex = useMemo(() => {
+    if (!is3DPrinted) return undefined;
+    const v = product.variants[variantIdx];
+    return v.colorHex;
+  }, [is3DPrinted, product.variants, variantIdx]);
 
   const variant = product.variants[variantIdx];
   const wishlisted = isWishlisted(variant.sku);
@@ -69,11 +94,20 @@ export function ProductPageClient({ product }: { product: ProductPage }) {
       price: variant.price,
       image: variant.image,
       quantity,
+      fulfillmentType: product.fulfillmentType,
+      customization: is3DPrinted ? printCustomization : undefined,
     });
     trigger('success');
     if (typeof window !== 'undefined' && window.innerWidth <= 768) {
       show(`${variant.name} (${variant.variant}) added to cart`, 'success', 3000);
     }
+  };
+
+  // When a filament color is selected, also switch to the matching variant
+  const handleFilamentColorChange = (colorId: string) => {
+    const matchingIdx = product.variants.findIndex(v => v.filamentColorId === colorId);
+    if (matchingIdx !== -1) setVariantIdx(matchingIdx);
+    setPrintCustomization(prev => ({ ...prev, filamentColorId: colorId }));
   };
 
   const handleWishlist = () => {
@@ -98,20 +132,30 @@ export function ProductPageClient({ product }: { product: ProductPage }) {
       <div className={styles.layout}>
         <div className="reveal-item">
           <div className={styles.gallery}>
-            <img
-              className={styles.galleryImage}
-              src={variant.image}
-              alt={variant.name}
-              loading="eager"
-              style={{ viewTransitionName: `product-${product.slug}` }}
-              onError={(e) => { (e.currentTarget as HTMLImageElement).src = '/images/products/placeholder.svg'; }}
-            />
+            {is3DPrinted && product.stlFile ? (
+              <Suspense fallback={
+                <div style={{ width: '100%', height: '400px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f8fafc', borderRadius: '12px', color: '#666', fontSize: '14px' }}>
+                  Loading 3D model&hellip;
+                </div>
+              }>
+                <STLViewer stlPath={product.stlFile} color={selectedColorHex ?? '#F8F8F8'} />
+              </Suspense>
+            ) : (
+              <img
+                className={styles.galleryImage}
+                src={variant.image}
+                alt={variant.name}
+                loading="eager"
+                style={{ viewTransitionName: `product-${product.slug}` }}
+                onError={(e) => { (e.currentTarget as HTMLImageElement).src = '/images/products/placeholder.svg'; }}
+              />
+            )}
             <div className={styles.galleryDecor} aria-hidden="true">
               <PolkaDots pattern="corner" size="sm" cornerPosition="top-right" />
             </div>
           </div>
 
-          {uniqueImages && (
+          {!is3DPrinted && uniqueImages && (
             <div className={styles.thumbnails}>
               {product.variants.map((v, i) => (
                 <button
@@ -128,15 +172,23 @@ export function ProductPageClient({ product }: { product: ProductPage }) {
         </div>
 
         <div className={`${styles.info} reveal-item`}>
+          {is3DPrinted && (
+            <div style={{ marginBottom: '12px' }}>
+              <MadeToOrderBadge leadTime={product.printLeadTime} />
+            </div>
+          )}
+
           <SectionHeading heading={product.name} as="h1" dotAccent />
 
           <div className={styles.meta}>
             <span>SKU: {variant.sku}</span>
             <span>Category: {product.category}</span>
-            <span className={`${styles.availability}${variant.inventory === 0 ? ` ${styles.outOfStock}` : ''}`}>
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="12" cy="12" r="6" /></svg>
-              {variant.inventory === 0 ? 'Out of Stock' : 'In Stock'}
-            </span>
+            {!is3DPrinted && (
+              <span className={`${styles.availability}${variant.inventory === 0 ? ` ${styles.outOfStock}` : ''}`}>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="12" cy="12" r="6" /></svg>
+                {variant.inventory === 0 ? 'Out of Stock' : 'In Stock'}
+              </span>
+            )}
           </div>
 
           <div className={styles.price}>
@@ -146,53 +198,78 @@ export function ProductPageClient({ product }: { product: ProductPage }) {
             )}
           </div>
 
-          <VariantSelector
-            variants={product.variants}
-            selectedIndex={variantIdx}
-            onSelect={setVariantIdx}
-          />
+          {is3DPrinted && filamentColors.length > 0 ? (
+            <div style={{ marginBottom: '16px' }}>
+              <p style={{ margin: '0 0 8px', fontSize: '13px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em', color: '#666' }}>Color</p>
+              <FilamentColorPicker
+                colors={filamentColors}
+                selectedId={printCustomization.filamentColorId ?? filamentColors[0].id}
+                onChange={handleFilamentColorChange}
+              />
+            </div>
+          ) : (
+            <VariantSelector
+              variants={product.variants}
+              selectedIndex={variantIdx}
+              onSelect={setVariantIdx}
+            />
+          )}
 
-          {variant.inventory !== 0 && (
+          {(is3DPrinted || variant.inventory !== 0) && (
             <>
+              {is3DPrinted && product.customizationOptions && (
+                <div style={{ marginBottom: '16px' }}>
+                  <CustomizationPanel
+                    options={product.customizationOptions}
+                    value={{ engravingText: printCustomization.engravingText, keychainHole: printCustomization.keychainHole }}
+                    onChange={(val) => setPrintCustomization(prev => ({ ...prev, ...val }))}
+                  />
+                </div>
+              )}
+
               <div className={styles.quantityRow}>
                 <label className={styles.quantityLabel}>Quantity:</label>
                 <QuantitySelector value={quantity} onChange={setQuantity} />
               </div>
 
-              <div className={styles.bulkTier}>
-                {bulkTiers.map((t, i) => (
-                  <span key={t.qty}>
-                    <span className={quantity >= t.qty ? styles.bulkTierActive : undefined}>
-                      {t.qty}+ units: {t.label}
-                    </span>
-                    {i < bulkTiers.length - 1 && <span className={styles.bulkTierDivider}>&middot;</span>}
-                  </span>
-                ))}
-              </div>
+              {!is3DPrinted && (
+                <>
+                  <div className={styles.bulkTier}>
+                    {bulkTiers.map((t, i) => (
+                      <span key={t.qty}>
+                        <span className={quantity >= t.qty ? styles.bulkTierActive : undefined}>
+                          {t.qty}+ units: {t.label}
+                        </span>
+                        {i < bulkTiers.length - 1 && <span className={styles.bulkTierDivider}>&middot;</span>}
+                      </span>
+                    ))}
+                  </div>
 
-              {quantity >= 25 && (
-                <div className={styles.quantityWarningAmber}>
-                  <svg className={styles.warningIcon} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
-                    <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
-                    <path d="M12 9v4" /><path d="M12 17h.01" />
-                  </svg>
-                  <span>
-                    <strong>Wholesale inquiry recommended.</strong> For orders of 25+ units we offer custom pricing and priority fulfillment.{' '}
-                    <a href="/contact" className={styles.warningLink}>Contact our sales team</a> for a quote.
-                  </span>
-                </div>
-              )}
+                  {quantity >= 25 && (
+                    <div className={styles.quantityWarningAmber}>
+                      <svg className={styles.warningIcon} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+                        <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+                        <path d="M12 9v4" /><path d="M12 17h.01" />
+                      </svg>
+                      <span>
+                        <strong>Wholesale inquiry recommended.</strong> For orders of 25+ units we offer custom pricing and priority fulfillment.{' '}
+                        <a href="/contact" className={styles.warningLink}>Contact our sales team</a> for a quote.
+                      </span>
+                    </div>
+                  )}
 
-              {quantity >= 10 && quantity < 25 && (
-                <div className={styles.quantityWarningTeal}>
-                  <svg className={styles.warningIcon} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
-                    <circle cx="12" cy="12" r="10" />
-                    <path d="M12 16v-4" /><path d="M12 8h.01" />
-                  </svg>
-                  <span>
-                    Large order — bulk discount applied! Contact us for wholesale pricing on orders of 25+.
-                  </span>
-                </div>
+                  {quantity >= 10 && quantity < 25 && (
+                    <div className={styles.quantityWarningTeal}>
+                      <svg className={styles.warningIcon} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+                        <circle cx="12" cy="12" r="10" />
+                        <path d="M12 16v-4" /><path d="M12 8h.01" />
+                      </svg>
+                      <span>
+                        Large order — bulk discount applied! Contact us for wholesale pricing on orders of 25+.
+                      </span>
+                    </div>
+                  )}
+                </>
               )}
             </>
           )}
@@ -201,9 +278,9 @@ export function ProductPageClient({ product }: { product: ProductPage }) {
             <button
               className="btn btn-primary btn-lg"
               onClick={handleAddToCart}
-              disabled={variant.inventory === 0}
+              disabled={!is3DPrinted && variant.inventory === 0}
             >
-              {variant.inventory === 0 ? 'Out of Stock' : 'Add to Cart'}
+              {!is3DPrinted && variant.inventory === 0 ? 'Out of Stock' : 'Add to Cart'}
             </button>
             <button
               className={`btn-wishlist${wishlisted ? ' active' : ''}`}
@@ -218,14 +295,17 @@ export function ProductPageClient({ product }: { product: ProductPage }) {
             </button>
           </div>
 
-          {variant.inventory !== 0 && (
+          {(is3DPrinted || variant.inventory !== 0) && (
             <div className={styles.features}>
               <div className={styles.feature}>
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
-                  <rect width="20" height="20" x="2" y="2" rx="5" />
-                  <path d="M5 12h14" /><path d="M12 5v14" />
+                  {is3DPrinted ? (
+                    <path d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2M6 14h12v8H6z" />
+                  ) : (
+                    <><rect width="20" height="20" x="2" y="2" rx="5" /><path d="M5 12h14" /><path d="M12 5v14" /></>
+                  )}
                 </svg>
-                Ships within 24-48 hours
+                {is3DPrinted ? `Printed in-house \u00b7 ${product.printLeadTime ?? '3\u20135 business days'}` : 'Ships within 24-48 hours'}
               </div>
             </div>
           )}

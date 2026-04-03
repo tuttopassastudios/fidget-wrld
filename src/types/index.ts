@@ -1,5 +1,21 @@
 // Fidgetopia Product Types
 
+export type FulfillmentType = 'dropship' | '3d-printed';
+
+export interface FilamentColor {
+  id: string;
+  name: string;
+  hex: string;
+  inStock: boolean;
+  type?: 'standard' | 'translucent' | 'gradient';
+}
+
+export interface PrintCustomization {
+  filamentColorId?: string;
+  engravingText?: string;
+  keychainHole?: boolean;
+}
+
 export type ProductCategory =
   | 'Magnetic'
   | 'Squishy'
@@ -27,6 +43,7 @@ export interface ProductVariant {
   cjPid?: string;      // CJ Dropshipping Product ID
   cjVid?: string;      // CJ Dropshipping Variant ID
   cjWarehouse?: 'US' | 'CN';  // Fulfillment warehouse — defaults to CN
+  filamentColorId?: string;  // Which filament color this variant represents
 }
 
 export interface ProductPage {
@@ -49,6 +66,16 @@ export interface ProductPage {
   materials?: string[];
   dimensions?: string;
   weight?: string;
+
+  // 3D printing
+  fulfillmentType?: FulfillmentType;       // defaults to 'dropship' if absent
+  stlFile?: string;                        // path like '/models/yafic_v2.stl'
+  availableFilamentColorIds?: string[];    // references FilamentColor.id
+  customizationOptions?: {
+    engravingText?: boolean;
+    keychainHole?: boolean;
+  };
+  printLeadTime?: string;                  // e.g. '3–5 business days'
 
   // Badges
   isNew?: boolean;
@@ -94,6 +121,8 @@ export interface CartItem {
   image: string;
   quantity: number;
   giftWrap?: boolean;
+  fulfillmentType?: FulfillmentType;
+  customization?: PrintCustomization;
 }
 
 export interface WishlistItem {
