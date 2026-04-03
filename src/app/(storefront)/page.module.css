@@ -256,6 +256,50 @@
   transform: translateX(2px);
 }
 
+/* ── Custom 3D-Printed Section ── */
+.printedSection {
+  padding: 64px 0;
+  margin: 0;
+}
+
+.printedInner {
+  background: linear-gradient(135deg, #f0fdfa 0%, #e0f2fe 100%);
+  border-radius: 20px;
+  padding: 48px 32px;
+  position: relative;
+}
+
+.printedHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.printedSubheading {
+  font-size: 16px;
+  color: #64748b;
+  margin: 8px 0 0;
+}
+
+.printedCta {
+  font-size: var(--text-sm);
+  font-weight: var(--font-semibold);
+  color: var(--color-accent-primary);
+  text-decoration: none;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  transition: var(--transition-fast);
+  white-space: nowrap;
+}
+
+.printedCta:hover {
+  color: var(--color-accent-primary-hover);
+  text-decoration: underline;
+}
+
 /* ── Responsive ── */
 @media (max-width: 768px) {
   .hero {

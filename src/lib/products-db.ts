@@ -288,3 +288,10 @@ export async function getBestSellers(): Promise<ProductPage[]> {
   const bestsellers = products.filter(p => p.isBestseller && !p.isOutOfStock);
   return bestsellers.slice(0, 3);
 }
+
+export async function get3DPrintedProducts(): Promise<ProductPage[]> {
+  // Returns all products with fulfillmentType === '3d-printed' from the static catalog
+  // (3D printed products are managed in static data, not Supabase)
+  const { productPages } = await import('@/data/products');
+  return productPages.filter(p => p.fulfillmentType === '3d-printed');
+}

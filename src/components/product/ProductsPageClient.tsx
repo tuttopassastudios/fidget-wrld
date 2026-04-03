@@ -29,6 +29,7 @@ export function ProductsPageClient({ products }: { products: ProductPage[] }) {
   const searchParams = useSearchParams();
   const searchQuery = searchParams.get('search') || '';
   const urlCategory = searchParams.get('category') || null;
+  const urlFulfillment = (searchParams.get('fulfillment') || 'all') as 'all' | '3d-printed' | 'dropship';
   const { trigger } = useHaptics();
   const [sort, setSort] = useState<SortOption>('featured');
 
@@ -41,6 +42,7 @@ export function ProductsPageClient({ products }: { products: ProductPage[] }) {
     moods: [],
     audiences: [],
     stockStatus: 'all',
+    fulfillment: urlFulfillment,
   });
 
   // Sync category from URL params (only when it actually changes)
@@ -51,6 +53,15 @@ export function ProductsPageClient({ products }: { products: ProductPage[] }) {
       queueMicrotask(() => setFilters(prev => ({ ...prev, category: urlCategory })));
     }
   }, [urlCategory]);
+
+  // Sync fulfillment from URL params (only when it actually changes)
+  const prevUrlFulfillmentRef = useRef(urlFulfillment);
+  useLayoutEffect(() => {
+    if (prevUrlFulfillmentRef.current !== urlFulfillment) {
+      prevUrlFulfillmentRef.current = urlFulfillment;
+      queueMicrotask(() => setFilters(prev => ({ ...prev, fulfillment: urlFulfillment })));
+    }
+  }, [urlFulfillment]);
 
   const handleFilterChange = useCallback(
     (newFilters: FilterState) => {
@@ -112,6 +123,13 @@ export function ProductsPageClient({ products }: { products: ProductPage[] }) {
       pills.push({
         label: filters.stockStatus === 'in-stock' ? 'In Stock' : 'Out of Stock',
         onRemove: () => setFilters(f => ({ ...f, stockStatus: 'all' })),
+      });
+    }
+
+    if (filters.fulfillment !== 'all') {
+      pills.push({
+        label: filters.fulfillment === '3d-printed' ? '3D Printed' : 'Quick Ship',
+        onRemove: () => setFilters(f => ({ ...f, fulfillment: 'all' })),
       });
     }
 
@@ -180,6 +198,15 @@ export function ProductsPageClient({ products }: { products: ProductPage[] }) {
       items = items.filter(p => !p.isOutOfStock);
     } else if (filters.stockStatus === 'out-of-stock') {
       items = items.filter(p => !!p.isOutOfStock);
+    }
+
+    // Fulfillment type filter
+    if (filters.fulfillment && filters.fulfillment !== 'all') {
+      items = items.filter(p =>
+        filters.fulfillment === '3d-printed'
+          ? p.fulfillmentType === '3d-printed'
+          : p.fulfillmentType !== '3d-printed'
+      );
     }
 
     // Sort
@@ -277,6 +304,7 @@ export function ProductsPageClient({ products }: { products: ProductPage[] }) {
                   meta={p.category}
                   variantCount={p.variants.length}
                   allOutOfStock={p.isOutOfStock}
+                  fulfillmentType={p.fulfillmentType}
                 />
               ))}
             </div>

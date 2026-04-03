@@ -8,10 +8,17 @@ import { EditorialGrid } from '@/components/ui/EditorialGrid';
 import { CategoryBubbles } from '@/components/ui/CategoryBubbles';
 import { NewsletterSignup } from '@/components/newsletter';
 import { BallpitHero } from './BallpitHero';
-import { getBestSellers } from '@/lib/products-db';
+import { getBestSellers, get3DPrintedProducts } from '@/lib/products-db';
 import styles from './page.module.css';
 
 const CATEGORY_ITEMS = [
+  {
+    label: '3D Printed',
+    icon: '🖨️',
+    href: '/products?fulfillment=3d-printed',
+    rotation: -3,
+    hoverStyles: { bgColor: '#0d9488', textColor: '#fff' },
+  },
   {
     label: 'Magnetic',
     icon: '🧲',
@@ -58,6 +65,7 @@ const CATEGORY_ITEMS = [
 
 export default async function HomePage() {
   const bestSellersData = await getBestSellers();
+  const printedProductsData = await get3DPrintedProducts();
 
   const bestSellers = bestSellersData.map(p => {
     const v = p.variants[p.defaultVariantIndex];
@@ -72,6 +80,23 @@ export default async function HomePage() {
       meta: p.category,
       variantCount: p.variants.length,
       allOutOfStock: !!p.isOutOfStock,
+    };
+  });
+
+  const printedProducts = printedProductsData.map(p => {
+    const v = p.variants[p.defaultVariantIndex];
+    return {
+      sku: v.sku,
+      name: p.name,
+      variant: v.variant,
+      price: v.price,
+      image: v.image,
+      category: p.category,
+      slug: p.slug,
+      meta: p.category,
+      variantCount: p.variants.length,
+      allOutOfStock: !!p.isOutOfStock,
+      fulfillmentType: p.fulfillmentType,
     };
   });
 
@@ -111,7 +136,48 @@ export default async function HomePage() {
         <CategoryBubbles items={CATEGORY_ITEMS} />
       </FadeIn>
 
-      {/* 3. Best Sellers */}
+      {/* 3. Custom 3D-Printed Section */}
+      {printedProducts.length > 0 && (
+        <FadeIn>
+          <section className={styles.printedSection}>
+            <div className="container">
+              <div className={styles.printedInner}>
+                <div className={styles.printedHeader}>
+                  <div>
+                    <SectionHeading
+                      heading="Custom 3D-Printed Fidgets"
+                      eyebrow="Made to Order"
+                    />
+                    <p className={styles.printedSubheading}>
+                      Designed by you. Printed by us. Shipped in 3&ndash;5 days.
+                    </p>
+                  </div>
+                  <Link href="/products?fulfillment=3d-printed" className={styles.printedCta}>
+                    Shop 3D Printed &rarr;
+                  </Link>
+                </div>
+                <EditorialGrid layout="row">
+                  {printedProducts.map((p, i) => (
+                    <ProductCard
+                      key={p.sku}
+                      product={p}
+                      slug={p.slug}
+                      meta={p.meta}
+                      priority={i < 4}
+                      variantCount={p.variantCount}
+                      allOutOfStock={p.allOutOfStock}
+                      badges={{ isNew: true }}
+                      fulfillmentType={p.fulfillmentType}
+                    />
+                  ))}
+                </EditorialGrid>
+              </div>
+            </div>
+          </section>
+        </FadeIn>
+      )}
+
+      {/* 4. Best Sellers */}
       <FadeIn>
         <section className={styles.productsSection}>
           <div className="container">
@@ -128,7 +194,7 @@ export default async function HomePage() {
         </section>
       </FadeIn>
 
-      {/* 4. Newsletter */}
+      {/* 5. Newsletter */}
       <FadeIn>
         <section className={styles.newsletterSection}>
           <div className="container">
@@ -152,7 +218,7 @@ export default async function HomePage() {
         </section>
       </FadeIn>
 
-      {/* 5. Support Banner */}
+      {/* 6. Support Banner */}
       <FadeIn>
         <section className={styles.supportBanner}>
           <div className="container">

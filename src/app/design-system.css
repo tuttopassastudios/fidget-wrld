@@ -400,6 +400,14 @@ img {
   font-weight: 800;
 }
 
+.badge-printed {
+  background: #0d9488;
+  color: #fff;
+  border: none;
+  box-shadow: 0 2px 8px rgba(13, 148, 136, 0.3);
+  font-weight: 800;
+}
+
 .badge-limited {
   background: rgba(239, 68, 68, 0.15);
   color: var(--color-error);

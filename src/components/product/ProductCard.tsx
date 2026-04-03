@@ -30,6 +30,7 @@ interface ProductCardProps {
   productData?: ProductPage;
   enableViewTransition?: boolean;
   allOutOfStock?: boolean;
+  fulfillmentType?: string;
 }
 
 export function ProductCard({
@@ -46,6 +47,7 @@ export function ProductCard({
   productData,
   enableViewTransition = true,
   allOutOfStock = false,
+  fulfillmentType,
 }: ProductCardProps) {
   const { addItem } = useCart();
   const { show } = useToast();
@@ -107,11 +109,14 @@ export function ProductCard({
             />
             {/* Polka-dot hover overlay */}
             <div className="product-card-dot-overlay" aria-hidden="true" />
-            {badges && (badges.isNew || badges.isBestseller || badges.isHot) && (
+            {(fulfillmentType === '3d-printed' || (badges && (badges.isNew || badges.isBestseller || badges.isHot))) && (
               <div className="product-card-badges">
-                {badges.isNew && <span className="badge badge-new">NEW</span>}
-                {badges.isBestseller && <span className="badge badge-bestseller">BEST</span>}
-                {badges.isHot && <span className="badge badge-hot">HOT</span>}
+                {fulfillmentType === '3d-printed' && (
+                  <span className="badge badge-printed" aria-label="3D Printed to order">3D PRINTED</span>
+                )}
+                {badges?.isNew && <span className="badge badge-new">NEW</span>}
+                {badges?.isBestseller && <span className="badge badge-bestseller">BEST</span>}
+                {badges?.isHot && <span className="badge badge-hot">HOT</span>}
               </div>
             )}
             {allOutOfStock && (
