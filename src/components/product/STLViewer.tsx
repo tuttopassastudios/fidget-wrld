@@ -4,6 +4,7 @@ import { Suspense, useRef, useState, useEffect } from 'react';
 import { Canvas, useLoader } from '@react-three/fiber';
 import { OrbitControls, Center, useProgress, Html } from '@react-three/drei';
 import { STLLoader } from 'three/examples/jsm/loaders/STLLoader.js';
+import * as THREE from 'three';
 
 export interface STLViewerProps {
   stlPath: string;
@@ -45,9 +46,18 @@ function ProgressTracker() {
 
 function STLModel({ stlPath, color }: { stlPath: string; color: string }) {
   const geometry = useLoader(STLLoader, stlPath);
+
+  // Normalize the model to fit in a 2-unit bounding sphere regardless of STL units (mm, cm, in)
+  geometry.computeBoundingBox();
+  const box = geometry.boundingBox!;
+  const size = new THREE.Vector3();
+  box.getSize(size);
+  const maxDim = Math.max(size.x, size.y, size.z);
+  const scale = maxDim > 0 ? 2 / maxDim : 1;
+
   return (
     <Center>
-      <mesh geometry={geometry} castShadow receiveShadow>
+      <mesh geometry={geometry} castShadow receiveShadow scale={scale}>
         <meshStandardMaterial color={color} roughness={0.4} metalness={0.1} />
       </mesh>
     </Center>
