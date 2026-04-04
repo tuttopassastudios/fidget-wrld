@@ -104,22 +104,39 @@ export default async function HomePage() {
 
   return (
     <PageReveal>
-      {/* 1. Hero — Ballpit + Logo */}
+      {/* 1. Hero — Ballpit window + tagline */}
       <section className={styles.hero}>
-        <BallpitHero className={styles.heroBallpit} />
-        <noscript>
-          <div className={styles.heroFallback} />
-        </noscript>
+        <Image
+          src="/images/fidget-wrld-logo-main.png"
+          alt="Fidget WRLD"
+          width={600}
+          height={400}
+          priority
+          className={styles.heroLogo}
+        />
 
+        {/* Windowed ball pit */}
+        <div className={styles.heroWindow}>
+          <div className={styles.heroWindowChrome} aria-hidden="true">
+            <span className={styles.heroDot} style={{ background: '#ff5f57' }} />
+            <span className={styles.heroDot} style={{ background: '#febc2e' }} />
+            <span className={styles.heroDot} style={{ background: '#28c840' }} />
+            <span className={styles.heroWindowLabel}>fidget-wrld &mdash; interactive</span>
+          </div>
+          <div className={styles.heroWindowCanvas}>
+            <BallpitHero className={styles.heroBallpit} />
+            <noscript><div className={styles.heroFallback} /></noscript>
+          </div>
+        </div>
+
+        {/* Hook copy + CTA */}
         <div className={styles.heroContent}>
-          <Image
-            src="/images/fidget-wrld-logo-main.png"
-            alt="Fidget WRLD"
-            width={600}
-            height={400}
-            priority
-            className={styles.heroLogo}
-          />
+          <p className={styles.heroTagline}>
+            Built different. Fidgeted&nbsp;everywhere.
+          </p>
+          <p className={styles.heroSub}>
+            Custom 3D-printed toys, N52 magnetic balls, and more &mdash; made&nbsp;to&nbsp;order and shipped in&nbsp;days.
+          </p>
           <Link href="/products" className={styles.heroCta}>
             Shop Now
           </Link>
