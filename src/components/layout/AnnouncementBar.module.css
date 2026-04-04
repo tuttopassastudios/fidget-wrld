@@ -1,67 +1,58 @@
-.announcementBar {
-  background: linear-gradient(90deg, #3B82F6 0%, #06B6D4 50%, #22C55E 100%);
-  background-size: 200% 100%;
-  animation: gradientShift 8s ease infinite;
-  padding: 10px 16px;
-  text-align: center;
-  position: relative;
+/* Announcement Bar — fixed scrolling strip at top of page */
+.bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 36px;
+  background: #3B82F6;
+  z-index: 101;
   overflow: hidden;
+  display: flex;
+  align-items: center;
 }
 
-@keyframes gradientShift {
-  0%, 100% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
+.track {
+  display: flex;
+  white-space: nowrap;
+  animation: marquee 35s linear infinite;
+  will-change: transform;
+}
+
+.text {
+  font-family: var(--font-mono), 'DM Mono', monospace;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  color: rgba(255, 255, 255, 0.95);
+  padding-right: 80px;
+  flex-shrink: 0;
+}
+
+.sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .announcementBar {
+  .track {
     animation: none;
-    background-position: 50% 50%;
-  }
-}
-
-.announcementContent {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  font-size: 13px;
-  font-weight: 500;
-  color: #FFFFFF;
-  flex-wrap: wrap;
-}
-
-.announcementContent strong {
-  font-weight: 700;
-}
-
-.emoji {
-  font-size: 14px;
-}
-
-.divider {
-  opacity: 0.5;
-}
-
-.promoCode {
-  background: rgba(255, 255, 255, 0.25);
-  padding: 2px 8px;
-  border-radius: 4px;
-  font-family: monospace;
-  letter-spacing: 1px;
-}
-
-@media (max-width: 600px) {
-  .announcementContent {
-    font-size: 12px;
-    gap: 6px;
+    justify-content: center;
   }
 
-  .divider {
-    display: none;
-  }
-
-  .announcementContent > span:nth-child(4) {
+  .text:last-child {
     display: none;
   }
 }

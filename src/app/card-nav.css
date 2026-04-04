@@ -4,7 +4,7 @@
 
 .card-nav-container {
   position: fixed;
-  top: 1rem;
+  top: calc(1rem + 36px);
   left: 50%;
   transform: translateX(-50%);
   width: 90%;
@@ -18,12 +18,10 @@
   display: block;
   height: 60px;
   padding: 0;
-  background: rgba(255, 255, 255, 0.92);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid var(--color-border);
+  background: #3B82F6;
+  border: 1px solid rgba(255, 255, 255, 0.15);
   border-radius: var(--radius-xl);
-  box-shadow: var(--shadow-playful);
+  box-shadow: 0 4px 20px rgba(59, 130, 246, 0.35), 0 1px 4px rgba(0,0,0,0.1);
   position: relative;
   overflow: hidden;
   will-change: height;
@@ -56,13 +54,13 @@
   background: none;
   border: none;
   border-radius: var(--radius-md);
-  color: var(--color-text-primary);
+  color: #fff;
   transition: background var(--transition-fast);
   flex-shrink: 0;
 }
 
 .card-nav-hamburger:hover {
-  background: var(--color-bg-elevated);
+  background: rgba(0, 0, 0, 0.12);
 }
 
 .card-nav-hamburger:focus-visible {
@@ -103,20 +101,8 @@
   font-size: 20px;
   font-weight: var(--font-bold);
   letter-spacing: -0.5px;
-  color: var(--color-accent-tertiary);
-  background: linear-gradient(135deg, #00B4D8 0%, #4ADE80 50%, #00B4D8 100%);
-  background-size: 200% 100%;
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: #fff;
   white-space: nowrap;
-}
-
-@supports not (background-clip: text) {
-  .card-nav-logo-text {
-    background: none;
-    -webkit-text-fill-color: unset;
-  }
 }
 
 /* Right actions */
@@ -136,7 +122,7 @@
   background: transparent;
   border: none;
   border-radius: var(--radius-md);
-  color: var(--color-text-secondary);
+  color: rgba(255, 255, 255, 0.9);
   cursor: pointer;
   transition: background var(--transition-fast), color var(--transition-fast);
   text-decoration: none;
@@ -146,8 +132,8 @@
 }
 
 .card-nav-icon-btn:hover {
-  background: var(--color-bg-elevated);
-  color: var(--color-accent-primary);
+  background: rgba(0, 0, 0, 0.12);
+  color: #fff;
 }
 
 .card-nav-icon-btn:focus-visible {
@@ -276,7 +262,7 @@
 .card-nav-extra-link {
   font-size: 13px;
   font-weight: var(--font-semibold);
-  color: var(--color-text-secondary);
+  color: rgba(255, 255, 255, 0.8);
   text-decoration: none;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -285,7 +271,7 @@
 }
 
 .card-nav-extra-link:hover {
-  color: var(--color-accent-primary);
+  color: #fff;
 }
 
 .card-nav-extra-link:focus-visible {
@@ -294,16 +280,16 @@
   border-radius: 4px;
 }
 
-/* ---- Body spacer for floating nav ---- */
+/* ---- Body spacer for floating nav + announcement bar ---- */
 .card-nav-spacer {
-  height: calc(60px + 2rem);
+  height: calc(60px + 2rem + 36px);
 }
 
 /* ---- Responsive ---- */
 @media (max-width: 768px) {
   .card-nav-container {
     width: 92%;
-    top: 0.75rem;
+    top: calc(0.75rem + 36px);
   }
 
 
@@ -347,7 +333,7 @@
 @media (max-width: 480px) {
   .card-nav-container {
     width: 95%;
-    top: 0.5rem;
+    top: calc(0.5rem + 36px);
   }
 }
 

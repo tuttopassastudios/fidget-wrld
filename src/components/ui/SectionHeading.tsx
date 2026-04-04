@@ -28,7 +28,7 @@ export function SectionHeading({
       {eyebrow && (
         <p
           style={{
-            fontFamily: 'var(--font-primary)',
+            fontFamily: 'var(--font-mono)',
             fontSize: 'var(--text-xs)',
             fontWeight: 'var(--font-medium)',
             textTransform: 'uppercase',
