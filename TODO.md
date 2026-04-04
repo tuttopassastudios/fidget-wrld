@@ -183,6 +183,61 @@
 
 ---
 
+---
+
+## Phase 8: G-code Viewer (Made-to-Order Products)
+
+> **Goal:** Replace STLViewer with an interactive 3D toolpath viewer on product pages for 3D-printed products.
+> Customers can orbit/zoom and scrub through layers to watch their item "build up."
+> Pre-process G-code locally → upload compact JSON to Supabase Storage → lightweight browser render.
+
+### Architecture
+- Slicer: Bambu Studio (Marlin-flavor G-code, absolute positioning G90, absolute extrusion M82)
+- Pre-process locally: raw `.gcode` → compact toolpath JSON stored in Supabase Storage bucket `products`
+- Viewer: Three.js `LineSegments` (no new deps — Three.js already in project)
+- Print moves only (hide travel moves for clean look)
+- Cumulative layer display: layers 1–N all visible, slider reveals up to selected layer
+- Filament color from `FilamentColorPicker` drives toolpath line color in real time
+
+### Bambu G-code specifics (for agents)
+- Layer change: `; CHANGE_LAYER` comment in file OR Z value change on G1/G0
+- Layer count in header: `; layer_count = N`
+- Print move: `G1` line with `E` param where new E > current E (extrusion, not retract)
+- Travel move: `G0`, or `G1` with no `E`, or `G1` where E ≤ current E (retraction)
+- Absolute positioning (`G90`) and absolute extrusion (`M82`) are default — E values monotonically increase during printing, decrease on retract
+
+### Toolpath JSON schema
+```json
+{
+  "layerCount": 142,
+  "layers": [
+    { "z": 0.20, "verts": [x1, y1, x2, y2, x3, y3] },
+    { "z": 0.40, "verts": [x1, y1, x2, y2] }
+  ]
+}
+```
+- `verts` is a flat array of X,Y pairs (Z is constant per layer, stored in `z`)
+- In the viewer, reconstruct 3D points as `[x, z_height, y]` (Three.js Y-up convention)
+- Segments are pairs: `[verts[0],verts[1]]` → `[verts[2],verts[3]]` etc.
+
+### Tasks
+
+- [x] **GV-1** — `scripts/process-gcode.js`: Bambu G-code → toolpath JSON + Supabase upload
+- [x] **GV-2** — `src/components/product/GCodeViewer.tsx`: interactive 3D toolpath viewer
+- [x] **GV-3** — `src/components/product/ProductPageClient.tsx`: swap STLViewer → GCodeViewer
+- [x] **GV-4** — `src/data/products.ts` + `src/types/index.ts`: add `gcodePreviewPath` field
+
+> ⏳ **Awaiting G-code files** — run `node scripts/process-gcode.js <file.gcode> <slug>` for each 3D-printed product and paste the returned URL into `gcodePreviewPath` in `src/data/products.ts`
+
+### Dependency graph
+```
+GV-1 (script)   ──────────────────────────────────► (run manually, upload JSON)
+GV-2 (viewer)   ──► GV-3 (product page) ──► GV-4 (types + data)
+```
+GV-1 and GV-2 can be built in parallel. GV-3 needs GV-2. GV-4 needs GV-3.
+
+---
+
 ## Build Status
 
 ✅ **Site builds successfully** (`npm run build` passes)
