@@ -137,6 +137,11 @@
   }
 }
 
+/* Ensure pills are never permanently invisible (JS may be slow) */
+.pillLink {
+  visibility: visible;
+}
+
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
   .pillLink {

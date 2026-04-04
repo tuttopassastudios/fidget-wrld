@@ -24,6 +24,7 @@ interface CategoryBubblesProps {
 }
 
 export function CategoryBubbles({ items, className }: CategoryBubblesProps) {
+  const sectionRef = useRef<HTMLElement | null>(null);
   const bubblesRef = useRef<(HTMLAnchorElement | null)[]>([]);
   const labelRefs = useRef<(HTMLSpanElement | null)[]>([]);
   const hasAnimated = useRef(false);
@@ -44,48 +45,49 @@ export function CategoryBubbles({ items, className }: CategoryBubblesProps) {
     gsap.set(bubbles, { scale: 0, transformOrigin: '50% 50%' });
     gsap.set(labels, { y: 24, autoAlpha: 0 });
 
+    const runAnimation = () => {
+      if (hasAnimated.current) return;
+      hasAnimated.current = true;
+
+      bubbles.forEach((bubble, i) => {
+        const delay = i * 0.1 + gsap.utils.random(-0.03, 0.03);
+        const tl = gsap.timeline({ delay });
+        tl.to(bubble, { scale: 1, duration: 0.5, ease: 'back.out(1.5)' });
+        if (labels[i]) {
+          tl.to(labels[i], { y: 0, autoAlpha: 1, duration: 0.5, ease: 'power3.out' }, '-=0.45');
+        }
+      });
+    };
+
+    // Fallback: if observer never fires, show after 2s
+    const fallback = setTimeout(() => {
+      gsap.set(bubbles, { scale: 1 });
+      gsap.set(labels, { y: 0, autoAlpha: 1 });
+      hasAnimated.current = true;
+    }, 2000);
+
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          hasAnimated.current = true;
+          clearTimeout(fallback);
           observer.disconnect();
-
-          bubbles.forEach((bubble, i) => {
-            const delay = i * 0.1 + gsap.utils.random(-0.03, 0.03);
-            const tl = gsap.timeline({ delay });
-
-            tl.to(bubble, {
-              scale: 1,
-              duration: 0.5,
-              ease: 'back.out(1.5)',
-            });
-
-            if (labels[i]) {
-              tl.to(
-                labels[i],
-                {
-                  y: 0,
-                  autoAlpha: 1,
-                  duration: 0.5,
-                  ease: 'power3.out',
-                },
-                '-=0.45'
-              );
-            }
-          });
+          runAnimation();
         }
       },
-      { threshold: 0.2 }
+      { threshold: 0 }
     );
 
-    const firstBubble = bubbles[0];
-    if (firstBubble) observer.observe(firstBubble);
+    // Observe the section container so scroll position is reliable
+    if (sectionRef.current) observer.observe(sectionRef.current);
 
-    return () => observer.disconnect();
+    return () => {
+      clearTimeout(fallback);
+      observer.disconnect();
+    };
   }, []);
 
   return (
-    <section className={`categoryBubbles ${className ?? ''}`}>
+    <section ref={sectionRef} className={`categoryBubbles ${className ?? ''}`}>
       <div className="categoryBubblesHeading">
         <h2>Shop by Category</h2>
         <p>Find your perfect fidget</p>
