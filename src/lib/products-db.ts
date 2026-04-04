@@ -107,6 +107,15 @@ export async function getAllProducts(): Promise<ProductPage[]> {
 }
 
 export async function getProductBySlug(slug: string): Promise<ProductPage | null> {
+  // 3D-printed products are always managed in the static catalog — never Supabase.
+  // This matches get3DPrintedProducts() and ensures variant images / STL paths
+  // stay in sync with the code rather than stale DB rows.
+  const { getProductBySlug: staticGet } = await import('@/data/products');
+  const staticProduct = staticGet(slug);
+  if (staticProduct?.fulfillmentType === '3d-printed') {
+    return staticProduct;
+  }
+
   try {
     const supabase = getAdminClient();
     const { data, error } = await supabase
@@ -117,9 +126,8 @@ export async function getProductBySlug(slug: string): Promise<ProductPage | null
 
     if (error) {
       if (error.code === 'PGRST116') {
-        // Not in Supabase — fall back to static catalog (covers 3D-printed products)
-        const { getProductBySlug: staticGet } = await import('@/data/products');
-        return staticGet(slug) ?? null;
+        // Not in Supabase — fall back to static catalog
+        return staticProduct ?? null;
       }
       throw error;
     }
@@ -128,8 +136,7 @@ export async function getProductBySlug(slug: string): Promise<ProductPage | null
     return dbRowToProductPage(data);
   } catch (error) {
     console.error('[products-db] Supabase read failed, using static fallback:', error);
-    const { getProductBySlug: staticGet } = await import('@/data/products');
-    return staticGet(slug) ?? null;
+    return staticProduct ?? null;
   }
 }
 
