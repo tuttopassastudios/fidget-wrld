@@ -49,7 +49,7 @@ const FEATURES = [
   {
     label: 'Make It Yours',
     title: 'Full Customization',
-    desc: '6 premium Bambu filament colors — matte, silk chrome, translucent, and the South Beach gradient.',
+    desc: 'Name engravings, model modifications, and premium filament options — make it exactly what you want.',
     color: '#8B5CF6',
     bg: 'rgba(139, 92, 246, 0.16)',
     icon: (
