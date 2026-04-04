@@ -90,7 +90,7 @@ export function ProductPageClient({ product }: { product: ProductPage }) {
   const selectedMaterialType = useMemo(() => {
     const colorId = printCustomization.filamentColorId;
     const fc = filamentColors.find(c => c.id === colorId);
-    return (fc?.type ?? 'standard') as 'standard' | 'translucent' | 'gradient';
+    return (fc?.type ?? 'standard') as 'standard' | 'translucent' | 'gradient' | 'silk' | 'silk-gradient';
   }, [printCustomization.filamentColorId, filamentColors]);
 
   // Per-model rotation corrections (radians). Fixes orientation issues caused by

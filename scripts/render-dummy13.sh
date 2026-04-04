@@ -7,12 +7,12 @@ SCRIPT="C:/Users/espom/fidgetopia/scripts/assemble-dummy13.py"
 OUT="C:/Users/espom/fidgetopia/public/images/products"
 
 COLORS=(
-  "blue|#3B82F6|standard"
-  "dark-purple|#5B21B6|standard"
+  "blue|#2563EB|standard"
+  "dark-purple|#3B0764|standard"
   "white|#F8F8F8|standard"
-  "silver|#BCC8D6|standard"
-  "transparent-blue|#93C5FD|translucent"
-  "pink-blue-gradient|#C084FC|gradient"
+  "silver|#C8C8CC|silk"
+  "transparent-blue|#D4ECFA|translucent"
+  "pink-blue-gradient|#00C4B4|silk-gradient"
 )
 
 total=${#COLORS[@]}

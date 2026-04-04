@@ -9,18 +9,17 @@ import * as THREE from 'three';
 export interface STLViewerProps {
   stlPath: string;
   color?: string;
-  materialType?: 'standard' | 'translucent' | 'gradient';
+  materialType?: 'standard' | 'translucent' | 'gradient' | 'silk' | 'silk-gradient';
   modelRotation?: [number, number, number]; // radians [rx, ry, rz]
 }
 
 // ---------------------------------------------------------------------------
-// PLA layer-line GLSL shader
-// Note: Three.js automatically injects built-in uniforms (normalMatrix,
-// modelViewMatrix, projectionMatrix, viewMatrix) — do NOT redeclare them.
+// PLA layer-line + silk GLSL shader
+// Three.js auto-injects built-in uniforms — do NOT redeclare viewMatrix etc.
 // ---------------------------------------------------------------------------
 
 const PLA_VERT = /* glsl */ `
-varying vec3 vObjectPos;    // object-space position for layer-line rhythm
+varying vec3 vObjectPos;    // object-space position for layer lines / gradient
 varying vec3 vObjectNormal; // object-space normal for flat-face attenuation
 varying vec3 vViewNormal;   // view-space normal for lighting
 
@@ -33,14 +32,15 @@ void main() {
 `;
 
 const PLA_FRAG = /* glsl */ `
-// viewMatrix is auto-provided by Three.js — no redeclaration needed.
+// viewMatrix is auto-provided by Three.js — do NOT redeclare.
 
 uniform vec3  u_baseColor;
 uniform float u_layerScale;
 uniform float u_seamDark;
-uniform int   u_isGradient;
-uniform vec3  u_colorBottom;
-uniform vec3  u_colorTop;
+uniform int   u_isGradient;  // 1 = gradient or silk-gradient
+uniform int   u_isSilk;      // 1 = silk / silk-gradient (metallic sheen, no layer lines)
+uniform vec3  u_colorBottom; // gradient bottom color
+uniform vec3  u_colorTop;    // gradient top color
 uniform float u_yMin;
 uniform float u_yMax;
 
@@ -49,25 +49,22 @@ varying vec3 vObjectNormal;
 varying vec3 vViewNormal;
 
 float diffuse(vec3 n, vec3 worldDir, float intensity) {
-  // Transform world-space light direction into view space.
-  // viewMatrix maps world → camera; mat3 drops translation.
   vec3 vDir = normalize(mat3(viewMatrix) * normalize(worldDir));
   return max(dot(n, vDir), 0.0) * intensity;
+}
+
+// Blinn-Phong specular (view space, camera is along +Z)
+float specularBP(vec3 n, vec3 worldLight, float shininess, float intensity) {
+  vec3 lDir   = normalize(mat3(viewMatrix) * normalize(worldLight));
+  vec3 viewDir = vec3(0.0, 0.0, 1.0); // camera in view space
+  vec3 h = normalize(lDir + viewDir);
+  return pow(max(dot(n, h), 0.0), shininess) * intensity;
 }
 
 void main() {
   vec3 n = normalize(vViewNormal);
 
-  // PLA layer-line: sample from Y (display up = horizontal bands).
-  // Attenuate on faces whose normals point up/down — those are flat top/bottom
-  // faces where you'd never see layer seams, and heavy banding causes artifacts.
-  float phase     = fract(vObjectPos.y * u_layerScale);
-  float rawLayer  = mix(u_seamDark, 1.0, smoothstep(0.0, 0.5, phase));
-  float faceUp    = abs(normalize(vObjectNormal).y);          // 1 = horizontal face
-  float layerMask = 1.0 - faceUp * 0.85;                     // fade effect on flat tops
-  float layerF    = mix(1.0, rawLayer, layerMask);
-
-  // Base colour (solid or pink→blue gradient along Y)
+  // Base colour: solid or teal→pink silk gradient along Y
   vec3 color;
   if (u_isGradient == 1) {
     float t = (u_yMax > u_yMin)
@@ -77,16 +74,43 @@ void main() {
   } else {
     color = u_baseColor;
   }
-  color *= layerF;
 
-  // Studio 4-light rig tuned for bright background
-  float ambient = 0.38;
-  float d_key   = diffuse(n, vec3( 4.0,  6.0,  3.0),  0.38); // key
-  float d_fill  = diffuse(n, vec3(-5.0,  2.0,  2.0),  0.16); // fill
-  float d_rim   = diffuse(n, vec3( 0.0,  4.0, -5.0),  0.06); // subtle rim
-  float d_top   = diffuse(n, vec3( 0.0,  8.0,  0.0),  0.08); // top
+  if (u_isSilk == 1) {
+    // ── Silk / metallic ────────────────────────────────────────────────────
+    // No layer lines. High specular key + fill + rim.
+    float ambient = 0.20;
+    float d_key   = diffuse(n, vec3( 4.0,  6.0,  3.0), 0.40);
+    float d_fill  = diffuse(n, vec3(-5.0,  2.0,  2.0), 0.20);
+    float d_rim   = diffuse(n, vec3( 0.0,  4.0, -5.0), 0.12);
+    float d_top   = diffuse(n, vec3( 0.0,  8.0,  0.0), 0.08);
 
-  color *= (ambient + d_key + d_fill + d_rim + d_top);
+    float s_key   = specularBP(n, vec3( 4.0,  6.0,  3.0), 80.0, 0.60);
+    float s_fill  = specularBP(n, vec3(-5.0,  2.0,  2.0), 32.0, 0.18);
+    float s_rim   = specularBP(n, vec3( 0.0,  4.0, -5.0), 48.0, 0.10);
+
+    color = color * (ambient + d_key + d_fill + d_rim + d_top)
+            + vec3(s_key + s_fill + s_rim);
+
+  } else {
+    // ── PLA matte with horizontal layer lines ──────────────────────────────
+    // Sample Y (display up) for horizontal bands.
+    // Attenuate on upward-facing flat surfaces to avoid banding artifacts.
+    float phase     = fract(vObjectPos.y * u_layerScale);
+    float rawLayer  = mix(u_seamDark, 1.0, smoothstep(0.0, 0.5, phase));
+    float faceUp    = abs(normalize(vObjectNormal).y);
+    float layerMask = 1.0 - faceUp * 0.85;
+    float layerF    = mix(1.0, rawLayer, layerMask);
+
+    color *= layerF;
+
+    float ambient = 0.38;
+    float d_key   = diffuse(n, vec3( 4.0,  6.0,  3.0), 0.38);
+    float d_fill  = diffuse(n, vec3(-5.0,  2.0,  2.0), 0.16);
+    float d_rim   = diffuse(n, vec3( 0.0,  4.0, -5.0), 0.06);
+    float d_top   = diffuse(n, vec3( 0.0,  8.0,  0.0), 0.08);
+
+    color *= (ambient + d_key + d_fill + d_rim + d_top);
+  }
 
   gl_FragColor = vec4(color, 1.0);
 }
@@ -94,10 +118,12 @@ void main() {
 
 function buildPLAMaterial(
   color: string,
-  materialType: 'standard' | 'translucent' | 'gradient',
+  materialType: 'standard' | 'gradient' | 'silk-gradient',
   yMin: number,
   yMax: number,
 ): THREE.ShaderMaterial {
+  const isSilk     = materialType === 'silk-gradient';
+  const isGradient = materialType === 'gradient' || materialType === 'silk-gradient';
   return new THREE.ShaderMaterial({
     vertexShader: PLA_VERT,
     fragmentShader: PLA_FRAG,
@@ -105,9 +131,10 @@ function buildPLAMaterial(
       u_baseColor:   { value: new THREE.Color(color) },
       u_layerScale:  { value: 60.0 },
       u_seamDark:    { value: 0.76 },
-      u_isGradient:  { value: materialType === 'gradient' ? 1 : 0 },
-      u_colorBottom: { value: new THREE.Color('#EC4899') },
-      u_colorTop:    { value: new THREE.Color('#3B82F6') },
+      u_isGradient:  { value: isGradient ? 1 : 0 },
+      u_isSilk:      { value: isSilk ? 1 : 0 },
+      u_colorBottom: { value: new THREE.Color('#E91E8C') }, // hot pink (bottom)
+      u_colorTop:    { value: new THREE.Color('#00C4B4') }, // teal (top)
       u_yMin:        { value: yMin },
       u_yMax:        { value: yMax },
     },
@@ -152,7 +179,7 @@ function STLModel({
 }: {
   stlPath: string;
   color: string;
-  materialType: 'standard' | 'translucent' | 'gradient';
+  materialType: 'standard' | 'translucent' | 'gradient' | 'silk' | 'silk-gradient';
   modelRotation: [number, number, number];
 }) {
   const geometry = useLoader(STLLoader, stlPath);
@@ -165,7 +192,7 @@ function STLModel({
   const scale  = maxDim > 0 ? 2 / maxDim : 1;
 
   const plaMaterial = useMemo(
-    () => buildPLAMaterial(color, materialType, box.min.y, box.max.y),
+    () => buildPLAMaterial(color, materialType === 'gradient' ? 'gradient' : materialType === 'silk-gradient' ? 'silk-gradient' : 'standard', box.min.y, box.max.y),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [color, materialType, box.min.y, box.max.y],
   );
@@ -177,11 +204,30 @@ function STLModel({
           <meshPhysicalMaterial
             color={color}
             transparent
-            opacity={0.78}
-            roughness={0.05}
+            opacity={0.75}
+            roughness={0.04}
             metalness={0}
+            transmission={0.6}
+            ior={1.47}
             depthWrite={false}
             side={THREE.DoubleSide}
+          />
+        </mesh>
+      </Center>
+    );
+  }
+
+  if (materialType === 'silk') {
+    return (
+      <Center>
+        <mesh geometry={geometry} scale={scale} rotation={modelRotation} castShadow>
+          <meshPhysicalMaterial
+            color={color}
+            metalness={0.88}
+            roughness={0.08}
+            reflectivity={1.0}
+            clearcoat={0.3}
+            clearcoatRoughness={0.1}
           />
         </mesh>
       </Center>
@@ -211,13 +257,13 @@ function Scene({
 }: {
   stlPath: string;
   color: string;
-  materialType: 'standard' | 'translucent' | 'gradient';
+  materialType: 'standard' | 'translucent' | 'gradient' | 'silk' | 'silk-gradient';
   modelRotation: [number, number, number];
   autoRotate: boolean;
 }) {
   return (
     <>
-      {/* Bright studio lights — also used by shadow pass + translucent material */}
+      {/* Studio lights */}
       <ambientLight intensity={0.7} />
       <directionalLight position={[5, 8, 4]}  intensity={1.6} castShadow
         shadow-mapSize-width={1024} shadow-mapSize-height={1024}
@@ -229,7 +275,7 @@ function Scene({
       <directionalLight position={[0, 6, -6]}  intensity={0.5} />
       <directionalLight position={[0, 10, 0]}  intensity={0.4} />
 
-      {/* Floor plane — shows soft drop shadow only */}
+      {/* Floor — drop shadow only */}
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -1.25, 0]} receiveShadow>
         <planeGeometry args={[20, 20]} />
         <shadowMaterial transparent opacity={0.18} />

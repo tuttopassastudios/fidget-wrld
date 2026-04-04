@@ -119,6 +119,42 @@ def apply_translucent_material(obj):
     if obj.data.materials: obj.data.materials[0] = mat
     else: obj.data.materials.append(mat)
 
+def apply_silk_material(obj, color_hex):
+    mat = bpy.data.materials.new(name='PLA_Silk')
+    mat.use_nodes = True
+    nodes = mat.node_tree.nodes; links = mat.node_tree.links; nodes.clear()
+    output = nodes.new('ShaderNodeOutputMaterial')
+    bsdf   = nodes.new('ShaderNodeBsdfPrincipled')
+    bsdf.inputs['Base Color'].default_value = hex_to_rgba(color_hex)
+    bsdf.inputs['Metallic'].default_value   = 0.92
+    bsdf.inputs['Roughness'].default_value  = 0.07
+    bsdf.inputs['Specular'].default_value   = 1.0
+    links.new(bsdf.outputs['BSDF'], output.inputs['Surface'])
+    if obj.data.materials: obj.data.materials[0] = mat
+    else: obj.data.materials.append(mat)
+
+def apply_silk_gradient_material(obj):
+    mat = bpy.data.materials.new(name='PLA_SilkGrad')
+    mat.use_nodes = True
+    nodes = mat.node_tree.nodes; links = mat.node_tree.links; nodes.clear()
+    output = nodes.new('ShaderNodeOutputMaterial')
+    bsdf   = nodes.new('ShaderNodeBsdfPrincipled')
+    bsdf.inputs['Metallic'].default_value  = 0.85
+    bsdf.inputs['Roughness'].default_value = 0.07
+    bsdf.inputs['Specular'].default_value  = 1.0
+    tex_coord = nodes.new('ShaderNodeTexCoord')
+    sep = nodes.new('ShaderNodeSeparateXYZ'); links.new(tex_coord.outputs['Object'], sep.inputs[0])
+    mr  = nodes.new('ShaderNodeMapRange'); mr.inputs['From Min'].default_value = -0.5; mr.inputs['From Max'].default_value = 0.5
+    links.new(sep.outputs[2], mr.inputs['Value'])
+    gr = nodes.new('ShaderNodeValToRGB')
+    gr.color_ramp.elements[0].color = (0.913,0.118,0.549,1)  # hot pink
+    gr.color_ramp.elements[1].color = (0.0,0.769,0.706,1)    # teal
+    links.new(mr.outputs['Result'], gr.inputs['Fac'])
+    links.new(gr.outputs['Color'], bsdf.inputs['Base Color'])
+    links.new(bsdf.outputs['BSDF'], output.inputs['Surface'])
+    if obj.data.materials: obj.data.materials[0] = mat
+    else: obj.data.materials.append(mat)
+
 def apply_gradient_material(obj):
     mat = bpy.data.materials.new(name='PLA_Grad')
     mat.use_nodes = True
@@ -131,7 +167,8 @@ def apply_gradient_material(obj):
     mr  = nodes.new('ShaderNodeMapRange'); mr.inputs['From Min'].default_value = -0.5; mr.inputs['From Max'].default_value = 0.5
     links.new(sep.outputs[2], mr.inputs['Value'])
     gr = nodes.new('ShaderNodeValToRGB')
-    gr.color_ramp.elements[0].color = (0.925,0.282,0.600,1); gr.color_ramp.elements[1].color = (0.231,0.510,0.965,1)
+    gr.color_ramp.elements[0].color = (0.913,0.118,0.549,1)  # hot pink
+    gr.color_ramp.elements[1].color = (0.0,0.769,0.706,1)    # teal
     links.new(mr.outputs['Result'], gr.inputs['Fac'])
     wave = nodes.new('ShaderNodeTexWave'); wave.wave_type='BANDS'; wave.bands_direction='Z'
     wave.inputs['Scale'].default_value=90; wave.inputs['Distortion'].default_value=0.4
@@ -194,6 +231,10 @@ for obj in all_objects:
     obj.data.auto_smooth_angle = math.radians(60)
     if material_type == 'translucent':
         apply_translucent_material(obj)
+    elif material_type == 'silk':
+        apply_silk_material(obj, color_hex)
+    elif material_type == 'silk-gradient':
+        apply_silk_gradient_material(obj)
     elif material_type == 'gradient':
         apply_gradient_material(obj)
     else:

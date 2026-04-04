@@ -110,8 +110,56 @@ def build_translucent_material(mat):
     links.new(bsdf.outputs['BSDF'], output.inputs['Surface'])
 
 
+def build_silk_material(mat, color_hex):
+    """PLA Silk+ — chrome/metallic sheen, no visible layer lines."""
+    mat.use_nodes = True
+    nodes = mat.node_tree.nodes
+    links = mat.node_tree.links
+    nodes.clear()
+    output = nodes.new('ShaderNodeOutputMaterial')
+    bsdf   = nodes.new('ShaderNodeBsdfPrincipled')
+    bsdf.inputs['Base Color'].default_value = hex_to_rgba(color_hex)
+    bsdf.inputs['Metallic'].default_value   = 0.92
+    bsdf.inputs['Roughness'].default_value  = 0.07
+    bsdf.inputs['Specular'].default_value   = 1.0
+    links.new(bsdf.outputs['BSDF'], output.inputs['Surface'])
+
+
+def build_silk_gradient_material(mat):
+    """PLA Silk Multi-Color 'South Beach' — hot-pink (bottom) → teal (top) with metallic sheen."""
+    mat.use_nodes = True
+    nodes = mat.node_tree.nodes
+    links = mat.node_tree.links
+    nodes.clear()
+
+    output = nodes.new('ShaderNodeOutputMaterial')
+    bsdf   = nodes.new('ShaderNodeBsdfPrincipled')
+    bsdf.inputs['Metallic'].default_value  = 0.85
+    bsdf.inputs['Roughness'].default_value = 0.07
+    bsdf.inputs['Specular'].default_value  = 1.0
+
+    tex_coord    = nodes.new('ShaderNodeTexCoord')
+    separate_xyz = nodes.new('ShaderNodeSeparateXYZ')
+    links.new(tex_coord.outputs['Object'], separate_xyz.inputs[0])
+
+    map_range = nodes.new('ShaderNodeMapRange')
+    map_range.inputs['From Min'].default_value = -0.5
+    map_range.inputs['From Max'].default_value =  0.5
+    links.new(separate_xyz.outputs[2], map_range.inputs['Value'])
+
+    grad_ramp = nodes.new('ShaderNodeValToRGB')
+    # Bottom: hot pink #E91E8C, Top: teal #00C4B4
+    grad_ramp.color_ramp.elements[0].position = 0.0
+    grad_ramp.color_ramp.elements[0].color    = (0.913, 0.118, 0.549, 1.0)
+    grad_ramp.color_ramp.elements[1].position = 1.0
+    grad_ramp.color_ramp.elements[1].color    = (0.0, 0.769, 0.706, 1.0)
+    links.new(map_range.outputs['Result'], grad_ramp.inputs['Fac'])
+    links.new(grad_ramp.outputs['Color'], bsdf.inputs['Base Color'])
+    links.new(bsdf.outputs['BSDF'], output.inputs['Surface'])
+
+
 def build_gradient_material(mat):
-    """Pink (bottom Z) → blue (top Z) gradient with PLA layer lines."""
+    """Hot-pink (bottom Z) → teal (top Z) gradient with PLA layer lines."""
     mat.use_nodes = True
     nodes = mat.node_tree.nodes
     links = mat.node_tree.links
@@ -139,12 +187,12 @@ def build_gradient_material(mat):
     map_range.location = (-700, 200)
     links.new(separate_xyz.outputs[2], map_range.inputs['Value'])
 
-    # Colour gradient: hot pink → ocean blue
+    # Colour gradient: hot pink (bottom) → teal (top) — matches South Beach
     grad_ramp = nodes.new('ShaderNodeValToRGB')
     grad_ramp.color_ramp.elements[0].position = 0.0
-    grad_ramp.color_ramp.elements[0].color    = (0.925, 0.282, 0.600, 1.0)  # #EC4899
+    grad_ramp.color_ramp.elements[0].color    = (0.913, 0.118, 0.549, 1.0)  # #E91E8C hot pink
     grad_ramp.color_ramp.elements[1].position = 1.0
-    grad_ramp.color_ramp.elements[1].color    = (0.231, 0.510, 0.965, 1.0)  # #3B82F6
+    grad_ramp.color_ramp.elements[1].color    = (0.0, 0.769, 0.706, 1.0)    # #00C4B4 teal
     grad_ramp.location = (-500, 200)
     links.new(map_range.outputs['Result'], grad_ramp.inputs['Fac'])
 
@@ -224,6 +272,10 @@ def render_stl(stl_path, output_path, color_hex='#3B82F6', material_type='standa
     mat = bpy.data.materials.new(name='ProductMat')
     if material_type == 'translucent':
         build_translucent_material(mat)
+    elif material_type == 'silk':
+        build_silk_material(mat, color_hex)
+    elif material_type == 'silk-gradient':
+        build_silk_gradient_material(mat)
     elif material_type == 'gradient':
         build_gradient_material(mat)
     else:

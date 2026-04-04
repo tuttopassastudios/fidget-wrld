@@ -7,7 +7,7 @@ export interface FilamentColor {
   name: string;
   hex: string;
   inStock: boolean;
-  type?: 'standard' | 'translucent' | 'gradient';
+  type?: 'standard' | 'translucent' | 'gradient' | 'silk' | 'silk-gradient';
   priceAdjustment?: number; // extra cost above base variant price (e.g. 1.00 for premium filaments)
 }
 

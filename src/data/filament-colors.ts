@@ -1,12 +1,12 @@
 import type { FilamentColor } from '@/types';
 
 export const filamentColors: FilamentColor[] = [
-  { id: 'blue',               name: 'Ocean Blue',       hex: '#3B82F6', inStock: true, type: 'standard'   },
-  { id: 'dark-purple',        name: 'Dark Purple',      hex: '#5B21B6', inStock: true, type: 'standard'   },
-  { id: 'white',              name: 'Arctic White',     hex: '#F8F8F8', inStock: true, type: 'standard'   },
-  { id: 'silver',             name: 'Silver',           hex: '#BCC8D6', inStock: true, type: 'standard'   },
-  { id: 'transparent-blue',   name: 'Transparent Blue', hex: '#93C5FD', inStock: true, type: 'translucent', priceAdjustment: 1.00 },
-  { id: 'pink-blue-gradient', name: 'Pink/Blue Gradient', hex: '#C084FC', inStock: true, type: 'gradient', priceAdjustment: 1.00 },
+  { id: 'blue',               name: 'Bambu Blue',         hex: '#2563EB', inStock: true, type: 'standard'      },
+  { id: 'dark-purple',        name: 'Dark Purple',        hex: '#3B0764', inStock: true, type: 'standard'      },
+  { id: 'white',              name: 'Arctic White',       hex: '#F8F8F8', inStock: true, type: 'standard'      },
+  { id: 'silver',             name: 'Silk Silver',        hex: '#C8C8CC', inStock: true, type: 'silk',         priceAdjustment: 1.00 },
+  { id: 'transparent-blue',   name: 'Ice Translucent',    hex: '#D4ECFA', inStock: true, type: 'translucent',  priceAdjustment: 1.00 },
+  { id: 'pink-blue-gradient', name: 'South Beach',        hex: '#00C4B4', inStock: true, type: 'silk-gradient', priceAdjustment: 1.00 },
 ];
 
 export function getFilamentColor(id: string): FilamentColor | undefined {
