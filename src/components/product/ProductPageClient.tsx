@@ -86,6 +86,13 @@ export function ProductPageClient({ product }: { product: ProductPage }) {
     return v.colorHex;
   }, [is3DPrinted, product.variants, variantIdx]);
 
+  // Material type for the 3D viewer (drives translucent / gradient mode)
+  const selectedMaterialType = useMemo(() => {
+    const colorId = printCustomization.filamentColorId;
+    const fc = filamentColors.find(c => c.id === colorId);
+    return (fc?.type ?? 'standard') as 'standard' | 'translucent' | 'gradient';
+  }, [printCustomization.filamentColorId, filamentColors]);
+
   const variant = product.variants[variantIdx];
   const wishlisted = isWishlisted(variant.sku);
   const related = getRecommendations([{ sku: variant.sku, name: product.name }]);
@@ -208,7 +215,7 @@ export function ProductPageClient({ product }: { product: ProductPage }) {
                   product.gcodePreviewPath ? (
                     <GCodeViewer toolpathUrl={product.gcodePreviewPath} color={selectedColorHex ?? '#22d3ee'} />
                   ) : (
-                    <STLViewer stlPath={product.stlFile!} color={selectedColorHex ?? '#A8A8A8'} />
+                    <STLViewer stlPath={product.stlFile!} color={selectedColorHex ?? '#3B82F6'} materialType={selectedMaterialType} />
                   )
                 ) : (
                   <img

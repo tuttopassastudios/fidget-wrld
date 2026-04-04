@@ -1,15 +1,21 @@
 """
-Blender render script — call via:
-  blender --background --python scripts/render-product.py -- <stl_path> <output_path>
+Blender render script — PLA 3D-print simulation with procedural layer lines.
+Usage:
+  blender --background --python render-product.py -- <stl_path> <output_path> [color_hex] [material_type]
+  material_type: standard (default) | translucent | gradient
 """
 import bpy
 import sys
 import math
 
 
-def hex_to_rgba(hex_color):
+def hex_to_rgb(hex_color):
     h = hex_color.lstrip('#')
-    return tuple(int(h[i:i+2], 16) / 255.0 for i in (0, 2, 4)) + (1.0,)
+    return tuple(int(h[i:i+2], 16) / 255.0 for i in (0, 2, 4))
+
+
+def hex_to_rgba(hex_color):
+    return hex_to_rgb(hex_color) + (1.0,)
 
 
 def clear_scene():
@@ -22,7 +28,166 @@ def clear_scene():
             pass
 
 
-def render_stl(stl_path, output_path, color_hex='#F0F0F0'):
+def build_standard_material(mat, color_hex):
+    """PLA matte material with procedural layer lines on Z axis."""
+    mat.use_nodes = True
+    nodes = mat.node_tree.nodes
+    links = mat.node_tree.links
+    nodes.clear()
+
+    output = nodes.new('ShaderNodeOutputMaterial')
+    bsdf   = nodes.new('ShaderNodeBsdfPrincipled')
+    bsdf.inputs['Roughness'].default_value = 0.72
+    bsdf.inputs['Specular'].default_value  = 0.2
+    bsdf.inputs['Metallic'].default_value  = 0.0
+    bsdf.location  = (-200, 0)
+    output.location = (200, 0)
+
+    # Object-space coordinates so layer lines are consistent regardless of object size
+    tex_coord = nodes.new('ShaderNodeTexCoord')
+    tex_coord.location = (-800, 0)
+
+    # Wave texture — horizontal bands along Z = layer lines
+    wave = nodes.new('ShaderNodeTexWave')
+    wave.wave_type       = 'BANDS'
+    wave.bands_direction = 'Z'
+    wave.inputs['Scale'].default_value            = 90.0
+    wave.inputs['Distortion'].default_value       = 0.4
+    wave.inputs['Detail'].default_value           = 3.0
+    wave.inputs['Detail Scale'].default_value     = 1.5
+    wave.inputs['Detail Roughness'].default_value = 0.65
+    wave.location = (-600, 0)
+    links.new(tex_coord.outputs['Object'], wave.inputs['Vector'])
+
+    # Ramp: dark at layer seam, bright in layer body
+    ramp = nodes.new('ShaderNodeValToRGB')
+    ramp.color_ramp.elements[0].position = 0.0
+    ramp.color_ramp.elements[0].color    = (0.76, 0.76, 0.76, 1.0)
+    ramp.color_ramp.elements[1].position = 0.35
+    ramp.color_ramp.elements[1].color    = (1.0, 1.0, 1.0, 1.0)
+    ramp.location = (-400, 100)
+    links.new(wave.outputs['Fac'], ramp.inputs['Fac'])
+
+    # Base color node
+    rgb_node = nodes.new('ShaderNodeRGB')
+    rgb_node.outputs[0].default_value = hex_to_rgba(color_hex)
+    rgb_node.location = (-400, -150)
+
+    # Multiply base color by layer pattern
+    mix_color = nodes.new('ShaderNodeMixRGB')
+    mix_color.blend_type = 'MULTIPLY'
+    mix_color.inputs['Fac'].default_value = 1.0
+    mix_color.location = (-100, 100)
+    links.new(rgb_node.outputs['Color'],  mix_color.inputs[1])
+    links.new(ramp.outputs['Color'],      mix_color.inputs[2])
+    links.new(mix_color.outputs['Color'], bsdf.inputs['Base Color'])
+
+    # Subtle bump at layer seam for depth
+    bump = nodes.new('ShaderNodeBump')
+    bump.inputs['Strength'].default_value = 0.28
+    bump.inputs['Distance'].default_value = 0.015
+    bump.location = (-100, -150)
+    links.new(ramp.outputs['Color'],  bump.inputs['Height'])
+    links.new(bump.outputs['Normal'], bsdf.inputs['Normal'])
+
+    links.new(bsdf.outputs['BSDF'], output.inputs['Surface'])
+
+
+def build_translucent_material(mat):
+    """Clear/transparent PLA — blue-tinted with soft internal glow."""
+    mat.use_nodes = True
+    nodes = mat.node_tree.nodes
+    links = mat.node_tree.links
+    nodes.clear()
+
+    output = nodes.new('ShaderNodeOutputMaterial')
+    bsdf   = nodes.new('ShaderNodeBsdfPrincipled')
+    bsdf.inputs['Base Color'].default_value   = (0.38, 0.68, 1.00, 1.0)
+    bsdf.inputs['Roughness'].default_value    = 0.04
+    bsdf.inputs['Transmission'].default_value = 0.88
+    bsdf.inputs['IOR'].default_value          = 1.47   # PLA refractive index
+    bsdf.inputs['Specular'].default_value     = 0.6
+    links.new(bsdf.outputs['BSDF'], output.inputs['Surface'])
+
+
+def build_gradient_material(mat):
+    """Pink (bottom Z) → blue (top Z) gradient with PLA layer lines."""
+    mat.use_nodes = True
+    nodes = mat.node_tree.nodes
+    links = mat.node_tree.links
+    nodes.clear()
+
+    output = nodes.new('ShaderNodeOutputMaterial')
+    bsdf   = nodes.new('ShaderNodeBsdfPrincipled')
+    bsdf.inputs['Roughness'].default_value = 0.72
+    bsdf.inputs['Specular'].default_value  = 0.2
+    bsdf.location  = (-200, 0)
+    output.location = (200, 0)
+
+    # Object-space Z for both gradient and layer lines
+    tex_coord    = nodes.new('ShaderNodeTexCoord')
+    separate_xyz = nodes.new('ShaderNodeSeparateXYZ')
+    links.new(tex_coord.outputs['Object'], separate_xyz.inputs[0])
+    separate_xyz.location = (-900, 200)
+
+    # Map object-space Z (-0.5 → 0.5) to 0 → 1
+    map_range = nodes.new('ShaderNodeMapRange')
+    map_range.inputs['From Min'].default_value = -0.5
+    map_range.inputs['From Max'].default_value  =  0.5
+    map_range.inputs['To Min'].default_value   =  0.0
+    map_range.inputs['To Max'].default_value   =  1.0
+    map_range.location = (-700, 200)
+    links.new(separate_xyz.outputs[2], map_range.inputs['Value'])
+
+    # Colour gradient: hot pink → ocean blue
+    grad_ramp = nodes.new('ShaderNodeValToRGB')
+    grad_ramp.color_ramp.elements[0].position = 0.0
+    grad_ramp.color_ramp.elements[0].color    = (0.925, 0.282, 0.600, 1.0)  # #EC4899
+    grad_ramp.color_ramp.elements[1].position = 1.0
+    grad_ramp.color_ramp.elements[1].color    = (0.231, 0.510, 0.965, 1.0)  # #3B82F6
+    grad_ramp.location = (-500, 200)
+    links.new(map_range.outputs['Result'], grad_ramp.inputs['Fac'])
+
+    # Layer lines (same wave as standard)
+    wave = nodes.new('ShaderNodeTexWave')
+    wave.wave_type       = 'BANDS'
+    wave.bands_direction = 'Z'
+    wave.inputs['Scale'].default_value            = 90.0
+    wave.inputs['Distortion'].default_value       = 0.4
+    wave.inputs['Detail'].default_value           = 3.0
+    wave.inputs['Detail Scale'].default_value     = 1.5
+    wave.inputs['Detail Roughness'].default_value = 0.65
+    wave.location = (-700, -100)
+    links.new(tex_coord.outputs['Object'], wave.inputs['Vector'])
+
+    layer_ramp = nodes.new('ShaderNodeValToRGB')
+    layer_ramp.color_ramp.elements[0].position = 0.0
+    layer_ramp.color_ramp.elements[0].color    = (0.76, 0.76, 0.76, 1.0)
+    layer_ramp.color_ramp.elements[1].position = 0.35
+    layer_ramp.color_ramp.elements[1].color    = (1.0, 1.0, 1.0, 1.0)
+    layer_ramp.location = (-500, -100)
+    links.new(wave.outputs['Fac'], layer_ramp.inputs['Fac'])
+
+    # Combine: gradient × layer pattern
+    mix_color = nodes.new('ShaderNodeMixRGB')
+    mix_color.blend_type = 'MULTIPLY'
+    mix_color.inputs['Fac'].default_value = 1.0
+    mix_color.location = (-200, 100)
+    links.new(grad_ramp.outputs['Color'],  mix_color.inputs[1])
+    links.new(layer_ramp.outputs['Color'], mix_color.inputs[2])
+    links.new(mix_color.outputs['Color'],  bsdf.inputs['Base Color'])
+
+    bump = nodes.new('ShaderNodeBump')
+    bump.inputs['Strength'].default_value = 0.28
+    bump.inputs['Distance'].default_value = 0.015
+    bump.location = (-200, -200)
+    links.new(layer_ramp.outputs['Color'], bump.inputs['Height'])
+    links.new(bump.outputs['Normal'],      bsdf.inputs['Normal'])
+
+    links.new(bsdf.outputs['BSDF'], output.inputs['Surface'])
+
+
+def render_stl(stl_path, output_path, color_hex='#3B82F6', material_type='standard'):
     clear_scene()
 
     # --- Import ---
@@ -39,18 +204,21 @@ def render_stl(stl_path, output_path, color_hex='#F0F0F0'):
     obj.data.use_auto_smooth = True
     obj.data.auto_smooth_angle = math.radians(60)
 
-    # Scale object so longest axis = 1 unit (camera stays fixed)
+    # Scale so longest axis = 1 unit (camera stays fixed)
     max_dim = max(obj.dimensions)
-    scale = 1.0 / max_dim if max_dim > 0 else 1.0
+    scale   = 1.0 / max_dim if max_dim > 0 else 1.0
     obj.scale = (scale, scale, scale)
     bpy.ops.object.transform_apply(scale=True)
 
     # --- Material ---
     mat = bpy.data.materials.new(name='ProductMat')
-    mat.use_nodes = True
-    bsdf = mat.node_tree.nodes.get('Principled BSDF')
-    bsdf.inputs['Base Color'].default_value = hex_to_rgba(color_hex)
-    bsdf.inputs['Roughness'].default_value = 0.35
+    if material_type == 'translucent':
+        build_translucent_material(mat)
+    elif material_type == 'gradient':
+        build_gradient_material(mat)
+    else:
+        build_standard_material(mat, color_hex)
+
     if obj.data.materials:
         obj.data.materials[0] = mat
     else:
@@ -58,78 +226,78 @@ def render_stl(stl_path, output_path, color_hex='#F0F0F0'):
 
     # --- Camera ---
     cam_data = bpy.data.cameras.new('Camera')
-    cam_data.lens = 70          # slight telephoto = less distortion
+    cam_data.lens = 70           # slight telephoto — less distortion
     cam_obj = bpy.data.objects.new('Camera', cam_data)
     bpy.context.collection.objects.link(cam_obj)
     bpy.context.scene.camera = cam_obj
+    cam_obj.location        = (1.35, -1.35, 1.05)
+    cam_obj.rotation_euler  = (math.radians(58), 0, math.radians(45))
 
-    # Isometric-ish angle: slightly above, to the front-right (closer = larger subject)
-    cam_obj.location = (1.35, -1.35, 1.05)
-    cam_obj.rotation_euler = (math.radians(58), 0, math.radians(45))
-
-    # Track-to constraint so camera always looks at object
     con = cam_obj.constraints.new('TRACK_TO')
-    con.target = obj
+    con.target     = obj
     con.track_axis = 'TRACK_NEGATIVE_Z'
-    con.up_axis = 'UP_Y'
+    con.up_axis    = 'UP_Y'
 
-    # --- Lighting (three-point) ---
+    # --- Lighting (studio four-point) ---
     def add_area_light(location, rotation_euler, energy, size):
         d = bpy.data.lights.new(name='Light', type='AREA')
         d.energy = energy
-        d.size = size
+        d.size   = size
         o = bpy.data.objects.new(name='Light', object_data=d)
         bpy.context.collection.objects.link(o)
-        o.location = location
+        o.location       = location
         o.rotation_euler = rotation_euler
         return o
 
-    # Key
-    add_area_light((3, -2, 4),   (math.radians(-45), 0, math.radians(45)),  600, 3)
-    # Fill
-    add_area_light((-3, 1, 2),   (math.radians(-20), 0, math.radians(-120)), 200, 4)
-    # Rim
-    add_area_light((0, 4, -0.5), (math.radians(80), 0, 0),                  150, 2)
+    # Key — bright, front-right-above
+    add_area_light((3,  -2,  4),   (math.radians(-45), 0, math.radians(45)),   700, 3)
+    # Fill — soft, left side
+    add_area_light((-3,  1,  2),   (math.radians(-20), 0, math.radians(-120)), 260, 5)
+    # Rim — behind-top for edge separation
+    add_area_light((0,   4, -0.5), (math.radians(80),  0, 0),                  180, 2)
+    # Top fill — brightens top surfaces
+    add_area_light((0,   0,  5),   (0, 0, 0),                                  130, 4)
 
-    # --- World background: near-white gradient feel via solid color ---
+    # --- World background: light gray studio feel ---
     world = bpy.context.scene.world
     world.use_nodes = True
     bg_node = world.node_tree.nodes.get('Background')
     if bg_node:
-        bg_node.inputs[0].default_value = (0.92, 0.92, 0.92, 1.0)
+        bg_node.inputs[0].default_value = (0.90, 0.90, 0.90, 1.0)
         bg_node.inputs[1].default_value = 1.0
 
     # --- Render settings ---
     scene = bpy.context.scene
-    scene.render.engine = 'CYCLES'
-    scene.cycles.samples = 96
-    scene.cycles.use_denoising = True
-    scene.render.resolution_x = 1024
-    scene.render.resolution_y = 1024
-    scene.render.film_transparent = False
-    scene.render.filepath = output_path
+    scene.render.engine            = 'CYCLES'
+    scene.cycles.samples           = 128
+    scene.cycles.use_denoising     = True
+    scene.render.resolution_x      = 1024
+    scene.render.resolution_y      = 1024
+    scene.render.film_transparent  = False
+    scene.render.filepath          = output_path
     scene.render.image_settings.file_format = 'JPEG'
-    scene.render.image_settings.quality = 92
+    scene.render.image_settings.quality     = 92
 
-    print(f'Rendering {stl_path} → {output_path}')
+    print(f'Rendering {stl_path} -> {output_path} [{material_type}]')
     bpy.ops.render.render(write_still=True)
     print('Done.')
 
 
-# Args after '--' are passed through to the script
+# --- Entry point ---
 argv = sys.argv
 try:
-    idx = argv.index('--')
+    idx  = argv.index('--')
     args = argv[idx + 1:]
 except ValueError:
     args = []
 
 if len(args) < 2:
-    print('Usage: blender --background --python render-product.py -- <stl_path> <output_path> [color_hex]')
+    print('Usage: blender --background --python render-product.py -- <stl_path> <output_path> [color_hex] [material_type]')
     sys.exit(1)
 
-stl_path   = args[0]
-output_path = args[1]
-color_hex  = args[2] if len(args) > 2 else '#A8A8A8'
+stl_path      = args[0]
+output_path   = args[1]
+color_hex     = args[2] if len(args) > 2 else '#3B82F6'
+material_type = args[3] if len(args) > 3 else 'standard'
 
-render_stl(stl_path, output_path, color_hex)
+render_stl(stl_path, output_path, color_hex, material_type)

@@ -8,6 +8,7 @@ export interface FilamentColor {
   hex: string;
   inStock: boolean;
   type?: 'standard' | 'translucent' | 'gradient';
+  priceAdjustment?: number; // extra cost above base variant price (e.g. 1.00 for premium filaments)
 }
 
 export interface PrintCustomization {
