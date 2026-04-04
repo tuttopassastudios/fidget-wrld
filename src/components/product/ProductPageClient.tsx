@@ -93,6 +93,24 @@ export function ProductPageClient({ product }: { product: ProductPage }) {
     return (fc?.type ?? 'standard') as 'standard' | 'translucent' | 'gradient';
   }, [printCustomization.filamentColorId, filamentColors]);
 
+  // Per-model rotation corrections (radians). Fixes orientation issues caused by
+  // different Z-up / Y-up conventions between slicers and Three.js.
+  const modelRotation = useMemo((): [number, number, number] => {
+    const R = Math.PI;
+    const corrections: Record<string, [number, number, number]> = {
+      // Articulated animals — Z is print height → rotate X -90° so head goes to +Y (up)
+      'rocktopus':              [-R / 2, 0, 0],
+      'cute-octopus':           [-R / 2, 0, 0],
+      'octopus-long-tentacles': [-R / 2, 0, 0],
+      // Snake / slug — same X correction, then flip Y so head faces forward
+      'cute-snakey':            [-R / 2, R, 0],
+      'flex-slug':              [-R / 2, R, 0],
+      // Dragon lies flat; tilt forward 30° so body reads as 3D, not a flat square
+      'flexi-mecha-dragon':     [-R / 6, 0, 0],
+    };
+    return corrections[product.slug] ?? [0, 0, 0];
+  }, [product.slug]);
+
   const variant = product.variants[variantIdx];
   const wishlisted = isWishlisted(variant.sku);
   const related = getRecommendations([{ sku: variant.sku, name: product.name }]);
@@ -215,7 +233,7 @@ export function ProductPageClient({ product }: { product: ProductPage }) {
                   product.gcodePreviewPath ? (
                     <GCodeViewer toolpathUrl={product.gcodePreviewPath} color={selectedColorHex ?? '#22d3ee'} />
                   ) : (
-                    <STLViewer stlPath={product.stlFile!} color={selectedColorHex ?? '#3B82F6'} materialType={selectedMaterialType} />
+                    <STLViewer stlPath={product.stlFile!} color={selectedColorHex ?? '#3B82F6'} materialType={selectedMaterialType} modelRotation={modelRotation} />
                   )
                 ) : (
                   <img

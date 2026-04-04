@@ -187,13 +187,23 @@ def build_gradient_material(mat):
     links.new(bsdf.outputs['BSDF'], output.inputs['Surface'])
 
 
-def render_stl(stl_path, output_path, color_hex='#3B82F6', material_type='standard'):
+def render_stl(stl_path, output_path, color_hex='#3B82F6', material_type='standard',
+               rot_x=0.0, rot_y=0.0, rot_z=0.0):
     clear_scene()
 
     # --- Import ---
     bpy.ops.import_mesh.stl(filepath=stl_path)
     obj = bpy.context.selected_objects[0]
     bpy.context.view_layer.objects.active = obj
+
+    # Apply rotation correction BEFORE centering (degrees → radians)
+    if rot_x or rot_y or rot_z:
+        obj.rotation_euler = (
+            math.radians(rot_x),
+            math.radians(rot_y),
+            math.radians(rot_z),
+        )
+        bpy.ops.object.transform_apply(rotation=True)
 
     # Center geometry at origin
     bpy.ops.object.origin_set(type='ORIGIN_GEOMETRY', center='BOUNDS')
@@ -292,12 +302,16 @@ except ValueError:
     args = []
 
 if len(args) < 2:
-    print('Usage: blender --background --python render-product.py -- <stl_path> <output_path> [color_hex] [material_type]')
+    print('Usage: blender --background --python render-product.py -- '
+          '<stl_path> <output_path> [color_hex] [material_type] [rot_x] [rot_y] [rot_z]')
     sys.exit(1)
 
 stl_path      = args[0]
 output_path   = args[1]
 color_hex     = args[2] if len(args) > 2 else '#3B82F6'
 material_type = args[3] if len(args) > 3 else 'standard'
+rot_x         = float(args[4]) if len(args) > 4 else 0.0
+rot_y         = float(args[5]) if len(args) > 5 else 0.0
+rot_z         = float(args[6]) if len(args) > 6 else 0.0
 
-render_stl(stl_path, output_path, color_hex, material_type)
+render_stl(stl_path, output_path, color_hex, material_type, rot_x, rot_y, rot_z)
