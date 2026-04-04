@@ -8,6 +8,7 @@ import { EditorialGrid } from '@/components/ui/EditorialGrid';
 import { CategoryBubbles } from '@/components/ui/CategoryBubbles';
 import { NewsletterSignup } from '@/components/newsletter';
 import { BallpitHero } from './BallpitHero';
+import { PrintingFeaturesBanner } from './PrintingFeaturesBanner';
 import { getBestSellers, get3DPrintedProducts } from '@/lib/products-db';
 import styles from './page.module.css';
 
@@ -136,7 +137,10 @@ export default async function HomePage() {
         <CategoryBubbles items={CATEGORY_ITEMS} />
       </FadeIn>
 
-      {/* 3. Custom 3D-Printed Section */}
+      {/* 3. Features Banner — 3D printing, shipping, support, customization */}
+      <PrintingFeaturesBanner />
+
+      {/* 4. Custom 3D-Printed Section */}
       {printedProducts.length > 0 && (
         <FadeIn>
           <section className={styles.printedSection}>
