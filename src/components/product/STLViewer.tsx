@@ -20,13 +20,15 @@ export interface STLViewerProps {
 // ---------------------------------------------------------------------------
 
 const PLA_VERT = /* glsl */ `
-varying vec3 vObjectPos;   // object-space Z for layer-line rhythm
-varying vec3 vViewNormal;  // view-space normal for lighting
+varying vec3 vObjectPos;    // object-space position for layer-line rhythm
+varying vec3 vObjectNormal; // object-space normal for flat-face attenuation
+varying vec3 vViewNormal;   // view-space normal for lighting
 
 void main() {
-  vObjectPos  = position;
-  vViewNormal = normalize(normalMatrix * normal);
-  gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+  vObjectPos    = position;
+  vObjectNormal = normal;
+  vViewNormal   = normalize(normalMatrix * normal);
+  gl_Position   = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
 }
 `;
 
@@ -43,6 +45,7 @@ uniform float u_yMin;
 uniform float u_yMax;
 
 varying vec3 vObjectPos;
+varying vec3 vObjectNormal;
 varying vec3 vViewNormal;
 
 float diffuse(vec3 n, vec3 worldDir, float intensity) {
@@ -55,9 +58,14 @@ float diffuse(vec3 n, vec3 worldDir, float intensity) {
 void main() {
   vec3 n = normalize(vViewNormal);
 
-  // PLA layer-line: sawtooth from Z position, darkened at seam
-  float phase  = fract(vObjectPos.z * u_layerScale);
-  float layerF = mix(u_seamDark, 1.0, smoothstep(0.0, 0.35, phase));
+  // PLA layer-line: sample from Y (display up = horizontal bands).
+  // Attenuate on faces whose normals point up/down — those are flat top/bottom
+  // faces where you'd never see layer seams, and heavy banding causes artifacts.
+  float phase     = fract(vObjectPos.y * u_layerScale);
+  float rawLayer  = mix(u_seamDark, 1.0, smoothstep(0.0, 0.5, phase));
+  float faceUp    = abs(normalize(vObjectNormal).y);          // 1 = horizontal face
+  float layerMask = 1.0 - faceUp * 0.85;                     // fade effect on flat tops
+  float layerF    = mix(1.0, rawLayer, layerMask);
 
   // Base colour (solid or pink→blue gradient along Y)
   vec3 color;

@@ -211,11 +211,11 @@ combined.scale = (scale, scale, scale)
 bpy.ops.object.transform_apply(scale=True)
 
 # Camera — slightly elevated front-quarter view for a standing figure
-cam_data = bpy.data.cameras.new('Camera'); cam_data.lens = 85
+cam_data = bpy.data.cameras.new('Camera'); cam_data.lens = 120
 cam_obj  = bpy.data.objects.new('Camera', cam_data)
 bpy.context.collection.objects.link(cam_obj)
 bpy.context.scene.camera = cam_obj
-cam_obj.location = (0.8, -1.6, 0.6)
+cam_obj.location = (1.2, -2.2, 0.8)
 cam_obj.rotation_euler = (math.radians(68), 0, math.radians(27))
 con = cam_obj.constraints.new('TRACK_TO')
 con.target = combined; con.track_axis = 'TRACK_NEGATIVE_Z'; con.up_axis = 'UP_Y'

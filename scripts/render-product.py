@@ -236,11 +236,11 @@ def render_stl(stl_path, output_path, color_hex='#3B82F6', material_type='standa
 
     # --- Camera ---
     cam_data = bpy.data.cameras.new('Camera')
-    cam_data.lens = 70           # slight telephoto — less distortion
+    cam_data.lens = 120          # tight telephoto — fills frame, emphasises PLA detail
     cam_obj = bpy.data.objects.new('Camera', cam_data)
     bpy.context.collection.objects.link(cam_obj)
     bpy.context.scene.camera = cam_obj
-    cam_obj.location        = (1.35, -1.35, 1.05)
+    cam_obj.location        = (1.8, -1.8, 1.3)
     cam_obj.rotation_euler  = (math.radians(58), 0, math.radians(45))
 
     con = cam_obj.constraints.new('TRACK_TO')
