@@ -1,4 +1,4 @@
-import { productPages, cjDropshippingProducts } from '@/data/products';
+import { productPages } from '@/data/products';
 
 export interface CJMapping {
   cjPid: string;
@@ -15,7 +15,7 @@ const skuToCJMap: Map<string, CJMapping> = new Map();
 function initializeMap() {
   if (skuToCJMap.size > 0) return; // Already initialized
 
-  for (const product of [...productPages, ...cjDropshippingProducts]) {
+  for (const product of productPages) {
     for (const variant of product.variants) {
       if (variant.cjPid && variant.cjVid) {
         skuToCJMap.set(variant.sku, {

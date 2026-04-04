@@ -7,17 +7,31 @@ export function ContactForm() {
   const [status, setStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
   const formRef = useRef<HTMLFormElement>(null);
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const form = e.currentTarget;
     const honeypot = form.querySelector<HTMLInputElement>('input[name="website"]');
     if (honeypot?.value) return;
 
     setStatus('sending');
-    // Simulated submission
-    setTimeout(() => {
-      setStatus('success');
-    }, 1200);
+    const data = new FormData(form);
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          website: honeypot?.value ?? '',
+          firstName: data.get('name'),
+          lastName: '',
+          email: data.get('email'),
+          subject: data.get('subject'),
+          message: data.get('message'),
+        }),
+      });
+      setStatus(res.ok ? 'success' : 'error');
+    } catch {
+      setStatus('error');
+    }
   };
 
   if (status === 'success') {

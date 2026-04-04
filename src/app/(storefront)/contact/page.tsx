@@ -8,13 +8,42 @@ export default function ContactPage() {
   const [submitted, setSubmitted] = useState(false);
   const [sending, setSending] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const [error, setError] = useState<string | null>(null);
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const form = e.currentTarget;
     const honeypot = form.querySelector<HTMLInputElement>('input[name="website"]');
     if (honeypot?.value) return;
+
+    setError(null);
     setSending(true);
-    setSubmitted(true);
+
+    const data = new FormData(form);
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          website: honeypot?.value ?? '',
+          firstName: data.get('given-name'),
+          lastName: data.get('family-name'),
+          email: data.get('email'),
+          subject: data.get('subject'),
+          message: data.get('message'),
+        }),
+      });
+      if (!res.ok) {
+        const json = await res.json().catch(() => ({}));
+        setError((json as { error?: string }).error ?? 'Something went wrong. Please try again.');
+        setSending(false);
+        return;
+      }
+      setSubmitted(true);
+    } catch {
+      setError('Something went wrong. Please try again.');
+      setSending(false);
+    }
   };
 
   if (submitted) {
@@ -89,6 +118,11 @@ export default function ContactPage() {
                 }}
               />
             </div>
+            {error && (
+              <p role="alert" style={{ color: 'var(--color-error, #dc2626)', marginBottom: '1rem', fontSize: 'var(--text-sm)' }}>
+                {error}
+              </p>
+            )}
             <button type="submit" className={`btn btn-primary ${styles.submitButton}`} disabled={sending} style={sending ? { opacity: 0.7 } : undefined}>
               {sending ? 'Sending…' : 'Send Message'}
             </button>
