@@ -104,46 +104,91 @@ export default async function HomePage() {
 
   return (
     <PageReveal>
-      {/* 1. Hero — Ballpit window + tagline */}
+      {/* 1. Hero — three-panel windowed layout */}
       <section className={styles.hero}>
-        {/* Windowed ball pit */}
-        <div className={styles.heroWindow}>
-          <div className={styles.heroWindowChrome} aria-hidden="true">
-            <span className={styles.heroDot} style={{ background: '#ff5f57' }} />
-            <span className={styles.heroDot} style={{ background: '#febc2e' }} />
-            <span className={styles.heroDot} style={{ background: '#28c840' }} />
-            <span className={styles.heroWindowLabel}>fidget-wrld &mdash; interactive</span>
-          </div>
-          <div className={styles.heroWindowCanvas}>
-            <BallpitHero className={styles.heroBallpit} />
-            <noscript><div className={styles.heroFallback} /></noscript>
-            {/* Logo overlaid on the ball pit */}
-            <div className={styles.heroLogoOverlay}>
-              <Image
-                src="/images/fidget-wrld-logo-main.png"
-                alt="Fidget WRLD"
-                width={600}
-                height={400}
-                priority
-                className={styles.heroLogo}
-              />
+        <div className={styles.heroStage}>
+
+          {/* Left panel — tagline */}
+          <div className={styles.heroSidePanel}>
+            <div className={styles.heroWindowChrome} aria-hidden="true">
+              <span className={styles.heroDot} style={{ background: '#ff5f57' }} />
+              <span className={styles.heroDot} style={{ background: '#febc2e' }} />
+              <span className={styles.heroDot} style={{ background: '#28c840' }} />
+              <span className={styles.heroWindowLabel}>fidget-wrld &mdash; about</span>
+            </div>
+            <div className={styles.heroSidePanelBody}>
+              <p className={styles.heroSideLabel}>The Fidget Shop</p>
+              <p className={styles.heroTagline}>
+                Built&nbsp;different.<br />Fidgeted&nbsp;everywhere.
+              </p>
+              <p className={styles.heroSub}>
+                Custom 3D-printed toys, N52 magnetic balls, and more &mdash; made to order and shipped in days.
+              </p>
             </div>
           </div>
-        </div>
 
-        {/* Hook copy + CTA */}
-        <div className={styles.heroContent}>
-          <p className={styles.heroTagline}>
-            Built different. Fidgeted&nbsp;everywhere.
-          </p>
-          <p className={styles.heroSub}>
-            Custom 3D-printed toys, N52 magnetic balls, and more &mdash; made&nbsp;to&nbsp;order and shipped in&nbsp;days.
-          </p>
-          <Link href="/products" className={styles.heroCta}>
-            Shop Now
-          </Link>
-        </div>
+          {/* Center — ball pit */}
+          <div className={styles.heroWindow}>
+            <div className={styles.heroWindowChrome} aria-hidden="true">
+              <span className={styles.heroDot} style={{ background: '#ff5f57' }} />
+              <span className={styles.heroDot} style={{ background: '#febc2e' }} />
+              <span className={styles.heroDot} style={{ background: '#28c840' }} />
+              <span className={styles.heroWindowLabel}>fidget-wrld &mdash; interactive</span>
+            </div>
+            <div className={styles.heroWindowCanvas}>
+              <BallpitHero className={styles.heroBallpit} />
+              <noscript><div className={styles.heroFallback} /></noscript>
+              <div className={styles.heroLogoOverlay}>
+                <Image
+                  src="/images/fidget-wrld-logo-main.png"
+                  alt="Fidget WRLD"
+                  width={600}
+                  height={400}
+                  priority
+                  className={styles.heroLogo}
+                />
+              </div>
+            </div>
+          </div>
 
+          {/* Right panel — CTA + features */}
+          <div className={styles.heroSidePanel}>
+            <div className={styles.heroWindowChrome} aria-hidden="true">
+              <span className={styles.heroDot} style={{ background: '#ff5f57' }} />
+              <span className={styles.heroDot} style={{ background: '#febc2e' }} />
+              <span className={styles.heroDot} style={{ background: '#28c840' }} />
+              <span className={styles.heroWindowLabel}>fidget-wrld &mdash; shop</span>
+            </div>
+            <div className={styles.heroSidePanelBody}>
+              <p className={styles.heroSideLabel}>Ready to order</p>
+              <Link href="/products" className={styles.heroCta}>
+                Shop Now
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true">
+                  <path d="M5 12h14M12 5l7 7-7 7" />
+                </svg>
+              </Link>
+              <ul className={styles.heroFeatures} aria-label="Key features">
+                <li className={styles.heroFeatureItem}>
+                  <span className={styles.heroFeatureIcon} aria-hidden="true">🚚</span>
+                  <span>Free USA shipping over $50</span>
+                </li>
+                <li className={styles.heroFeatureItem}>
+                  <span className={styles.heroFeatureIcon} aria-hidden="true">🖨️</span>
+                  <span>Made to order</span>
+                </li>
+                <li className={styles.heroFeatureItem}>
+                  <span className={styles.heroFeatureIcon} aria-hidden="true">📦</span>
+                  <span>Ships in 3–5 business days</span>
+                </li>
+                <li className={styles.heroFeatureItem}>
+                  <span className={styles.heroFeatureIcon} aria-hidden="true">✦</span>
+                  <span>Custom 3D prints available</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+        </div>
       </section>
 
       {/* 2. Category Bubbles */}
