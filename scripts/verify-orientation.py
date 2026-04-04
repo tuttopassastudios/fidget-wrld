@@ -39,10 +39,9 @@ obj.rotation_euler = (
 bpy.ops.object.transform_apply(location=False, rotation=True, scale=True)
 
 # ── bounding box after rotation ───────────────────────────────────────────────
-bbox = [obj.matrix_world @ v.co for v in obj.data.vertices[:1000:1]]  # sample
-xs = [v.x for v in obj.data.vertices]
-ys = [v.y for v in obj.data.vertices]
-zs = [v.z for v in obj.data.vertices]
+xs = [v.co.x for v in obj.data.vertices]
+ys = [v.co.y for v in obj.data.vertices]
+zs = [v.co.z for v in obj.data.vertices]
 
 dx = max(xs) - min(xs)
 dy = max(ys) - min(ys)
