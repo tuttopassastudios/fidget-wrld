@@ -1,6 +1,6 @@
 'use client';
 
-import { Suspense, useRef, useState, useEffect, useMemo } from 'react';
+import { Suspense, useState, useEffect, useMemo } from 'react';
 import { Canvas, useLoader } from '@react-three/fiber';
 import { OrbitControls, Center, useProgress, Html } from '@react-three/drei';
 import { STLLoader } from 'three/examples/jsm/loaders/STLLoader.js';
@@ -12,25 +12,123 @@ export interface STLViewerProps {
   materialType?: 'standard' | 'translucent' | 'gradient';
 }
 
+// ---------------------------------------------------------------------------
+// PLA layer-line GLSL shader
+// Simulates the horizontal banding of FDM 3D printing.
+// Lights are specified in world space; viewMatrix (Three.js built-in) rotates
+// them to view space so they stay fixed as the user orbits the model.
+// ---------------------------------------------------------------------------
+
+const PLA_VERT = /* glsl */ `
+varying vec3 vObjectPos;   // object-space position for layer-line Z lookup
+varying vec3 vViewNormal;  // view-space normal for lighting
+
+void main() {
+  vObjectPos  = position;
+  vViewNormal = normalize(normalMatrix * normal);
+  gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+}
+`;
+
+const PLA_FRAG = /* glsl */ `
+// Three.js provides viewMatrix automatically in ShaderMaterial
+uniform mat4 viewMatrix;
+
+uniform vec3  u_baseColor;
+uniform float u_layerScale; // ~60 — controls how many layer lines visible
+uniform float u_seamDark;   // 0.76 — darkest point at a layer seam
+uniform int   u_isGradient; // 1 = pink→blue gradient, 0 = solid
+uniform vec3  u_colorBottom;
+uniform vec3  u_colorTop;
+uniform float u_yMin;       // geometry Y bounds for gradient normalisation
+uniform float u_yMax;
+
+varying vec3 vObjectPos;
+varying vec3 vViewNormal;
+
+// Diffuse contribution from a world-space light direction
+float diffuse(vec3 n, vec3 worldDir, float intensity) {
+  vec3 viewDir = normalize(mat3(viewMatrix) * normalize(worldDir));
+  return max(dot(n, viewDir), 0.0) * intensity;
+}
+
+void main() {
+  vec3 n = normalize(vViewNormal);
+
+  // --- PLA layer-line factor ---
+  // fract of (Z × scale) gives a sawtooth 0→1 per layer.
+  // The seam (value near 0) is darkened; the body (0.35+) is full brightness.
+  float phase  = fract(vObjectPos.z * u_layerScale);
+  float layerF = mix(u_seamDark, 1.0, smoothstep(0.0, 0.35, phase));
+
+  // --- Base colour ---
+  vec3 color;
+  if (u_isGradient == 1) {
+    float t = (u_yMax > u_yMin)
+      ? clamp((vObjectPos.y - u_yMin) / (u_yMax - u_yMin), 0.0, 1.0)
+      : 0.5;
+    color = mix(u_colorBottom, u_colorTop, t);
+  } else {
+    color = u_baseColor;
+  }
+  color *= layerF;
+
+  // --- Studio 4-light rig (world-space directions, fixed to scene) ---
+  float ambient = 0.12;
+  float d_key   = diffuse(n, vec3( 4.0,  6.0,  3.0),  0.54); // key
+  float d_fill  = diffuse(n, vec3(-5.0,  2.0,  2.0),  0.22); // fill
+  float d_rim   = diffuse(n, vec3( 0.0,  4.0, -5.0),  0.22); // rim
+  float d_top   = diffuse(n, vec3( 0.0,  8.0,  0.0),  0.12); // top
+
+  color *= (ambient + d_key + d_fill + d_rim + d_top);
+
+  gl_FragColor = vec4(color, 1.0);
+}
+`;
+
+// ---------------------------------------------------------------------------
+// Helper: build the ShaderMaterial for standard / gradient modes
+// ---------------------------------------------------------------------------
+function buildPLAMaterial(
+  color: string,
+  materialType: 'standard' | 'translucent' | 'gradient',
+  yMin: number,
+  yMax: number,
+) {
+  return new THREE.ShaderMaterial({
+    vertexShader:   PLA_VERT,
+    fragmentShader: PLA_FRAG,
+    uniforms: {
+      u_baseColor:   { value: new THREE.Color(color) },
+      u_layerScale:  { value: 60.0 },
+      u_seamDark:    { value: 0.76 },
+      u_isGradient:  { value: materialType === 'gradient' ? 1 : 0 },
+      u_colorBottom: { value: new THREE.Color('#EC4899') },
+      u_colorTop:    { value: new THREE.Color('#3B82F6') },
+      u_yMin:        { value: yMin },
+      u_yMax:        { value: yMax },
+    },
+  });
+}
+
+// ---------------------------------------------------------------------------
+// Loading indicator
+// ---------------------------------------------------------------------------
 function LoadingOverlay({ progress }: { progress: number }) {
   return (
     <Html center>
       <div style={{ textAlign: 'center', color: '#aaa', fontSize: '14px', fontFamily: 'sans-serif' }}>
         <style>{`
-          @keyframes stl-spin {
-            to { transform: rotate(360deg); }
-          }
+          @keyframes stl-spin { to { transform: rotate(360deg); } }
           .stl-spinner {
-            width: 32px;
-            height: 32px;
-            border: 3px solid #333;
-            border-top-color: #3b82f6;
+            width: 32px; height: 32px;
+            border: 3px solid #333; border-top-color: #3b82f6;
             border-radius: 50%;
             animation: stl-spin 0.8s linear infinite;
             margin: 0 auto 8px;
           }
           @media (prefers-reduced-motion: reduce) {
-            .stl-spinner { animation: none; border-top-color: #3b82f6; }
+            .stl-spinner { animation: none; }
           }
         `}</style>
         <div className="stl-spinner" />
@@ -45,6 +143,9 @@ function ProgressTracker() {
   return <LoadingOverlay progress={progress} />;
 }
 
+// ---------------------------------------------------------------------------
+// STL mesh with PLA shader
+// ---------------------------------------------------------------------------
 function STLModel({
   stlPath,
   color,
@@ -56,47 +157,22 @@ function STLModel({
 }) {
   const geometry = useLoader(STLLoader, stlPath);
 
-  // Normalize to fit in a 2-unit bounding sphere
+  // Normalise to fit in a 2-unit bounding sphere
   geometry.computeBoundingBox();
-  const box = geometry.boundingBox!;
-  const size = new THREE.Vector3();
+  const box    = geometry.boundingBox!;
+  const size   = new THREE.Vector3();
   box.getSize(size);
   const maxDim = Math.max(size.x, size.y, size.z);
-  const scale = maxDim > 0 ? 2 / maxDim : 1;
+  const scale  = maxDim > 0 ? 2 / maxDim : 1;
 
-  // Build vertex colors for gradient mode (pink bottom → blue top along Y after centering)
-  const gradientGeometry = useMemo(() => {
-    if (materialType !== 'gradient') return null;
-    const geo = geometry.clone();
-    geo.computeBoundingBox();
-    const yMin = geo.boundingBox!.min.y;
-    const yMax = geo.boundingBox!.max.y;
-    const positions = geo.attributes.position;
-    const colors = new Float32Array(positions.count * 3);
-    const colorBottom = new THREE.Color('#EC4899');
-    const colorTop    = new THREE.Color('#3B82F6');
-    for (let i = 0; i < positions.count; i++) {
-      const y = positions.getY(i);
-      const t = yMax > yMin ? (y - yMin) / (yMax - yMin) : 0.5;
-      const c = colorBottom.clone().lerp(colorTop, t);
-      colors[i * 3]     = c.r;
-      colors[i * 3 + 1] = c.g;
-      colors[i * 3 + 2] = c.b;
-    }
-    geo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
-    return geo;
-  }, [geometry, materialType]);
+  // PLA shader (standard + gradient share the same GLSL; only uniforms differ)
+  const plaMaterial = useMemo(
+    () => buildPLAMaterial(color, materialType, box.min.y, box.max.y),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [color, materialType, box.min.y, box.max.y],
+  );
 
-  if (materialType === 'gradient' && gradientGeometry) {
-    return (
-      <Center>
-        <mesh geometry={gradientGeometry} castShadow receiveShadow scale={scale}>
-          <meshStandardMaterial vertexColors roughness={0.65} metalness={0} />
-        </mesh>
-      </Center>
-    );
-  }
-
+  // Translucent uses a separate physical material
   if (materialType === 'translucent') {
     return (
       <Center>
@@ -117,13 +193,15 @@ function STLModel({
 
   return (
     <Center>
-      <mesh geometry={geometry} castShadow receiveShadow scale={scale}>
-        <meshStandardMaterial color={color} roughness={0.65} metalness={0} />
-      </mesh>
+      <mesh geometry={geometry} scale={scale} material={plaMaterial} />
     </Center>
   );
 }
 
+// ---------------------------------------------------------------------------
+// Scene: studio lighting declared in Three.js for shadow pass;
+// actual shading happens inside the custom shader.
+// ---------------------------------------------------------------------------
 function Scene({
   stlPath,
   color,
@@ -137,16 +215,12 @@ function Scene({
 }) {
   return (
     <>
-      {/* Studio four-point lighting rig against dark background */}
+      {/* Lights still needed for shadow casting and the translucent material */}
       <ambientLight intensity={0.15} />
-      {/* Key — bright, front-right-above */}
-      <directionalLight position={[4, 6, 3]}  intensity={3.8} castShadow color="#ffffff" />
-      {/* Fill — cool, left */}
-      <directionalLight position={[-5, 2, 2]} intensity={1.4}            color="#c8d8ff" />
-      {/* Rim — behind-top, separates model from dark bg */}
-      <directionalLight position={[0, 4, -5]} intensity={2.6}            color="#ffffff" />
-      {/* Top fill — prevents top surfaces going dark */}
-      <directionalLight position={[0, 8, 0]}  intensity={1.0}            color="#ffffff" />
+      <directionalLight position={[4, 6, 3]}  intensity={3.5} castShadow />
+      <directionalLight position={[-5, 2, 2]} intensity={1.4} color="#c8d8ff" />
+      <directionalLight position={[0, 4, -5]} intensity={2.4} />
+      <directionalLight position={[0, 8, 0]}  intensity={1.0} />
 
       <Suspense fallback={<ProgressTracker />}>
         <STLModel stlPath={stlPath} color={color} materialType={materialType} />
@@ -163,7 +237,14 @@ function Scene({
   );
 }
 
-export function STLViewer({ stlPath, color = '#3B82F6', materialType = 'standard' }: STLViewerProps) {
+// ---------------------------------------------------------------------------
+// Public component
+// ---------------------------------------------------------------------------
+export function STLViewer({
+  stlPath,
+  color = '#3B82F6',
+  materialType = 'standard',
+}: STLViewerProps) {
   const [reducedMotion, setReducedMotion] = useState(false);
 
   useEffect(() => {
@@ -175,7 +256,16 @@ export function STLViewer({ stlPath, color = '#3B82F6', materialType = 'standard
   }, []);
 
   return (
-    <div style={{ width: '100%', height: '400px', position: 'relative', background: '#0f0f0f', borderRadius: '12px', overflow: 'hidden' }}>
+    <div
+      style={{
+        width: '100%',
+        height: '400px',
+        position: 'relative',
+        background: '#0f0f0f',
+        borderRadius: '12px',
+        overflow: 'hidden',
+      }}
+    >
       <Canvas
         style={{ width: '100%', height: '100%' }}
         camera={{ position: [0, 0, 5], fov: 45 }}
@@ -183,7 +273,12 @@ export function STLViewer({ stlPath, color = '#3B82F6', materialType = 'standard
         gl={{ antialias: true, alpha: false }}
         onCreated={({ gl }) => { gl.setClearColor('#0f0f0f'); }}
       >
-        <Scene stlPath={stlPath} color={color} materialType={materialType} autoRotate={!reducedMotion} />
+        <Scene
+          stlPath={stlPath}
+          color={color}
+          materialType={materialType}
+          autoRotate={!reducedMotion}
+        />
       </Canvas>
     </div>
   );
