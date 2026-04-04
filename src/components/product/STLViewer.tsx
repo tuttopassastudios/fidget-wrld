@@ -118,11 +118,11 @@ void main() {
 
 function buildPLAMaterial(
   color: string,
-  materialType: 'standard' | 'gradient' | 'silk-gradient',
+  materialType: 'standard' | 'gradient' | 'silk' | 'silk-gradient',
   yMin: number,
   yMax: number,
 ): THREE.ShaderMaterial {
-  const isSilk     = materialType === 'silk-gradient';
+  const isSilk     = materialType === 'silk' || materialType === 'silk-gradient';
   const isGradient = materialType === 'gradient' || materialType === 'silk-gradient';
   return new THREE.ShaderMaterial({
     vertexShader: PLA_VERT,
@@ -192,7 +192,14 @@ function STLModel({
   const scale  = maxDim > 0 ? 2 / maxDim : 1;
 
   const plaMaterial = useMemo(
-    () => buildPLAMaterial(color, materialType === 'gradient' ? 'gradient' : materialType === 'silk-gradient' ? 'silk-gradient' : 'standard', box.min.y, box.max.y),
+    () => buildPLAMaterial(
+      color,
+      materialType === 'gradient'      ? 'gradient' :
+      materialType === 'silk-gradient' ? 'silk-gradient' :
+      materialType === 'silk'          ? 'silk' :
+      'standard',
+      box.min.y, box.max.y,
+    ),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [color, materialType, box.min.y, box.max.y],
   );
@@ -204,30 +211,13 @@ function STLModel({
           <meshPhysicalMaterial
             color={color}
             transparent
-            opacity={0.75}
-            roughness={0.04}
+            opacity={0.92}
+            roughness={0.15}
             metalness={0}
-            transmission={0.6}
+            transmission={0.15}
             ior={1.47}
             depthWrite={false}
             side={THREE.DoubleSide}
-          />
-        </mesh>
-      </Center>
-    );
-  }
-
-  if (materialType === 'silk') {
-    return (
-      <Center>
-        <mesh geometry={geometry} scale={scale} rotation={modelRotation} castShadow>
-          <meshPhysicalMaterial
-            color={color}
-            metalness={0.88}
-            roughness={0.08}
-            reflectivity={1.0}
-            clearcoat={0.3}
-            clearcoatRoughness={0.1}
           />
         </mesh>
       </Center>
