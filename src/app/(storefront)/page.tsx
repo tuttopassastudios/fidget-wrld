@@ -132,13 +132,15 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* 2. Category Bubbles */}
+      {/* 2. Features Banner — 3D printing, shipping, support, customization */}
+      <FadeIn>
+        <PrintingFeaturesBanner />
+      </FadeIn>
+
+      {/* 3. Category Bubbles */}
       <FadeIn>
         <CategoryBubbles items={CATEGORY_ITEMS} />
       </FadeIn>
-
-      {/* 3. Features Banner — 3D printing, shipping, support, customization */}
-      <PrintingFeaturesBanner />
 
       {/* 4. Custom 3D-Printed Section */}
       {printedProducts.length > 0 && (
@@ -161,7 +163,7 @@ export default async function HomePage() {
                   </Link>
                 </div>
                 <EditorialGrid layout="row">
-                  {printedProducts.map((p, i) => (
+                  {printedProducts.slice(0, 3).map((p, i) => (
                     <ProductCard
                       key={p.sku}
                       product={p}

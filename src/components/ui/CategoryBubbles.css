@@ -1,24 +1,24 @@
-/* Category Bubbles — adapted from reactbits BubbleMenu */
+/* Category Bubbles — compact 2-column layout */
 .categoryBubbles {
-  padding: var(--space-16) 0 var(--space-12);
+  padding: var(--space-12) 0 var(--space-10);
   position: relative;
 }
 
 .categoryBubblesHeading {
   text-align: center;
-  margin-bottom: var(--space-8);
+  margin-bottom: var(--space-6);
 }
 
 .categoryBubblesHeading h2 {
   font-family: var(--font-display);
-  font-size: var(--text-3xl);
+  font-size: var(--text-2xl);
   font-weight: var(--font-bold);
   color: var(--color-text-primary);
-  margin: 0 0 8px;
+  margin: 0 0 6px;
 }
 
 .categoryBubblesHeading p {
-  font-size: var(--text-base);
+  font-size: var(--text-sm);
   color: var(--color-text-secondary);
   margin: 0;
 }
@@ -27,37 +27,16 @@
   list-style: none;
   margin: 0 auto;
   padding: 0 24px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0;
-  row-gap: 8px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
   width: 100%;
-  max-width: 1200px;
-  justify-content: stretch;
-}
-
-.pillSpacer {
-  width: 100%;
-  height: 0;
-  pointer-events: none;
+  max-width: 560px;
+  box-sizing: border-box;
 }
 
 .pillCol {
   display: flex;
-  justify-content: center;
-  align-items: stretch;
-  flex: 0 0 calc(100% / 3);
-  box-sizing: border-box;
-}
-
-/* Center the bottom row when there are 2 leftover items */
-.pillCol:nth-child(4):nth-last-child(2) {
-  margin-left: calc(100% / 6);
-}
-
-/* Center the bottom row when there is 1 leftover item */
-.pillCol:nth-child(4):last-child {
-  margin-left: calc(100% / 3);
 }
 
 .pillLink {
@@ -65,35 +44,32 @@
   --pill-color: #111;
   --pill-border: rgba(0, 0, 0, 0.08);
   --item-rot: 0deg;
-  --pill-min-h: 140px;
   --hover-bg: #f3f4f6;
   --hover-color: #111;
   width: 100%;
-  min-height: var(--pill-min-h);
-  padding: clamp(1.2rem, 2.5vw, 6rem) 0;
-  font-size: clamp(1.25rem, 3.5vw, 3rem);
+  padding: 14px 16px;
+  font-size: 0.9375rem;
   font-family: var(--font-display);
   font-weight: 600;
-  line-height: 0;
   border-radius: 999px;
   background: var(--pill-bg);
   color: var(--pill-color);
   text-decoration: none;
   box-shadow:
-    0 4px 14px rgba(0, 0, 0, 0.08),
-    0 1px 3px rgba(0, 0, 0, 0.04);
+    0 2px 8px rgba(0, 0, 0, 0.07),
+    0 1px 2px rgba(0, 0, 0, 0.04);
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
   transition:
-    background 0.3s ease,
-    color 0.3s ease,
-    transform 0.3s ease;
+    background 0.25s ease,
+    color 0.25s ease,
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
   will-change: transform;
   box-sizing: border-box;
   white-space: nowrap;
-  overflow: hidden;
   cursor: pointer;
 }
 
@@ -102,29 +78,28 @@
   align-items: center;
   gap: 0.4em;
   will-change: transform, opacity;
-  height: 1.2em;
   line-height: 1.2;
 }
 
 .pillIcon {
-  font-size: 0.85em;
+  font-size: 1em;
   line-height: 1;
   flex-shrink: 0;
 }
 
-/* Desktop rotations + hover */
-@media (min-width: 900px) {
+/* Desktop — subtle rotation + hover */
+@media (min-width: 600px) {
   .pillLink {
     transform: rotate(var(--item-rot));
   }
 
   .pillLink:hover {
-    transform: rotate(var(--item-rot)) scale(1.06);
+    transform: rotate(var(--item-rot)) scale(1.05);
     background: var(--hover-bg);
     color: var(--hover-color);
     box-shadow:
-      0 8px 24px rgba(0, 0, 0, 0.12),
-      0 2px 6px rgba(0, 0, 0, 0.06);
+      0 6px 18px rgba(0, 0, 0, 0.1),
+      0 2px 4px rgba(0, 0, 0, 0.05);
   }
 
   .pillLink:active {
@@ -132,34 +107,21 @@
   }
 }
 
-/* Mobile layout — 2-column grid */
-@media (max-width: 899px) {
+/* Mobile */
+@media (max-width: 599px) {
   .categoryBubbles {
     padding: var(--space-10) 0 var(--space-8);
   }
 
-  .categoryBubblesHeading {
-    margin-bottom: var(--space-6);
-  }
-
-  .categoryBubblesHeading h2 {
-    font-size: var(--text-2xl);
-  }
-
   .pillList {
-    gap: 10px;
+    max-width: 100%;
     padding: 0 16px;
-  }
-
-  .pillCol {
-    flex: 0 0 calc(50% - 5px);
-    margin-left: 0 !important;
+    gap: 8px;
   }
 
   .pillLink {
-    font-size: clamp(0.95rem, 3.5vw, 1.4rem);
-    padding: clamp(0.75rem, 2.5vw, 1.2rem) 0;
-    min-height: 64px;
+    padding: 12px 12px;
+    font-size: 0.875rem;
   }
 
   .pillLink:active {
