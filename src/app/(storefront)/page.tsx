@@ -69,7 +69,7 @@ export default async function HomePage() {
   const bestSellersData = await getBestSellers();
   const printedProductsData = await get3DPrintedProducts();
 
-  const bestSellers = bestSellersData.map(p => {
+  const bestSellers = bestSellersData.filter(p => p.fulfillmentType === '3d-printed').map(p => {
     const v = p.variants[p.defaultVariantIndex];
     return {
       sku: v.sku,
@@ -152,18 +152,13 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* 2. Product scroll showcase */}
-      <ProductScrollBanner />
-
-      {/* 3. Features Banner — 3D printing, shipping, support, customization */}
-      <FadeIn>
-        <PrintingFeaturesBanner />
-      </FadeIn>
-
-      {/* 4. Category Bubbles */}
+      {/* 2. Category Bubbles */}
       <FadeIn>
         <CategoryBubbles items={CATEGORY_ITEMS} />
       </FadeIn>
+
+      {/* 3. Product scroll showcase */}
+      <ProductScrollBanner />
 
       {/* 4. Custom 3D-Printed Section */}
       {printedProducts.length > 0 && (
@@ -206,21 +201,28 @@ export default async function HomePage() {
         </FadeIn>
       )}
 
-      {/* 4. Best Sellers */}
-      <FadeIn>
-        <section className={styles.productsSection}>
-          <div className="container">
-            <div className={styles.bestSellersHeader}>
-              <SectionHeading heading="Best Sellers" eyebrow="Fan Favorites" dotAccent />
-              <Link href="/products" className={styles.viewAllLink}>View All &rarr;</Link>
+      {/* 5. Best Sellers */}
+      {bestSellers.length > 0 && (
+        <FadeIn>
+          <section className={styles.productsSection}>
+            <div className="container">
+              <div className={styles.bestSellersHeader}>
+                <SectionHeading heading="Best Sellers" eyebrow="Fan Favorites" dotAccent />
+                <Link href="/products" className={styles.viewAllLink}>View All &rarr;</Link>
+              </div>
+              <EditorialGrid layout="row">
+                {bestSellers.map((p, i) => (
+                  <ProductCard key={p.sku} product={p} slug={p.slug} meta={p.meta} priority={i < 4} variantCount={p.variantCount} allOutOfStock={p.allOutOfStock} />
+                ))}
+              </EditorialGrid>
             </div>
-            <EditorialGrid layout="row">
-              {bestSellers.map((p, i) => (
-                <ProductCard key={p.sku} product={p} slug={p.slug} meta={p.meta} priority={i < 4} variantCount={p.variantCount} allOutOfStock={p.allOutOfStock} />
-              ))}
-            </EditorialGrid>
-          </div>
-        </section>
+          </section>
+        </FadeIn>
+      )}
+
+      {/* 6. Features Banner — 3D printing, shipping, support, customization */}
+      <FadeIn>
+        <PrintingFeaturesBanner />
       </FadeIn>
 
       {/* 5. Newsletter */}
