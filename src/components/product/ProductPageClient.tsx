@@ -37,6 +37,15 @@ const STLViewer = dynamic(() => import('./STLViewer').then(m => ({ default: m.ST
   ),
 });
 
+const GCodeViewer = dynamic(() => import('./GCodeViewer').then(m => ({ default: m.GCodeViewer })), {
+  ssr: false,
+  loading: () => (
+    <div style={{ width: '100%', height: '400px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f8fafc', borderRadius: '12px', color: '#888', fontSize: '14px' }}>
+      Loading 3D preview&hellip;
+    </div>
+  ),
+});
+
 export function ProductPageClient({ product }: { product: ProductPage }) {
   // Memoize model component lookup to satisfy React 19 render rules
   const ModelComponent = useMemo(() => getModelComponent(product.slug), [product.slug]);
@@ -150,7 +159,7 @@ export function ProductPageClient({ product }: { product: ProductPage }) {
       <div className={styles.layout}>
         <div className="reveal-item">
           <div className={styles.gallery}>
-            {is3DPrinted && product.stlFile ? (
+            {is3DPrinted && (product.gcodePreviewPath || product.stlFile) ? (
               <>
                 {product.assembledPhotoUrl && (
                   <div style={{ display: 'flex', gap: '4px', marginBottom: '12px' }}>
@@ -196,7 +205,11 @@ export function ProductPageClient({ product }: { product: ProductPage }) {
                   </div>
                 )}
                 {galleryView === '3d' ? (
-                  <STLViewer stlPath={product.stlFile} color={selectedColorHex ?? '#A8A8A8'} />
+                  product.gcodePreviewPath ? (
+                    <GCodeViewer toolpathUrl={product.gcodePreviewPath} color={selectedColorHex ?? '#22d3ee'} />
+                  ) : (
+                    <STLViewer stlPath={product.stlFile!} color={selectedColorHex ?? '#A8A8A8'} />
+                  )
                 ) : (
                   <img
                     className={styles.galleryImage}

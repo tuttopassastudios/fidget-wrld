@@ -15,6 +15,7 @@ export const productPages: ProductPage[] = [
     category: 'Collectible',
     fulfillmentType: '3d-printed',
     stlFile: '/models/dummy13-runners.stl',
+    gcodePreviewPath: '', // TODO: run `node scripts/process-gcode.js <file.gcode> dummy-13` and paste URL here
     assembledPhotoUrl: '/images/products/dummy-13.jpg',
     availableFilamentColorIds: ['white', 'black'],
     multiColorParts: [
@@ -83,6 +84,7 @@ export const productPages: ProductPage[] = [
     category: 'Clicky',
     fulfillmentType: '3d-printed',
     stlFile: '/models/click-clack-swoosh.stl',
+    gcodePreviewPath: '', // TODO: run `node scripts/process-gcode.js <file.gcode> click-clack-swoosh` and paste URL here
     availableFilamentColorIds: ['white', 'black'],
     customizationOptions: {
       engravingText: true,
@@ -147,6 +149,7 @@ export const productPages: ProductPage[] = [
     category: 'Clicky',
     fulfillmentType: '3d-printed',
     stlFile: '/models/yafic_v2.stl',
+    gcodePreviewPath: '', // TODO: run `node scripts/process-gcode.js <file.gcode> infinity-cube` and paste URL here
     availableFilamentColorIds: ['white', 'black'],
     customizationOptions: {
       engravingText: true,
