@@ -106,15 +106,6 @@ export default async function HomePage() {
     <PageReveal>
       {/* 1. Hero — Ballpit window + tagline */}
       <section className={styles.hero}>
-        <Image
-          src="/images/fidget-wrld-logo-main.png"
-          alt="Fidget WRLD"
-          width={600}
-          height={400}
-          priority
-          className={styles.heroLogo}
-        />
-
         {/* Windowed ball pit */}
         <div className={styles.heroWindow}>
           <div className={styles.heroWindowChrome} aria-hidden="true">
@@ -126,6 +117,17 @@ export default async function HomePage() {
           <div className={styles.heroWindowCanvas}>
             <BallpitHero className={styles.heroBallpit} />
             <noscript><div className={styles.heroFallback} /></noscript>
+            {/* Logo overlaid on the ball pit */}
+            <div className={styles.heroLogoOverlay}>
+              <Image
+                src="/images/fidget-wrld-logo-main.png"
+                alt="Fidget WRLD"
+                width={600}
+                height={400}
+                priority
+                className={styles.heroLogo}
+              />
+            </div>
           </div>
         </div>
 
