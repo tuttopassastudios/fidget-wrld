@@ -6,6 +6,7 @@ import { PageReveal } from '@/components/ui/PageReveal';
 import { SectionHeading } from '@/components/ui/SectionHeading';
 import { EditorialGrid } from '@/components/ui/EditorialGrid';
 import { CategoryBubbles } from '@/components/ui/CategoryBubbles';
+import { MacWindowFrame } from '@/components/ui/MacWindowFrame';
 import { NewsletterSignup } from '@/components/newsletter';
 import { BallpitHero } from './BallpitHero';
 import { PrintingFeaturesBanner } from './PrintingFeaturesBanner';
@@ -193,7 +194,13 @@ export default async function HomePage() {
 
       {/* 2. Category Bubbles */}
       <FadeIn>
-        <CategoryBubbles items={CATEGORY_ITEMS} />
+        <section style={{ padding: 'var(--space-10) 0' }}>
+          <div className="container">
+            <MacWindowFrame label="fidget-wrld — categories">
+              <CategoryBubbles items={CATEGORY_ITEMS} />
+            </MacWindowFrame>
+          </div>
+        </section>
       </FadeIn>
 
       {/* 3. Product scroll showcase */}
@@ -204,37 +211,39 @@ export default async function HomePage() {
         <FadeIn>
           <section className={styles.printedSection}>
             <div className="container">
-              <div className={styles.printedInner}>
-                <div className={styles.printedHeader}>
-                  <div>
-                    <SectionHeading
-                      heading="Custom 3D-Printed Fidgets"
-                      eyebrow="Made to Order"
-                    />
-                    <p className={styles.printedSubheading}>
-                      Designed by you. Printed by us. Shipped in 3&ndash;5 days.
-                    </p>
+              <MacWindowFrame label="fidget-wrld — 3d-printed">
+                <div className={styles.printedInner}>
+                  <div className={styles.printedHeader}>
+                    <div>
+                      <SectionHeading
+                        heading="Custom 3D-Printed Fidgets"
+                        eyebrow="Made to Order"
+                      />
+                      <p className={styles.printedSubheading}>
+                        Designed by you. Printed by us. Shipped in 3&ndash;5 days.
+                      </p>
+                    </div>
+                    <Link href="/products?fulfillment=3d-printed" className={styles.printedCta}>
+                      Shop 3D Printed &rarr;
+                    </Link>
                   </div>
-                  <Link href="/products?fulfillment=3d-printed" className={styles.printedCta}>
-                    Shop 3D Printed &rarr;
-                  </Link>
+                  <EditorialGrid layout="row">
+                    {printedProducts.slice(0, 3).map((p, i) => (
+                      <ProductCard
+                        key={p.sku}
+                        product={p}
+                        slug={p.slug}
+                        meta={p.meta}
+                        priority={i < 4}
+                        variantCount={p.variantCount}
+                        allOutOfStock={p.allOutOfStock}
+                        badges={{ isNew: true }}
+                        fulfillmentType={p.fulfillmentType}
+                      />
+                    ))}
+                  </EditorialGrid>
                 </div>
-                <EditorialGrid layout="row">
-                  {printedProducts.slice(0, 3).map((p, i) => (
-                    <ProductCard
-                      key={p.sku}
-                      product={p}
-                      slug={p.slug}
-                      meta={p.meta}
-                      priority={i < 4}
-                      variantCount={p.variantCount}
-                      allOutOfStock={p.allOutOfStock}
-                      badges={{ isNew: true }}
-                      fulfillmentType={p.fulfillmentType}
-                    />
-                  ))}
-                </EditorialGrid>
-              </div>
+              </MacWindowFrame>
             </div>
           </section>
         </FadeIn>
@@ -245,15 +254,19 @@ export default async function HomePage() {
         <FadeIn>
           <section className={styles.productsSection}>
             <div className="container">
-              <div className={styles.bestSellersHeader}>
-                <SectionHeading heading="Best Sellers" eyebrow="Fan Favorites" dotAccent />
-                <Link href="/products" className={styles.viewAllLink}>View All &rarr;</Link>
-              </div>
-              <EditorialGrid layout="row">
-                {bestSellers.map((p, i) => (
-                  <ProductCard key={p.sku} product={p} slug={p.slug} meta={p.meta} priority={i < 4} variantCount={p.variantCount} allOutOfStock={p.allOutOfStock} />
-                ))}
-              </EditorialGrid>
+              <MacWindowFrame label="fidget-wrld — best-sellers">
+                <div className={styles.sectionWindowBody}>
+                  <div className={styles.bestSellersHeader}>
+                    <SectionHeading heading="Best Sellers" eyebrow="Fan Favorites" dotAccent />
+                    <Link href="/products" className={styles.viewAllLink}>View All &rarr;</Link>
+                  </div>
+                  <EditorialGrid layout="row">
+                    {bestSellers.map((p, i) => (
+                      <ProductCard key={p.sku} product={p} slug={p.slug} meta={p.meta} priority={i < 4} variantCount={p.variantCount} allOutOfStock={p.allOutOfStock} />
+                    ))}
+                  </EditorialGrid>
+                </div>
+              </MacWindowFrame>
             </div>
           </section>
         </FadeIn>
@@ -268,22 +281,24 @@ export default async function HomePage() {
       <FadeIn>
         <section className={styles.newsletterSection}>
           <div className="container">
-            <div className={styles.newsletterInner}>
-              <div className={styles.newsletterIcon} aria-hidden="true">
-                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
-                  <polyline points="22,6 12,13 2,6" />
-                </svg>
+            <MacWindowFrame label="fidget-wrld — newsletter" variant="dark">
+              <div className={styles.newsletterInner}>
+                <div className={styles.newsletterIcon} aria-hidden="true">
+                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                    <polyline points="22,6 12,13 2,6" />
+                  </svg>
+                </div>
+                <SectionHeading heading="Join the Fidget Fam" align="center" />
+                <p>
+                  Get first access to new arrivals, exclusive discounts, and fidget tips delivered straight to your inbox.
+                </p>
+                <NewsletterSignup />
+                <p className={styles.newsletterDisclaimer}>
+                  We respect your privacy. Unsubscribe anytime.
+                </p>
               </div>
-              <SectionHeading heading="Join the Fidget Fam" align="center" />
-              <p>
-                Get first access to new arrivals, exclusive discounts, and fidget tips delivered straight to your inbox.
-              </p>
-              <NewsletterSignup />
-              <p className={styles.newsletterDisclaimer}>
-                We respect your privacy. Unsubscribe anytime.
-              </p>
-            </div>
+            </MacWindowFrame>
           </div>
         </section>
       </FadeIn>

@@ -99,6 +99,12 @@ export function ProductCard({
     <>
       <ReflectiveCard className={`product-card${allOutOfStock ? ' product-card--out-of-stock' : ''}`} enableTilt={false}>
         <Link href={`/products/${slug}`} className="product-card-link" prefetch={true} style={enableViewTransition ? { viewTransitionName: `product-${slug}` } : undefined}>
+          <div className="product-card-chrome" aria-hidden="true">
+            <span className="product-card-chrome-dot product-card-chrome-dot--red" />
+            <span className="product-card-chrome-dot product-card-chrome-dot--yellow" />
+            <span className="product-card-chrome-dot product-card-chrome-dot--green" />
+            <span className="product-card-chrome-label">{slug}.fidget</span>
+          </div>
           <div className="product-card-image" style={size !== 'standard' ? { aspectRatio: imageAspect } : undefined}>
             <img
               src={product.image}
