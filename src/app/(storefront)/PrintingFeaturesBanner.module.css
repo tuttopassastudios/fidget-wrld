@@ -1,6 +1,6 @@
 /* ── Printing Features Banner — light theme ── */
 .banner {
-  background: var(--color-bg-dark, #E8ECF1);
+  background: #ffffff;
   padding: 64px 0;
   position: relative;
   border-top: 1px solid var(--color-border);
@@ -15,7 +15,7 @@
   left: 0;
   right: 0;
   height: 2px;
-  background: linear-gradient(90deg, #3B82F6 0%, #06B6D4 33%, #22C55E 66%, #8B5CF6 100%);
+  background: linear-gradient(90deg, #3B82F6 0%, #06B6D4 100%);
 }
 
 .inner {
@@ -33,12 +33,13 @@
 
 .eyebrow {
   display: inline-block;
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 700;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--color-accent-tertiary, #06B6D4);
+  color: var(--color-accent-primary, #3B82F6);
   margin-bottom: 12px;
+  font-family: var(--font-mono);
 }
 
 .heading {

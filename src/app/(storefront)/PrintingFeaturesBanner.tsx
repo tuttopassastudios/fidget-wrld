@@ -6,8 +6,8 @@ const FEATURES = [
     label: 'Made to Order',
     title: 'Custom 3D Printing',
     desc: 'Every piece is printed fresh in your chosen filament color — no pre-made inventory, just your order.',
-    color: '#0d9488',
-    bg: 'rgba(13, 148, 136, 0.18)',
+    color: '#3B82F6',
+    bg: 'rgba(59, 130, 246, 0.12)',
     icon: (
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
         <rect x="2" y="14" width="20" height="6" rx="2" />
@@ -21,8 +21,8 @@ const FEATURES = [
     label: 'Fast Turnaround',
     title: 'Ships in 3–5 Days',
     desc: 'Most printed orders leave our shop in 3–5 business days and land at your door shortly after.',
-    color: '#22C55E',
-    bg: 'rgba(34, 197, 94, 0.16)',
+    color: '#06B6D4',
+    bg: 'rgba(6, 182, 212, 0.12)',
     icon: (
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
         <path d="M5 17H3a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11a2 2 0 0 1 2 2v3" />
@@ -38,7 +38,7 @@ const FEATURES = [
     title: 'Responsive Support',
     desc: 'Questions, issues, or just curious? Our team responds within 24 hours, seven days a week.',
     color: '#3B82F6',
-    bg: 'rgba(59, 130, 246, 0.16)',
+    bg: 'rgba(59, 130, 246, 0.12)',
     icon: (
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
         <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
@@ -50,8 +50,8 @@ const FEATURES = [
     label: 'Make It Yours',
     title: 'Full Customization',
     desc: 'Name engravings, model modifications, and premium filament options — make it exactly what you want.',
-    color: '#8B5CF6',
-    bg: 'rgba(139, 92, 246, 0.16)',
+    color: '#06B6D4',
+    bg: 'rgba(6, 182, 212, 0.12)',
     icon: (
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
         <circle cx="12" cy="12" r="10" />

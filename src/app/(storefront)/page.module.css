@@ -250,7 +250,7 @@
 
 /* ── Best Sellers ── */
 .productsSection {
-  padding: var(--space-12) 0;
+  padding: 48px 0;
   content-visibility: auto;
   contain-intrinsic-size: auto 500px;
 }
@@ -279,7 +279,7 @@
 
 /* ── Newsletter ── */
 .newsletterSection {
-  padding: 64px 0;
+  padding: 48px 0;
   content-visibility: auto;
   contain-intrinsic-size: auto 350px;
 }
@@ -320,7 +320,7 @@
 /* ── Support Banner ── */
 .supportBanner {
   padding: var(--space-8) 0;
-  background: linear-gradient(135deg, rgba(34, 197, 94, 0.08) 0%, rgba(59, 130, 246, 0.08) 100%);
+  background: linear-gradient(135deg, rgba(6, 182, 212, 0.08) 0%, rgba(59, 130, 246, 0.08) 100%);
   border-top: 1px solid var(--color-border);
 }
 
@@ -339,10 +339,10 @@
   justify-content: center;
   width: 56px;
   height: 56px;
-  background: rgba(34, 197, 94, 0.15);
-  border: 1px solid rgba(34, 197, 94, 0.3);
+  background: rgba(6, 182, 212, 0.15);
+  border: 1px solid rgba(6, 182, 212, 0.3);
   border-radius: 50%;
-  color: var(--color-accent-secondary);
+  color: var(--color-accent-tertiary, #06B6D4);
   flex-shrink: 0;
 }
 
@@ -373,7 +373,7 @@
   font-size: var(--text-sm);
   font-weight: var(--font-semibold);
   color: #fff;
-  background: linear-gradient(135deg, var(--color-accent-secondary) 0%, #16a34a 100%);
+  background: linear-gradient(135deg, #06B6D4 0%, #3B82F6 100%);
   border-radius: var(--radius-full);
   text-decoration: none;
   transition: transform var(--transition-fast), box-shadow var(--transition-fast);
@@ -381,7 +381,7 @@
 
 .supportBannerLink:hover {
   transform: scale(1.03);
-  box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+  box-shadow: 0 4px 12px rgba(6, 182, 212, 0.4);
 }
 
 .supportBannerLink svg {
@@ -394,12 +394,12 @@
 
 /* ── Custom 3D-Printed Section ── */
 .printedSection {
-  padding: 64px 0;
+  padding: 48px 0;
   margin: 0;
 }
 
 .printedInner {
-  background: linear-gradient(135deg, #f0fdfa 0%, #e0f2fe 100%);
+  background: transparent;
   padding: 32px;
   position: relative;
 }

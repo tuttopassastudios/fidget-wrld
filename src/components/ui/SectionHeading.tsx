@@ -29,10 +29,10 @@ export function SectionHeading({
         <p
           style={{
             fontFamily: 'var(--font-mono)',
-            fontSize: 'var(--text-xs)',
-            fontWeight: 'var(--font-medium)',
+            fontSize: '10px',
+            fontWeight: '700',
             textTransform: 'uppercase',
-            letterSpacing: '0.1em',
+            letterSpacing: '0.12em',
             color: 'var(--color-accent-primary)',
             marginBottom: 'var(--space-2)',
           }}

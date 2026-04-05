@@ -20,49 +20,49 @@ const CATEGORY_ITEMS = [
     icon: '🖨️',
     href: '/products?fulfillment=3d-printed',
     rotation: -3,
-    hoverStyles: { bgColor: '#0d9488', textColor: '#fff' },
+    hoverStyles: { bgColor: '#06B6D4', textColor: '#fff' },
   },
   {
     label: 'Magnetic',
     icon: '🧲',
     href: '/products?category=Magnetic',
     rotation: -6,
-    hoverStyles: { bgColor: '#8B5CF6', textColor: '#fff' },
+    hoverStyles: { bgColor: '#3B82F6', textColor: '#fff' },
   },
   {
     label: 'Squishy',
     icon: '🫧',
     href: '/products?category=Squishy',
     rotation: 5,
-    hoverStyles: { bgColor: '#EC4899', textColor: '#fff' },
+    hoverStyles: { bgColor: '#06B6D4', textColor: '#fff' },
   },
   {
     label: 'Clicky',
     icon: '🎯',
     href: '/products?category=Clicky',
     rotation: 4,
-    hoverStyles: { bgColor: '#06B6D4', textColor: '#fff' },
+    hoverStyles: { bgColor: '#3B82F6', textColor: '#fff' },
   },
   {
     label: 'Stretchy',
     icon: '🌀',
     href: '/products?category=Stretchy',
     rotation: -5,
-    hoverStyles: { bgColor: '#22C55E', textColor: '#fff' },
+    hoverStyles: { bgColor: '#06B6D4', textColor: '#fff' },
   },
   {
     label: 'Desk Toys',
     icon: '🖥️',
     href: '/products?category=Desk+Toy',
     rotation: 6,
-    hoverStyles: { bgColor: '#F59E0B', textColor: '#fff' },
+    hoverStyles: { bgColor: '#3B82F6', textColor: '#fff' },
   },
   {
     label: 'Gift Sets',
     icon: '🎁',
     href: '/products?category=Gift+Set',
     rotation: -4,
-    hoverStyles: { bgColor: '#3B82F6', textColor: '#fff' },
+    hoverStyles: { bgColor: '#06B6D4', textColor: '#fff' },
   },
 ];
 
@@ -303,7 +303,7 @@ export default async function HomePage() {
         </section>
       </FadeIn>
 
-      {/* 6. Support Banner */}
+      {/* 7. Support Banner */}
       <FadeIn>
         <section className={styles.supportBanner}>
           <div className="container">
