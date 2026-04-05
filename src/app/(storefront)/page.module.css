@@ -5,8 +5,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  /* 80px for nav + 36px for announcement bar */
-  padding: calc(80px + 36px) var(--space-4) var(--space-12);
+  /* 16px gap after nav + announcement bar */
+  padding: 16px var(--space-4) var(--space-12);
   background: var(--color-bg-dark);
 }
 
@@ -448,7 +448,7 @@
 /* Mobile: ball pit top full-width, side panels in 2-col row below */
 @media (max-width: 768px) {
   .hero {
-    padding: calc(70px + 36px) var(--space-3) var(--space-8);
+    padding: 16px var(--space-3) var(--space-8);
   }
 
   .heroStage {
