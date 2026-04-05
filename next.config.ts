@@ -1,3 +1,4 @@
+// build: 2026-04-05
 import type { NextConfig } from "next";
 import withBundleAnalyzer from "@next/bundle-analyzer";
 
