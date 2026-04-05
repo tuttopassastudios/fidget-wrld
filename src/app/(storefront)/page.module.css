@@ -68,18 +68,18 @@
 }
 
 .heroWindowChrome {
-  height: 38px;
-  background: #1e2535;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  height: 34px;
+  background: #e8e8e8;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
   display: flex;
   align-items: center;
   padding: 0 14px;
-  gap: 8px;
+  gap: 7px;
 }
 
 .heroDot {
-  width: 12px;
-  height: 12px;
+  width: 10px;
+  height: 10px;
   border-radius: 50%;
   flex-shrink: 0;
 }
@@ -88,10 +88,10 @@
   flex: 1;
   text-align: center;
   font-size: 11px;
-  color: rgba(255, 255, 255, 0.3);
+  color: rgba(0, 0, 0, 0.38);
   letter-spacing: 0.06em;
-  margin-right: 52px; /* visual centering offset for 3 dots */
-  font-family: ui-monospace, monospace;
+  margin-right: 38px; /* visual centering offset for 3 dots */
+  font-family: var(--font-mono);
 }
 
 .heroWindowCanvas {

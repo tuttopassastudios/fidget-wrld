@@ -48,6 +48,7 @@ export function SectionHeading({
           lineHeight: 'var(--leading-tight)',
           color: 'var(--color-text-primary)',
           margin: 0,
+          whiteSpace: 'nowrap',
         }}
       >
         <BlurText text={heading} />
