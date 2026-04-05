@@ -281,7 +281,7 @@ export default async function HomePage() {
       <FadeIn>
         <section className={styles.newsletterSection}>
           <div className="container">
-            <MacWindowFrame label="fidget-wrld — newsletter" variant="dark">
+            <MacWindowFrame label="fidget-wrld — newsletter">
               <div className={styles.newsletterInner}>
                 <div className={styles.newsletterIcon} aria-hidden="true">
                   <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">

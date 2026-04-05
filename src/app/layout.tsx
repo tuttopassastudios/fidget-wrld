@@ -108,7 +108,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body style={{ background: '#F8FAFC', color: '#1E293B' }}>
+      <body style={{ background: '#E8ECF1', color: '#1E293B' }}>
         <ClickSpark>
           <Providers>
             {children}
