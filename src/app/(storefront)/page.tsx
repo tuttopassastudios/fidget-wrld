@@ -120,7 +120,7 @@ export default async function HomePage() {
             <div className={styles.heroSidePanelBody}>
               <p className={styles.heroSideLabel}>The Fidget Shop</p>
               <p className={styles.heroTagline}>
-                Built&nbsp;different.<br />Fidgeted&nbsp;everywhere.
+                Built different.<br />Fidgeted everywhere.
               </p>
               <p className={styles.heroSub}>
                 Custom 3D-printed toys, N52 magnetic balls, and more &mdash; made to order and shipped in days.
