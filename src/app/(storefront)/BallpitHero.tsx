@@ -1,8 +1,15 @@
 'use client';
 
-import { useSyncExternalStore } from 'react';
+import { useSyncExternalStore, useState } from 'react';
+import dynamic from 'next/dynamic';
 import { useDeviceTier } from '@/hooks/useDeviceTier';
-import { BallpitBackground } from '@/components/effects/BallpitBackground';
+
+// Lazy-load the entire BallpitBackground + Ballpit + Three.js chunk.
+// On mobile/low-end this import is never triggered, so zero Three.js JS is downloaded.
+const BallpitBackground = dynamic(
+  () => import('@/components/effects/BallpitBackground').then(m => ({ default: m.BallpitBackground })),
+  { ssr: false }
+);
 
 interface BallpitHeroProps {
   className?: string;
@@ -19,7 +26,6 @@ function subscribeToCoarsePointer(callback: () => void) {
   return () => mq.removeEventListener('change', callback);
 }
 
-// Check reduced motion preference without triggering setState in effect
 function getReducedMotionSnapshot() {
   return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 }
@@ -49,7 +55,6 @@ export function BallpitHero({ className, fallbackClassName }: BallpitHeroProps) 
   const skipBallpit = prefersReducedMotion || isCoarsePointer || tier === 'low';
 
   if (skipBallpit) {
-    // Render a lightweight CSS gradient fallback instead of WebGL
     return <div className={fallbackClassName} />;
   }
 

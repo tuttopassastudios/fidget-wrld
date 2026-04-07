@@ -1,8 +1,12 @@
 'use client';
 
-import { useLayoutEffect, useRef, useState, useCallback, useSyncExternalStore } from 'react';
-import { gsap } from 'gsap';
+import { useLayoutEffect, useRef, useState, useCallback, useSyncExternalStore, useEffect } from 'react';
 import Link from 'next/link';
+
+// Lazy-load GSAP — only fetched when menu animations are needed (not on critical path)
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+let gsap: any = null;
+const loadGsap = () => import('gsap').then(m => { gsap = m.gsap; });
 import { useCart } from '@/context/CartContext';
 import { useHaptics } from '@/hooks/useHaptics';
 
@@ -83,14 +87,22 @@ export function CardNav() {
   const navRef = useRef<HTMLElement>(null);
   const cardsRef = useRef<(HTMLDivElement | null)[]>([]);
   const extraLinksRef = useRef<HTMLDivElement>(null);
-  const tlRef = useRef<gsap.core.Timeline | null>(null);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const tlRef = useRef<any>(null);
   const skipAnimations = useRef(false);
+  const gsapReady = useRef(false);
 
   useLayoutEffect(() => {
     // Skip GSAP on reduced-motion OR low-end devices (use CSS transitions instead)
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const lowEnd = document.documentElement.classList.contains('device-low');
     skipAnimations.current = reducedMotion || lowEnd;
+  }, []);
+
+  // Lazy-load GSAP only when animations are needed (not on critical path)
+  useEffect(() => {
+    if (skipAnimations.current) return;
+    loadGsap().then(() => { gsapReady.current = true; });
   }, []);
 
   const count = mounted ? getCount() : 0;
@@ -128,6 +140,7 @@ export function CardNav() {
   }, []);
 
   const createTimeline = useCallback(() => {
+    if (!gsap) return null;
     const navEl = navRef.current;
     const cards = cardsRef.current.filter(Boolean) as HTMLDivElement[];
     if (!navEl || cards.length === 0) return null;
@@ -185,7 +198,7 @@ export function CardNav() {
 
       if (isExpanded) {
         const newHeight = calculateHeight();
-        gsap.set(navRef.current, { height: newHeight });
+        gsap?.set(navRef.current, { height: newHeight });
         tlRef.current.kill();
         const newTl = createTimeline();
         if (newTl) {

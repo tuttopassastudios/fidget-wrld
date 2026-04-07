@@ -1,8 +1,7 @@
 'use client';
 
 import type { CSSProperties } from 'react';
-import { useRef, useEffect } from 'react';
-import { gsap } from 'gsap';
+import { useRef, useEffect, useState } from 'react';
 import Link from 'next/link';
 
 import './CategoryBubbles.css';
@@ -25,60 +24,31 @@ interface CategoryBubblesProps {
 
 export function CategoryBubbles({ items, className }: CategoryBubblesProps) {
   const sectionRef = useRef<HTMLElement | null>(null);
-  const bubblesRef = useRef<(HTMLAnchorElement | null)[]>([]);
-  const labelRefs = useRef<(HTMLSpanElement | null)[]>([]);
-  const hasAnimated = useRef(false);
+  const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    if (hasAnimated.current) return;
-
     const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (prefersReduced) {
-      hasAnimated.current = true;
+      setVisible(true);
       return;
     }
 
-    const bubbles = bubblesRef.current.filter(Boolean) as HTMLAnchorElement[];
-    const labels = labelRefs.current.filter(Boolean) as HTMLSpanElement[];
-    if (!bubbles.length) return;
-
-    gsap.set(bubbles, { scale: 0, transformOrigin: '50% 50%' });
-    gsap.set(labels, { y: 24, autoAlpha: 0 });
-
-    const runAnimation = () => {
-      if (hasAnimated.current) return;
-      hasAnimated.current = true;
-
-      bubbles.forEach((bubble, i) => {
-        const delay = i * 0.1 + gsap.utils.random(-0.03, 0.03);
-        const tl = gsap.timeline({ delay });
-        tl.to(bubble, { scale: 1, duration: 0.5, ease: 'back.out(1.5)' });
-        if (labels[i]) {
-          tl.to(labels[i], { y: 0, autoAlpha: 1, duration: 0.5, ease: 'power3.out' }, '-=0.45');
-        }
-      });
-    };
-
-    // Fallback: if observer never fires, show after 2s
-    const fallback = setTimeout(() => {
-      gsap.set(bubbles, { scale: 1 });
-      gsap.set(labels, { y: 0, autoAlpha: 1 });
-      hasAnimated.current = true;
-    }, 2000);
+    const el = sectionRef.current;
+    if (!el) return;
 
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          clearTimeout(fallback);
+          setVisible(true);
           observer.disconnect();
-          runAnimation();
         }
       },
       { threshold: 0 }
     );
+    observer.observe(el);
 
-    // Observe the section container so scroll position is reliable
-    if (sectionRef.current) observer.observe(sectionRef.current);
+    // Fallback: show after 2s if observer never fires
+    const fallback = setTimeout(() => setVisible(true), 2000);
 
     return () => {
       clearTimeout(fallback);
@@ -97,24 +67,18 @@ export function CategoryBubbles({ items, className }: CategoryBubblesProps) {
           <li key={item.label} role="listitem" className="pillCol">
             <Link
               href={item.href}
-              className="pillLink"
+              className={`pillLink ${visible ? 'pillLink--visible' : ''}`}
               style={
                 {
                   '--item-rot': `${item.rotation ?? 0}deg`,
                   '--hover-bg': item.hoverStyles?.bgColor || '#f3f4f6',
                   '--hover-color': item.hoverStyles?.textColor || '#111',
+                  '--stagger-delay': `${idx * 0.1}s`,
                 } as CSSProperties
               }
-              ref={(el) => {
-                bubblesRef.current[idx] = el;
-              }}
+              ref={() => {}}
             >
-              <span
-                className="pillLabel"
-                ref={(el) => {
-                  labelRefs.current[idx] = el;
-                }}
-              >
+              <span className="pillLabel">
                 {item.icon && <span className="pillIcon" aria-hidden="true">{item.icon}</span>}
                 {item.label}
               </span>
