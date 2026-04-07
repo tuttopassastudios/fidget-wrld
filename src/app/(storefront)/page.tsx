@@ -145,6 +145,7 @@ export default async function HomePage() {
                   alt="Fidget WRLD"
                   width={600}
                   height={400}
+                  sizes="(max-width: 768px) 60vw, 300px"
                   priority
                   fetchPriority="high"
                   className={styles.heroLogo}

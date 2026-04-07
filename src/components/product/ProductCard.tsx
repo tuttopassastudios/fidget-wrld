@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useCart } from '@/context/CartContext';
 import { useToast } from '@/context/ToastContext';
 import { formatCurrency } from '@/lib/utils';
@@ -100,12 +101,15 @@ export function ProductCard({
       <ReflectiveCard className={`product-card${allOutOfStock ? ' product-card--out-of-stock' : ''}`} enableTilt={false}>
         <Link href={`/products/${slug}`} className="product-card-link" prefetch={true} style={enableViewTransition ? { viewTransitionName: `product-${slug}` } : undefined}>
           <div className="product-card-image" style={size !== 'standard' ? { aspectRatio: imageAspect } : undefined}>
-            <img
+            <Image
               src={product.image}
               alt={product.name}
+              width={size === 'featured' ? 400 : 256}
+              height={size === 'featured' ? 400 : 256}
+              sizes={size === 'featured' ? '(max-width: 768px) 50vw, 300px' : '(max-width: 768px) 40vw, 200px'}
               style={{ width: '100%', height: '100%', objectFit: 'contain' }}
               loading={priority ? 'eager' : 'lazy'}
-              onError={(e) => { (e.currentTarget as HTMLImageElement).src = '/images/products/placeholder.svg'; }}
+              quality={75}
             />
             {/* Polka-dot hover overlay */}
             <div className="product-card-dot-overlay" aria-hidden="true" />
