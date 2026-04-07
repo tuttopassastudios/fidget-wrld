@@ -68,12 +68,6 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${quicksand.variable} ${dmMono.variable}`}>
       <head>
-        {/* Preconnect to image CDN origins */}
-        <link rel="preconnect" href="https://cf.cjdropshipping.com" />
-        <link rel="preconnect" href="https://cc-west-usa.oss-us-west-1.aliyuncs.com" />
-        {process.env.NEXT_PUBLIC_SUPABASE_URL && (
-          <link rel="preconnect" href={process.env.NEXT_PUBLIC_SUPABASE_URL} />
-        )}
         {/* Detect low-end devices before first paint to avoid backdrop-filter jank */}
         <script
           dangerouslySetInnerHTML={{

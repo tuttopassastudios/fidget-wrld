@@ -146,6 +146,7 @@ export default async function HomePage() {
                   width={600}
                   height={400}
                   priority
+                  fetchPriority="high"
                   className={styles.heroLogo}
                 />
               </div>
