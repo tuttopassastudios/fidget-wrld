@@ -84,10 +84,13 @@ export function CardNav() {
   const cardsRef = useRef<(HTMLDivElement | null)[]>([]);
   const extraLinksRef = useRef<HTMLDivElement>(null);
   const tlRef = useRef<gsap.core.Timeline | null>(null);
-  const prefersReducedMotion = useRef(false);
+  const skipAnimations = useRef(false);
 
   useLayoutEffect(() => {
-    prefersReducedMotion.current = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    // Skip GSAP on reduced-motion OR low-end devices (use CSS transitions instead)
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const lowEnd = document.documentElement.classList.contains('device-low');
+    skipAnimations.current = reducedMotion || lowEnd;
   }, []);
 
   const count = mounted ? getCount() : 0;
@@ -163,7 +166,7 @@ export function CardNav() {
   }, [calculateHeight]);
 
   useLayoutEffect(() => {
-    if (prefersReducedMotion.current) return;
+    if (skipAnimations.current) return;
 
     const tl = createTimeline();
     tlRef.current = tl;
@@ -175,7 +178,7 @@ export function CardNav() {
   }, [createTimeline]);
 
   useLayoutEffect(() => {
-    if (prefersReducedMotion.current) return;
+    if (skipAnimations.current) return;
 
     const handleResize = () => {
       if (!tlRef.current) return;
@@ -207,7 +210,7 @@ export function CardNav() {
 
     setIsExpanded(false);
 
-    if (prefersReducedMotion.current) {
+    if (skipAnimations.current) {
       if (navRef.current) navRef.current.style.height = `${BAR_HEIGHT}px`;
       return;
     }
@@ -220,7 +223,7 @@ export function CardNav() {
   const toggleMenu = useCallback(() => {
     trigger('tap');
 
-    if (prefersReducedMotion.current) {
+    if (skipAnimations.current) {
       setIsExpanded(prev => !prev);
       if (navRef.current) {
         if (!isExpanded) {

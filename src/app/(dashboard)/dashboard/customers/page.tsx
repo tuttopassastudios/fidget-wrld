@@ -5,7 +5,12 @@ import { useAuth } from '@/context/AuthContext';
 import { PageReveal } from '@/components/ui/PageReveal';
 import { DashboardTopbar } from '@/components/dashboard/DashboardTopbar';
 import { StatCard } from '@/components/dashboard/StatCard';
-import { AcquisitionChart } from '@/components/dashboard/AcquisitionChart';
+import dynamic from 'next/dynamic';
+
+const AcquisitionChart = dynamic(
+  () => import('@/components/dashboard/AcquisitionChart').then(m => ({ default: m.AcquisitionChart })),
+  { loading: () => <div style={{ height: 300, background: '#f1f5f9', borderRadius: 8 }} /> }
+);
 import { RetentionCohort } from '@/components/dashboard/RetentionCohort';
 import { PromoAnalytics } from '@/components/dashboard/PromoAnalytics';
 import { generateCSV, downloadCSV } from '@/lib/csv-export';

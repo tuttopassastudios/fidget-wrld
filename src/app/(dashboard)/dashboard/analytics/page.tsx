@@ -7,8 +7,16 @@ import { DashboardTopbar } from '@/components/dashboard/DashboardTopbar';
 import { DateRangePicker } from '@/components/dashboard/DateRangePicker';
 import { StatCard } from '@/components/dashboard/StatCard';
 import { OrderFunnel } from '@/components/dashboard/OrderFunnel';
-import { StatusOverTime } from '@/components/dashboard/StatusOverTime';
-import { ProductRevenueChart } from '@/components/dashboard/ProductRevenueChart';
+import dynamic from 'next/dynamic';
+
+const StatusOverTime = dynamic(
+  () => import('@/components/dashboard/StatusOverTime').then(m => ({ default: m.StatusOverTime })),
+  { loading: () => <div style={{ height: 300, background: '#f1f5f9', borderRadius: 8 }} /> }
+);
+const ProductRevenueChart = dynamic(
+  () => import('@/components/dashboard/ProductRevenueChart').then(m => ({ default: m.ProductRevenueChart })),
+  { loading: () => <div style={{ height: 300, background: '#f1f5f9', borderRadius: 8 }} /> }
+);
 import { generateCSV, downloadCSV } from '@/lib/csv-export';
 import styles from './page.module.css';
 

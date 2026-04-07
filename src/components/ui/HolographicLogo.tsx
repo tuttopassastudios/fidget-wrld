@@ -1,5 +1,3 @@
-'use client';
-
 import Image from 'next/image';
 import './holographic.css';
 
@@ -24,7 +22,7 @@ export function HolographicLogo({
       style={{ isolation: 'isolate' }}
     >
       <Image
-        src="/images/fidget-wrld-logo.png"
+        src="/images/fidget-wrld-logo.webp"
         alt="Fidget WRLD"
         width={width}
         height={height}

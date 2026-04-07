@@ -8,7 +8,7 @@ export function Footer() {
         <div className="footer-top">
           <div className="footer-brand">
             <Link href="/" className="header-logo" style={{ fontSize: '1.25rem' }}>
-              <Image src="/images/fidget-wrld-logo.png" alt="Fidget WRLD" width={120} height={80} sizes="120px" />
+              <Image src="/images/fidget-wrld-logo.webp" alt="Fidget WRLD" width={120} height={80} sizes="120px" />
             </Link>
             <p>Premium fidget toys for focus, relaxation, and fun. Satisfying textures and endless entertainment for all ages.</p>
           </div>

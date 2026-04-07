@@ -3,6 +3,17 @@
 @import './sidebar-menu.css';
 @import './dock.css';
 
+/* ── Low-end device overrides ── */
+/* .device-low is set by inline script in <head> before first paint */
+.device-low * {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+.device-low .heroFallback,
+.device-low [class*="heroFallback"] {
+  display: block;
+}
+
 /* ── Lanyard (persistent top-right) ── */
 .lanyard-wrapper {
   position: fixed;

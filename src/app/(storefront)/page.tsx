@@ -137,11 +137,11 @@ export default async function HomePage() {
               <span className={styles.heroWindowLabel}>fidget-wrld &mdash; interactive</span>
             </div>
             <div className={styles.heroWindowCanvas}>
-              <BallpitHero className={styles.heroBallpit} />
+              <BallpitHero className={styles.heroBallpit} fallbackClassName={styles.heroFallback} />
               <noscript><div className={styles.heroFallback} /></noscript>
               <div className={styles.heroLogoOverlay}>
                 <Image
-                  src="/images/fidget-wrld-logo-main.png"
+                  src="/images/fidget-wrld-logo.webp"
                   alt="Fidget WRLD"
                   width={600}
                   height={400}

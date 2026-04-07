@@ -20,9 +20,11 @@ interface Spark {
   startTime: number;
 }
 
-const reducedMotion =
+const shouldSkipEffects =
   typeof window !== 'undefined' &&
-  window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  (window.matchMedia('(prefers-reduced-motion: reduce)').matches ||
+   (navigator.hardwareConcurrency ?? 4) <= 4 ||
+   ((navigator as { deviceMemory?: number }).deviceMemory ?? 8) <= 4);
 
 export default function ClickSpark({
   sparkColor = '#3B82F6',
@@ -38,7 +40,7 @@ export default function ClickSpark({
   const sparksRef = useRef<Spark[]>([]);
 
   useEffect(() => {
-    if (reducedMotion) return;
+    if (shouldSkipEffects) return;
 
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -89,7 +91,7 @@ export default function ClickSpark({
   );
 
   useEffect(() => {
-    if (reducedMotion) return;
+    if (shouldSkipEffects) return;
 
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -137,7 +139,7 @@ export default function ClickSpark({
   }, [sparkColor, sparkSize, sparkRadius, duration, easeFunc, extraScale]);
 
   const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (reducedMotion) return;
+    if (shouldSkipEffects) return;
 
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -156,7 +158,7 @@ export default function ClickSpark({
     sparksRef.current.push(...newSparks);
   };
 
-  if (reducedMotion) {
+  if (shouldSkipEffects) {
     return <>{children}</>;
   }
 

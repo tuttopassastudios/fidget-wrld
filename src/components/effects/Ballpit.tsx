@@ -358,6 +358,9 @@ class W {
   velocityData: Float32Array;
   sizeData: Float32Array;
   center: Vector3 = new Vector3();
+  // Spatial hash grid for O(n) collision detection
+  #gridCellSize: number = 0;
+  #grid: Map<number, number[]> = new Map();
 
   constructor(config: WConfig) {
     this.config = config;
@@ -365,6 +368,8 @@ class W {
     this.velocityData = new Float32Array(3 * config.count).fill(0);
     this.sizeData = new Float32Array(config.count).fill(1);
     this.center = new Vector3();
+    // Cell size = diameter of largest ball so neighbors are always in adjacent cells
+    this.#gridCellSize = config.maxSize * 2;
     this.#initializePositions();
     this.setSizes();
   }
@@ -408,31 +413,63 @@ class W {
       I.toArray(positionData, base);
       B.toArray(velocityData, base);
     }
+    // Build spatial hash grid — O(n) insert
+    const cs = this.#gridCellSize;
+    const grid = this.#grid;
+    grid.clear();
+    for (let idx = startIdx; idx < config.count; idx++) {
+      const base = 3 * idx;
+      const cx = Math.floor(positionData[base] / cs);
+      const cy = Math.floor(positionData[base + 1] / cs);
+      const cz = Math.floor(positionData[base + 2] / cs);
+      const key = (cx * 92837111) ^ (cy * 689287499) ^ (cz * 283923481);
+      const cell = grid.get(key);
+      if (cell) cell.push(idx);
+      else grid.set(key, [idx]);
+    }
+
+    // Collision detection using grid neighbors — O(n) average
     for (let idx = startIdx; idx < config.count; idx++) {
       const base = 3 * idx;
       I.fromArray(positionData, base);
       B.fromArray(velocityData, base);
       const radius = sizeData[idx];
-      for (let jdx = idx + 1; jdx < config.count; jdx++) {
-        const otherBase = 3 * jdx;
-        O.fromArray(positionData, otherBase);
-        N.fromArray(velocityData, otherBase);
-        _.copy(O).sub(I);
-        const dist = _.length();
-        const sumRadius = radius + sizeData[jdx];
-        if (dist < sumRadius) {
-          const overlap = sumRadius - dist;
-          j.copy(_).normalize().multiplyScalar(0.5 * overlap);
-          H.copy(j).multiplyScalar(Math.max(B.length(), 1));
-          T.copy(j).multiplyScalar(Math.max(N.length(), 1));
-          I.sub(j);
-          B.sub(H);
-          I.toArray(positionData, base);
-          B.toArray(velocityData, base);
-          O.add(j);
-          N.add(T);
-          O.toArray(positionData, otherBase);
-          N.toArray(velocityData, otherBase);
+      const cx = Math.floor(I.x / cs);
+      const cy = Math.floor(I.y / cs);
+      const cz = Math.floor(I.z / cs);
+
+      // Check 3x3x3 neighborhood
+      for (let dx = -1; dx <= 1; dx++) {
+        for (let dy = -1; dy <= 1; dy++) {
+          for (let dz = -1; dz <= 1; dz++) {
+            const nkey = ((cx + dx) * 92837111) ^ ((cy + dy) * 689287499) ^ ((cz + dz) * 283923481);
+            const cell = grid.get(nkey);
+            if (!cell) continue;
+            for (let c = 0; c < cell.length; c++) {
+              const jdx = cell[c];
+              if (jdx <= idx) continue; // avoid duplicate pairs
+              const otherBase = 3 * jdx;
+              O.fromArray(positionData, otherBase);
+              N.fromArray(velocityData, otherBase);
+              _.copy(O).sub(I);
+              const dist = _.length();
+              const sumRadius = radius + sizeData[jdx];
+              if (dist < sumRadius) {
+                const overlap = sumRadius - dist;
+                j.copy(_).normalize().multiplyScalar(0.5 * overlap);
+                H.copy(j).multiplyScalar(Math.max(B.length(), 1));
+                T.copy(j).multiplyScalar(Math.max(N.length(), 1));
+                I.sub(j);
+                B.sub(H);
+                I.toArray(positionData, base);
+                B.toArray(velocityData, base);
+                O.add(j);
+                N.add(T);
+                O.toArray(positionData, otherBase);
+                N.toArray(velocityData, otherBase);
+              }
+            }
+          }
         }
       }
       if (config.controlSphere0) {

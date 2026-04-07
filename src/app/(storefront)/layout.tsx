@@ -6,6 +6,8 @@ import { AnnouncementBar } from "@/components/layout/AnnouncementBar";
 import { Footer } from "@/components/layout/Footer";
 import { Dock } from "@/components/layout/Dock";
 import { ToastContainer } from "@/components/ui/ToastContainer";
+import ClickSpark from "@/components/effects/ClickSpark";
+import "../card-nav.css";
 
 const AgeGate = dynamic(() => import("@/components/AgeGate").then(m => m.AgeGate));
 const CartDrawer = dynamic(() => import("@/components/cart/CartDrawer").then(m => m.CartDrawer));
@@ -17,7 +19,7 @@ export default function StorefrontLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <>
+    <ClickSpark>
       <div className="storefront-content">
         <AnnouncementBar />
         <Suspense>
@@ -36,6 +38,6 @@ export default function StorefrontLayout({
         </Suspense>
       </div>
       <AgeGate />
-    </>
+    </ClickSpark>
   );
 }

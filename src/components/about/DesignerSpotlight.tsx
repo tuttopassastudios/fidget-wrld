@@ -1,5 +1,3 @@
-'use client';
-
 import type { Designer } from '@/data/designers';
 import type { ProductPage } from '@/types';
 import { PolkaDots } from '@/components/ui/DecorativePatterns';

@@ -1,5 +1,3 @@
-'use client';
-
 const steps = [
   { label: 'Cart', number: 1 },
   { label: 'Shipping', number: 2 },

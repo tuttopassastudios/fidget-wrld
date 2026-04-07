@@ -3,22 +3,20 @@ import { Quicksand, DM_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
-import "./card-nav.css";
 import { Providers } from "@/components/Providers";
-import ClickSpark from "@/components/effects/ClickSpark";
 
 const quicksand = Quicksand({
   variable: "--font-quicksand",
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
+  weight: ["400", "500", "600", "700"],
   display: "swap",
 });
 
 const dmMono = DM_Mono({
   variable: "--font-dm-mono",
   subsets: ["latin"],
-  weight: ["300", "400", "500"],
-  style: ["normal", "italic"],
+  weight: ["400"],
+  style: ["normal"],
   display: "swap",
 });
 
@@ -70,6 +68,18 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${quicksand.variable} ${dmMono.variable}`}>
       <head>
+        {/* Preconnect to image CDN origins */}
+        <link rel="preconnect" href="https://cf.cjdropshipping.com" />
+        <link rel="preconnect" href="https://cc-west-usa.oss-us-west-1.aliyuncs.com" />
+        {process.env.NEXT_PUBLIC_SUPABASE_URL && (
+          <link rel="preconnect" href={process.env.NEXT_PUBLIC_SUPABASE_URL} />
+        )}
+        {/* Detect low-end devices before first paint to avoid backdrop-filter jank */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var c=navigator.hardwareConcurrency||4;var m=navigator.deviceMemory||8;if(c<=4||m<=4||matchMedia('(prefers-reduced-motion:reduce)').matches)document.documentElement.classList.add('device-low')}catch(e){}})()`,
+          }}
+        />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -78,7 +88,7 @@ export default function RootLayout({
               '@type': 'Organization',
               name: 'Fidget WRLD',
               url: 'https://fidgetwrld.com',
-              logo: 'https://fidgetwrld.com/images/fidget-wrld-logo.png',
+              logo: 'https://fidgetwrld.com/images/fidget-wrld-logo.webp',
               description: 'Premium fidget toys and sensory tools for kids, adults, and collectors.',
               contactPoint: {
                 '@type': 'ContactPoint',
@@ -109,11 +119,9 @@ export default function RootLayout({
         />
       </head>
       <body style={{ background: '#D1D5DB', color: '#1E293B' }}>
-        <ClickSpark>
-          <Providers>
-            {children}
-          </Providers>
-        </ClickSpark>
+        <Providers>
+          {children}
+        </Providers>
         <Analytics />
         <SpeedInsights />
       </body>

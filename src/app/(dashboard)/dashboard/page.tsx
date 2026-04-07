@@ -9,8 +9,16 @@ import { StatCard } from '@/components/dashboard/StatCard';
 import { DataTable, type Column } from '@/components/dashboard/DataTable';
 import { StatusBadge } from '@/components/dashboard/StatusBadge';
 import { DateRangePicker } from '@/components/dashboard/DateRangePicker';
-import { RevenueChart } from '@/components/dashboard/RevenueChart';
-import { OrdersChart } from '@/components/dashboard/OrdersChart';
+import dynamic from 'next/dynamic';
+
+const RevenueChart = dynamic(
+  () => import('@/components/dashboard/RevenueChart').then(m => ({ default: m.RevenueChart })),
+  { loading: () => <div style={{ height: 300, background: '#f1f5f9', borderRadius: 8 }} /> }
+);
+const OrdersChart = dynamic(
+  () => import('@/components/dashboard/OrdersChart').then(m => ({ default: m.OrdersChart })),
+  { loading: () => <div style={{ height: 300, background: '#f1f5f9', borderRadius: 8 }} /> }
+);
 import { TopProducts } from '@/components/dashboard/TopProducts';
 import { OrderFunnel } from '@/components/dashboard/OrderFunnel';
 import { ViewSwitcher, usePersistedView } from '@/components/dashboard/ViewSwitcher';

@@ -54,7 +54,8 @@ export function ProductPageClient({ product }: { product: ProductPage }) {
 
   const [variantIdx, setVariantIdx] = useState(product.defaultVariantIndex);
   const [quantity, setQuantity] = useState(1);
-  const [galleryView, setGalleryView] = useState<'3d' | 'photo'>('3d');
+  // Default to photo view — Three.js only loads when user clicks "3D Model"
+  const [galleryView, setGalleryView] = useState<'3d' | 'photo'>('photo');
 
   // Initialize part colors with the first available color for each part
   const initialPartColors = useMemo(() => {

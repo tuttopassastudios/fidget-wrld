@@ -16,7 +16,7 @@ export function FidgetWrldLogo({ className, style, size = 'md' }: FidgetWrldLogo
   const { width, height } = sizes[size];
   return (
     <Image
-      src="/images/fidget-wrld-logo.png"
+      src="/images/fidget-wrld-logo.webp"
       alt="Fidget WRLD"
       width={width}
       height={height}

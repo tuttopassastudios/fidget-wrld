@@ -99,4 +99,4 @@ Premium fidget toy e-commerce site targeting kids, adults, and collectors.
 - Hero product: N52 Magnetic Balls (various colors/sizes)
 - Categories: Magnetic, Squishy, Clicky, Stretchy, Desk Toys, Gift Sets
 - Shop-by: Mood (calm/focus/play/collect), Audience (kids/adults/office), Texture
-- Logo: /public/images/fidget-wrld-logo.png
+- Logo: /public/images/fidget-wrld-logo.webp
