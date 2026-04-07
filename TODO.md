@@ -312,7 +312,7 @@ GV-1 and GV-2 can be built in parallel. GV-3 needs GV-2. GV-4 needs GV-3.
 > **Dependencies:** None (can run parallel with P2/P3/P4)
 > **Files:** `package.json`, various components
 
-- [ ] **P5-1** — ~~Remove `@react-three/rapier`~~ — KEEP: Lanyard.tsx imports it (commented out in layout but code exists).
+- [x] **P5-1** — Removed `@react-three/rapier` and all Lanyard dead code.
 - [x] **P5-2** — Audited `'use client'`: removed from 4 components (MadeToOrderBadge, CheckoutProgress, HolographicLogo, DesignerSpotlight). Rest legitimately need it.
 - [x] **P5-3** — Lazy-loaded all 5 recharts components in dashboard pages via `next/dynamic`.
 - [ ] **P5-4** — Tree-shake GSAP: import only `gsap/Observer` and `gsap/ScrollTrigger` instead of full GSAP if possible.
