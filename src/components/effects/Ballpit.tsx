@@ -136,12 +136,18 @@ class X {
       this.canvas!.height = h;
     }
 
+    const isMobile = typeof window !== 'undefined' && window.matchMedia('(pointer: coarse)').matches;
     const rendererOptions: WebGLRendererParameters = {
       canvas: this.canvas,
-      powerPreference: 'high-performance',
+      powerPreference: isMobile ? 'default' : 'high-performance',
+      antialias: !isMobile, // skip antialiasing on mobile to reduce GPU load
       ...(this.#config.rendererOptions ?? {})
     };
     this.renderer = new WebGLRenderer(rendererOptions);
+    // Cap pixel ratio on mobile to reduce fill rate
+    if (isMobile) {
+      this.maxPixelRatio = 1.5;
+    }
     this.renderer.outputColorSpace = SRGBColorSpace;
   }
 

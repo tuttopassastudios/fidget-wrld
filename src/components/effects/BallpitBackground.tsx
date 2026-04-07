@@ -40,10 +40,14 @@ export function BallpitBackground({
     typeof window !== 'undefined' && window.matchMedia('(pointer: coarse)').matches
   );
 
+  // Drastically reduce ball count on mobile to prevent GPU/CPU exhaustion
+  // (iPhone 12 and similar devices crash with 200 balls doing O(n²) collision)
+  const mobileCount = isMobile ? Math.min(count, 60) : count;
+
   return (
     <Ballpit
       className={className}
-      count={count}
+      count={mobileCount}
       colors={colors}
       followCursor={followCursor}
       gravity={gravity}
