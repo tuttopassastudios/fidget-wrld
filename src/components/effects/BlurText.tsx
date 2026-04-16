@@ -45,7 +45,6 @@ export function BlurText({
   threshold = 0.1,
   rootMargin = '0px',
 }: BlurTextProps) {
-  const characters = text.split('');
   const ref = useRef<HTMLSpanElement>(null);
 
   // Respect prefers-reduced-motion using external store (safe for render)
@@ -90,30 +89,45 @@ export function BlurText({
   const totalDuration = stepDuration * (stepCount - 1);
   const times = Array.from({ length: stepCount }, (_, i) => i / (stepCount - 1));
 
+  // Group characters into words so flex wrapping only occurs at word boundaries
+  const words = text.split(' ');
+  let charIndex = 0;
+
   return (
     <span
       ref={ref}
       className={className}
-      style={{ display: 'inline-flex', flexWrap: 'wrap' }}
+      style={{ display: 'inline-flex', flexWrap: 'wrap', columnGap: '0.25em' }}
     >
-      {characters.map((char, index) => {
-        const animateKeyframes = buildKeyframes(fromSnapshot, toSnapshots);
-        const spanTransition = {
-          duration: totalDuration,
-          times,
-          delay: (index * delay) / 1000,
-        };
+      {words.map((word, wordIdx) => {
+        const wordChars = word.split('');
+        const wordStart = charIndex;
+        charIndex += word.length + 1; // +1 for the space
 
         return (
-          <motion.span
-            key={index}
-            style={{ display: 'inline-block', willChange: 'transform, filter, opacity' }}
-            initial={prefersReducedMotion ? false : fromSnapshot}
-            animate={inView ? animateKeyframes : fromSnapshot}
-            transition={spanTransition}
-          >
-            {char === ' ' ? '\u00A0' : char}
-          </motion.span>
+          <span key={wordIdx} style={{ display: 'inline-flex', whiteSpace: 'nowrap' }}>
+            {wordChars.map((char, i) => {
+              const globalIdx = wordStart + i;
+              const animateKeyframes = buildKeyframes(fromSnapshot, toSnapshots);
+              const spanTransition = {
+                duration: totalDuration,
+                times,
+                delay: (globalIdx * delay) / 1000,
+              };
+
+              return (
+                <motion.span
+                  key={i}
+                  style={{ display: 'inline-block', willChange: 'transform, filter, opacity' }}
+                  initial={prefersReducedMotion ? false : fromSnapshot}
+                  animate={inView ? animateKeyframes : fromSnapshot}
+                  transition={spanTransition}
+                >
+                  {char}
+                </motion.span>
+              );
+            })}
+          </span>
         );
       })}
     </span>
